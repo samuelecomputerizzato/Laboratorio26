@@ -31,7 +31,7 @@ st.markdown(
     """,
     unsafe_allow_html=True)
 
-st.header("Assistenza online")
+st.header("Magna Franci")
 
 st.image("Chatbot.webp", width=500)
 
