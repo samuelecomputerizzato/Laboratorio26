@@ -15,7 +15,7 @@ from langchain_core.output_parsers import StrOutputParser
 
 # Elenco di tutte le icone Streamlit:
 # https://streamlit-emoji-shortcodes-streamlit-app-gwckff.streamlit.app/
-st.set_page_config(page_title= "RagChatbot",
+st.set_page_config(page_title= "Assistente Magna via Francigena",
                    page_icon=":classical_building:")
 
 # Personalizzazione colori:
