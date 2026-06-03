@@ -34,7 +34,7 @@ elif os.path.exists("Chatbot.webp"):
 
 # FIX PERCORSO FILE: Trova il PDF nella stessa cartella di questo file app.py
 cartella_corrente = os.path.dirname(__file__)
-documento = os.path.join(cartella_corrente, "Tappe via Francigena.pdf")
+documento = os.path.join(cartella_corrente, "Tappe.pdf")
 
 # Estrazione del contenuto e spezzettamento
 if os.path.exists(documento):
