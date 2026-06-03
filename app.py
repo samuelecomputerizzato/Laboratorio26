@@ -91,10 +91,9 @@ if os.path.exists(documento):
         
         prompt = ChatPromptTemplate.from_messages([
             ("system", 
-             '''Sei un assistente virtuale. 
-Usa il contesto fornito per rispondere alla domanda in modo conciso. 
-Puoi accedere a informazioni esterne, come Internet. 
-Se non conosci la risposta, dì semplicemente 'Non sono in grado di rispondere'. 
+             '''Sei un assistente per pellegrini della Magna via Francigena (Sicilia).
+Rispondi alle domande usando solo le informazioni presenti nel pdf. Rispondi in modo gentile e caloroso.
+Se non conosci la risposta, dì semplicemente 'Questa informazione non è oprevista nel tuo cammino'. 
 Contesto:\n{context}'''),
             ("human", "{question}")
         ])
