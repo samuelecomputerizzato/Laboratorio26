@@ -5,7 +5,3 @@ langchain-openai
 langchain-community
 faiss-cpu
 langchain-core
- openpyxl
- plotly.express 
- pandas 
- os
