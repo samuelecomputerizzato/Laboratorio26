@@ -43,7 +43,6 @@ st.markdown(
 st.header("La Magna via")
 
 # Gestione dinamica del percorso dell'immagine
-st.image("SfondoChatbot.webp", width=500)
 
 
 # FIX PERCORSO FILE: Trova il PDF nella stessa cartella di questo file app.py
