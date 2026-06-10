@@ -22,9 +22,9 @@ st.markdown(
         background-attachment: fixed;
         color: #000000;
         .stTextInput label {
-        color: #77dd77; 
+        color: #6E8B3D; 
         font-weight: bold;         
-        font-size: 25px;           
+        font-size: 25px !important;           
         
     }
     </style>
@@ -90,7 +90,7 @@ if os.path.exists(documento):
             st.session_state.domanda_inviva = st.session_state.domanda_utente
             st.session_state.domanda_utente = ""
 
-        st.text_input("Chiedi al chatbot:", key="domanda_utente", on_change=invia)
+        st.text_input("Chiedi alla via", key="domanda_utente", on_change=invia)
         domanda_utente = st.session_state.get("domanda_inviva", "")
         	
 
