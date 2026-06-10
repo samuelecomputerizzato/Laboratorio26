@@ -35,10 +35,9 @@ st.markdown(
 st.header("La Magna via")
 
 # Gestione dinamica del percorso dell'immagine
-if os.path.exists("Chatbot.webp"):
+
     st.image("Chatbot.webp", width=500)
-elif os.path.exists(""):
-    st.image("Chatbot.webp", width=500)
+
 
 # FIX PERCORSO FILE: Trova il PDF nella stessa cartella di questo file app.py
 cartella_corrente = os.path.dirname(__file__)
