@@ -32,7 +32,7 @@ st.markdown(
     
     /* Rettangolo di input */
     .stTextInput input {
-        background-color: #000000;
+        background-color: #808000;
         color: #ffffff;
         
     }
