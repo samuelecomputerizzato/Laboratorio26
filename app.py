@@ -18,13 +18,40 @@ st.markdown(
     <style>
     .stApp {
        
-        background-color: #9ecf2d;
+        
+    /* Sfondo generale dell'app: sopra l'immagine (fino a 720px), sotto il colore scuro monocromatico */
+        background: 
+            linear-gradient(to bottom, transparent 720px, #1E1E1E 720px),
+            url("app/static/MAGNAVIA.webp");
+        
+        background-size: 100% 720px, cover; 
+        background-repeat: no-repeat;
         background-attachment: fixed;
-        color: #000000;
-        .stTextInput label {
-        color: #000000; 
+        color: #B1D4D8;
+    }
+    
+    /* Centra il titolo principale e aumenta il carattere */
+    .titolo-centrato {
+        text-align: center;
+        font-size: 50px; /* Più grande di un normale header */
         font-weight: bold;
-        font-size: 16px !important;
+        color: #B1D4D8;
+        margin-bottom: 20px;
+    }
+    
+    /* Configurazione scritta "Chiedi al chatbot" */
+    .stTextInput label div p {
+        color: #FFD700 !important;
+        font-size: 24px !important;
+        font-weight: bold !important;
+    }
+    
+    /* Rettangolo di input */
+    .stTextInput input {
+        background-color: #ffffff;
+        color: #000000;
+    }
+   
     }
                    
         
