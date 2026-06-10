@@ -18,12 +18,17 @@ st.markdown(
     <style>
     .stApp {
        
-        background-color: #C2B280;
+    
+
+        background-image: url("    https://github.com/samuelecomputerizzato/Laboratorio26/blob/main/MAGNAVIA.webp");
+        background-size: cover;
+        background-position: center;
         background-attachment: fixed;
         color: #000000;
-        
     }
-    
+    </style>
+    """,
+    unsafe_allow_html=True
    
     
     /* Configurazione scritta "Chiedi al chatbot" */
