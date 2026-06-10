@@ -21,6 +21,11 @@ st.markdown(
         background-color:#bfa76f;
         background-attachment: fixed;
         color: #000000;
+        .stTextInput label {
+        color: #00FF00 !important; 
+        font-weight: bold;         
+        font-size: 16px;           
+        
     }
     </style>
     """,
@@ -87,6 +92,7 @@ if os.path.exists(documento):
 
         st.text_input("Chiedi al chatbot:", key="domanda_utente", on_change=invia)
         domanda_utente = st.session_state.get("domanda_inviva", "")
+        	
 
         def formatta_documento(documenti):
             return "\n\n".join([doc.page_content for doc in documenti])
