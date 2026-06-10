@@ -18,21 +18,13 @@ st.markdown(
     <style>
     .stApp {
        
-        
-    
         background-color: #C2B280;
         background-attachment: fixed;
         color: #000000;
+        text-align: center;
     }
     
-    /* Centra il titolo principale e aumenta il carattere */
-    .header {
-        text-align: center;
-        font-size: 50px; 
-        font-weight: bold;
-        color: #B1D4D8;
-        margin-bottom: 20px;
-    }
+   
     
     /* Configurazione scritta "Chiedi al chatbot" */
     .stTextInput label div p {
