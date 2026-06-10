@@ -34,8 +34,8 @@ st.markdown(
 st.header("La Magna via")
 
 # Gestione dinamica del percorso dell'immagine
-if os.path.exists("RAG Samuele/chatbot.webp"):
-    st.image("RAG Samuele/Chatbot.webp", width=1000)
+if os.path.exists("chatbot.webp"):
+    st.image("Chatbot.webp", width=1000)
 elif os.path.exists(""):
     st.image("Chatbot.webp", width=1000)
 
@@ -90,7 +90,7 @@ if os.path.exists(documento):
             st.session_state.domanda_inviva = st.session_state.domanda_utente
             st.session_state.domanda_utente = ""
 
-        st.text_input("Chiedi alla via", key="domanda_utente", on_change=invia)
+        st.text_input("Chiedi alla Via", key="domanda_utente", on_change=invia)
         domanda_utente = st.session_state.get("domanda_inviva", "")
         	
 
