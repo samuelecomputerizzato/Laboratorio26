@@ -26,7 +26,7 @@ st.markdown(
     }
     
     /* Centra il titolo principale e aumenta il carattere */
-    .titolo-centrato {
+    .header {
         text-align: center;
         font-size: 50px; 
         font-weight: bold;
