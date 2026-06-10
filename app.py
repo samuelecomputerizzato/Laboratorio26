@@ -28,9 +28,9 @@ st.header("La Magna via")
 
 # Gestione dinamica del percorso dell'immagine
 if os.path.exists("RAG Samuele/IMMAGINE DI PROVA"):
-    st.image("RAG Samuele/IMMAGINE DI PROVA", width=1000)
+    st.image("RAG Samuele/IMMAGINE DI PROVA", width=500)
 elif os.path.exists("IMMAGINE DI PROVA"):
-    st.image("IMMAGINE DI PROVA", width=1000)
+    st.image("IMMAGINE DI PROVA", width=500)
 
 # FIX PERCORSO FILE: Trova il PDF nella stessa cartella di questo file app.py
 cartella_corrente = os.path.dirname(__file__)
