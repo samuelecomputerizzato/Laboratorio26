@@ -29,8 +29,8 @@ st.header("               La Magna via")
 # Gestione dinamica del percorso dell'immagine
 if os.path.exists("RAG Samuele/Chatbot.webp"):
     st.image("RAG Samuele/Chatbot.webp", width=500)
-elif os.path.exists("Chatbot.webp"):
-    st.image("Chatbot.webp", width=500)
+elif os.path.exists("IMMAGINE DI PROVA.JPEG"):
+    st.image("IMMAGINE DI PROVA.JPEG", width=1000)
 
 # FIX PERCORSO FILE: Trova il PDF nella stessa cartella di questo file app.py
 cartella_corrente = os.path.dirname(__file__)
