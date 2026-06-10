@@ -25,7 +25,7 @@ st.markdown(
     
     /* Configurazione scritta "Chiedi al chatbot" */
     .stTextInput label div p {
-        color: #FFD700 !important;
+        color: #000000 !important;
         font-size: 24px !important;
         font-weight: bold !important;
     }
