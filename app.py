@@ -18,13 +18,13 @@ st.markdown(
     <style>
     .stApp {
         background-color: #ffff66;
-        color: #B1D4D8;
+        color: #000000;
     }
     </style>
     """,
     unsafe_allow_html=True)
 
-st.header("MagnaFranci")
+st.header("La Magna via")
 
 # Gestione dinamica del percorso dell'immagine
 if os.path.exists("RAG Samuele/Chatbot.webp"):
