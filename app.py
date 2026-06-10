@@ -18,7 +18,7 @@ st.markdown(
     <style>
     .stApp {
        
-        background-color: #8fd533;
+        background-color: #9ecf2d;
         background-attachment: fixed;
         color: #000000;
         .stTextInput label {
