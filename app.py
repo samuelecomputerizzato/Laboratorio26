@@ -22,9 +22,9 @@ st.markdown(
         background-attachment: fixed;
         color: #000000;
         .stTextInput label {
-        color: #6E8B3D; 
+        color: #000000; 
         font-weight: bold;
-        font-size: 24px !important;    
+        font-size: 16px !important;}    
                    
         
     }
