@@ -19,7 +19,7 @@ st.markdown(
     .stApp {
         background-color:#cca75e;
         background-attachment: fixed;
-        color: #000000;
+        color: #4a7d1c;
     }
     
     /* Configurazione scritta "Chiedi al chatbot" */
