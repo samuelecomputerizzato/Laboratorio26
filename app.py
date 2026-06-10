@@ -22,7 +22,7 @@ st.markdown(
     /* Sfondo generale dell'app: sopra l'immagine (fino a 720px), sotto il colore scuro monocromatico */
         background: 
             linear-gradient(to bottom, transparent 720px, #1E1E1E 720px),
-            url("app/static/MAGNAVIA.webp");
+            url("app/MAGNAVIA.webp");
         
         background-size: 100% 720px, cover; 
         background-repeat: no-repeat;
