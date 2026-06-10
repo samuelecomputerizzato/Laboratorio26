@@ -24,13 +24,13 @@ st.markdown(
     """,
     unsafe_allow_html=True)
 
-st.header("               La Magna via")
+st.header("La Magna via")
 
 # Gestione dinamica del percorso dell'immagine
-if os.path.exists("RAG Samuele/i-IMMAGINE DI PROVA.JPEG"):
-    st.image("RAG Samuele/IMMAGINE DI PROVA.JPEG", width=1000)
-elif os.path.exists("IMMAGINE DI PROVA.JPEG"):
-    st.image("IMMAGINE DI PROVA.JPEG", width=1000)
+if os.path.exists("RAG Samuele/i-IMMAGINE DI PROVA.JPG"):
+    st.image("RAG Samuele/IMMAGINE DI PROVA.JPG", width=1000)
+elif os.path.exists("IMMAGINE DI PROVA.JPG"):
+    st.image("IMMAGINE DI PROVA.JPG", width=1000)
 
 # FIX PERCORSO FILE: Trova il PDF nella stessa cartella di questo file app.py
 cartella_corrente = os.path.dirname(__file__)
