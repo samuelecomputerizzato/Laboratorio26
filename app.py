@@ -23,10 +23,6 @@ st.markdown(
         background-attachment: fixed;
         color: #000000;
     }
-    </style>
-    """,
-    unsafe_allow_html=True
-   
     
     /* Configurazione scritta "Chiedi al chatbot" */
     .stTextInput label div p {
@@ -39,13 +35,6 @@ st.markdown(
     .stTextInput input {
         background-color: #ffffff;
         color: #000000;
-    }
-   
-    <div style="text-align: center; width: 100%; display: block; margin: 20px 0;">
-        <h1 style="text-align: center; font-size: 55px; color: #000000; font-weight: bold; margin: 0 auto;">
-            La Magna via
-        </h1>
-    </div>         
         
     }
     </style>
