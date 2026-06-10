@@ -24,7 +24,8 @@ st.markdown(
         .stTextInput label {
         color: #000000; 
         font-weight: bold;
-        font-size: 16px !important;}    
+        font-size: 16px !important;
+    }
                    
         
     }
