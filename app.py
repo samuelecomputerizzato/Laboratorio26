@@ -41,6 +41,8 @@ st.markdown(
     unsafe_allow_html=True)
 
 st.header("La Magna via")
+st.image("ImmagineOrizzontale.webp", width=500)
+
 
 # Gestione dinamica del percorso dell'immagine
 
