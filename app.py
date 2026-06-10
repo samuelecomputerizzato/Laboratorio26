@@ -43,10 +43,7 @@ st.markdown(
         <h1 style="text-align: center; font-size: 55px; color: #000000; font-weight: bold; margin: 0 auto;">
             La Magna via
         </h1>
-    </div>
-    """, 
-    unsafe_allow_html=True
-                   
+    </div>         
         
     }
     </style>
