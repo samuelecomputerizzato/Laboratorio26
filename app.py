@@ -17,7 +17,7 @@ st.markdown(
     """
     <style>
     .stApp {
-        background-image: url("https://github.com/samuelecomputerizzato/Laboratorio26/blob/main/MAGNAVIA.webp");
+        background-image: url("https://github.com/samuelecomputerizzato/Laboratorio26/blob/4ec6d0f8fea1cb468a2ab8a0dc47501703c59526/MAGNAVIA.webp");
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
