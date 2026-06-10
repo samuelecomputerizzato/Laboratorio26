@@ -17,7 +17,7 @@ st.markdown(
     """
     <style>
     .stApp {
-        background-color:#BBAA8C;
+        background-color:#B5A585;
         background-attachment: fixed;
         color: #4a7d1c;
         font-size: 36px;
