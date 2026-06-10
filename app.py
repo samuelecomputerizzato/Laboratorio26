@@ -36,7 +36,7 @@ st.markdown(
 st.header("La Magna via")
 
 # Gestione dinamica del percorso dell'immagine
-st.image("Chatbot.webp", width=500)
+st.image("IMMAGINE DI PROVA.JPEG", width=1000)
 
 
 # FIX PERCORSO FILE: Trova il PDF nella stessa cartella di questo file app.py
