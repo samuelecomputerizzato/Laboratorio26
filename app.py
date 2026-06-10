@@ -18,10 +18,7 @@ st.markdown(
     <style>
     .stApp {
        
-        background:"MAGNAVIA.webp";
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
+        background-colour: #a2d13d;
         background-attachment: fixed;
         color: #000000;
         .stTextInput label {
