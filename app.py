@@ -41,6 +41,7 @@ st.markdown(
     unsafe_allow_html=True)
 
 st.header("La Magna via")
+st.image("ImmagineOrizzontale.webp")
 
 
 
