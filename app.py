@@ -12,6 +12,7 @@ from langchain_core.output_parsers import StrOutputParser
 
 st.set_page_config(page_title="Verbum viae", page_icon=":walking_man:")
 st.sidebar.header("I tuoi passi")
+font-size: 24px !important;
 st.sidebar.image("ImmagineOrizzontale.webp")
 # Personalizzazione colori
 st.markdown(
@@ -41,7 +42,7 @@ st.markdown(
     """,
     unsafe_allow_html=True)
 
-st.header("La Magna via")
+st.header("Verbum viae")
 st.image("ImmagineOrizzontale.webp")
 
 
