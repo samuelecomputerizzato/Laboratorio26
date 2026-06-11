@@ -171,8 +171,7 @@ def invia():
 # Mostra la cronologia a schermo
 st.write("---")
 for messaggio in st.session_state.cronologia:
-    with st.chat_message(messaggio["role"]):
-        st.write(messaggio["content"])
+
     # Assegna l'avatar corretto in base al ruolo
     if messaggio["role"] == "user":
         icona = "🚶‍♂️"  # Un'emoji per il pellegrino, oppure un percorso immagine "user.png"
