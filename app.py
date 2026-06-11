@@ -173,6 +173,15 @@ st.write("---")
 for messaggio in st.session_state.cronologia:
     with st.chat_message(messaggio["role"]):
         st.write(messaggio["content"])
+    # Assegna l'avatar corretto in base al ruolo
+    if messaggio["role"] == "user":
+        icona = "🚶‍♂️"  # Un'emoji per il pellegrino, oppure un percorso immagine "user.png"
+    else:
+        icona = "LOGO.png"  # Il logo del tuo chatbot (o "bot_icon.png")
+
+    with st.chat_message(messaggio["role"], avatar=icona):
+        st.write(messaggio["content"])
+        
 
 # Input dell'utente (Posizionato in fondo)
 if catena is not None:
