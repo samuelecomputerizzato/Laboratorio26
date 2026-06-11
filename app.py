@@ -106,7 +106,7 @@ if os.path.exists(documento):
         
         #modifica
 
-        if prompt := st.chat_input("Chiedi alla via):
+        if prompt := st.chat_input("Chiedi alla via"):
 
         def formatta_documento(documenti):
             return "\n\n".join([doc.page_content for doc in documenti])
