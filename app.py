@@ -47,7 +47,7 @@ st.sidebar.image("LOGO.png", width=200)
 st.sidebar.header("  I tuoi passi")
 
 
-st.header("Verbum viae")
+st.header("Verbum Viae", text_alignment="Center")
 
 # -------------------------------------------------------------------
 # Elaborazione Documento PDF e RAG
