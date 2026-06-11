@@ -44,7 +44,6 @@ st.markdown(
 
 # Interfaccia grafica principal
 st.sidebar.header("I tuoi passi")
-at
 
 st.header("Verbum viae")
 
