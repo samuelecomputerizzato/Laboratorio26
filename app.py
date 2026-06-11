@@ -43,7 +43,7 @@ st.markdown(
 )
 
 # Interfaccia grafica principale
-st.sidebar.image("Logo figo.png", width=200)
+st.sidebar.image("LOGO.png", width=200)
 st.sidebar.header("  I tuoi passi")
 
 
