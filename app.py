@@ -10,7 +10,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
-st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:")
+st.set_page_config(page_title="Verbum viae", page_icon=":walking_man:")
 st.sidebar.header("I tuoi passi")
 st.sidebar.image("ImmagineOrizzontale.webp")
 # Personalizzazione colori
