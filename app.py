@@ -22,7 +22,7 @@ st.markdown(
         color: #37261B;
         font-size: 36px;
     }
-    
+    st.divider()
     /* Configurazione scritta "Chiedi al chatbot" */
     .stTextInput label div p {
         color: #4A2A20 !important;
@@ -34,7 +34,7 @@ st.markdown(
     .stTextInput input {
         background-color: #4F7942;
         color: #ffffff;
-        
+     st.divider()   
     }
     </style>
     """,
