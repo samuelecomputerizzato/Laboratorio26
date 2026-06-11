@@ -42,9 +42,10 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Interfaccia grafica principal
-st.sidebar.header("I tuoi passi")
+# Interfaccia grafica principale
 st.sidebar.image("Logo figo.png", width=200)
+st.sidebar.header("I tuoi passi")
+
 
 st.header("Verbum viae")
 
