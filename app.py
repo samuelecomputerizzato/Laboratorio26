@@ -11,9 +11,10 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
 st.set_page_config(page_title="Verbum viae", page_icon=":walking_man:")
-st.sidebar.image("ImmagineOrizzontale.webp",width=100)
-st.sidebar.header("I tuoi passi")
-# Personalizzazione colori
+
+# -------------------------------------------------------------------
+# Configurazione Stile CSS (Corretto senza st.divider all'interno)
+# -------------------------------------------------------------------
 st.markdown(
     """
     <style>
@@ -23,7 +24,7 @@ st.markdown(
         color: #37261B;
         font-size: 36px;
     }
-    st.divider()
+    
     /* Configurazione scritta "Chiedi al chatbot" */
     .stTextInput label div p {
         color: #4A2A20 !important;
@@ -35,26 +36,28 @@ st.markdown(
     .stTextInput input {
         background-color: #4F7942;
         color: #ffffff;
-     st.divider()   
     }
     </style>
     """,
-    unsafe_allow_html=True)
+    unsafe_allow_html=True
+)
+
+# Interfaccia grafica principale
+st.sidebar.image("ImmagineOrizzontale.webp", width=100)
+st.sidebar.header("I tuoi passi")
 
 st.header("Verbum viae")
 st.image("ImmagineOrizzontale.webp")
 
-
-
-
-# Gestione dinamica del percorso dell'immagine
-
-
-# FIX PERCORSO FILE: Trova il PDF nella stessa cartella di questo file app.py
+# -------------------------------------------------------------------
+# Elaborazione Documento PDF e RAG
+# -------------------------------------------------------------------
 cartella_corrente = os.path.dirname(__file__)
 documento = os.path.join(cartella_corrente, "Tappe.pdf")
 
-# Estrazione del contenuto e spezzettamento
+# Inizializziamo la variabile del retriever (catena) fuori dall'if
+catena = None
+
 if os.path.exists(documento):
     
     @st.cache_data(show_spinner="Sto leggendo il PDF...")
@@ -75,14 +78,12 @@ if os.path.exists(documento):
             chunk_size=1000,
             chunk_overlap=200
         )
-        # Rimuoviamo stringhe vuote prima dello split
         return [f for f in taglierina.split_text(testo_estratto) if f.strip()]
 
     frammenti = crea_frammenti(testo)
 
-    # CONTROLLO DI SICUREZZA: Evita il crash se il PDF è vuoto o fatto di sole immagini
     if not frammenti:
-        st.error("Il file PDF è stato trovato, ma non è stato possibile estrarre testo. È un PDF scannerizzato (immagine)?")
+        st.error("Il file PDF è stato trovato, ma non è stato possibile estrarre testo. È un PDF scannerizzato?")
     else:
         @st.cache_resource(show_spinner=False)
         def crea_vectorstore(lista_frammenti):
@@ -93,18 +94,9 @@ if os.path.exists(documento):
             return FAISS.from_texts(lista_frammenti, embedding=embeddings) 
         
         vettori = crea_vectorstore(frammenti)
-
-
-# -------------------------------------------------------------------
-# Gestione prompt e input
-# -------------------------------------------------------------------
-def invia():
-            st.session_state.domanda_inviva = st.session_state.domanda_utente
-            st.session_state.domanda_utente = ""
-
-            st.text_input("Chiedi alla Via", key="domanda_utente", on_change=invia)
-            domanda_utente = st.session_state.get("domanda_inviata", "")
- def formatta_documento(documenti):
+        
+        # --- CONFIGURAZIONE LANGCHAIN (Spostata qui per essere pronta subito) ---
+        def formatta_documento(documenti):
             return "\n\n".join([doc.page_content for doc in documenti])
         
         prompt = ChatPromptTemplate.from_messages([
@@ -119,9 +111,7 @@ Il tuo ruolo è accompagnare l’utente durante il cammino fornendo:
 Regole di comportamento:
 - Usa esclusivamente le informazioni presenti nel contesto fornito
 - Non inventare informazioni mancanti
-- Se l’informazione richiesta non è disponibile nel contesto, rispondi in modo accogliente e coerente con il ruolo di guida del cammino
- 
-Rispondi:
+- Se l’informazione richiesta non è disponibile nel contesto, rispondi in modo accogliente e coerente con il ruolo di guida del cammino:
 “Caro pellegrino, al momento non riesco a guidarti su questa informazione.”
  
 Le risposte devono essere:
@@ -129,7 +119,7 @@ Le risposte devono essere:
 - utili durante il cammino
 - semplici da consultare anche in mobilità
 - coerenti con l’esperienza del pellegrinaggio
-- accoglienti e orientate all’accompagnamento del pellegrino'. 
+- accoglienti e orientate all’accompagnamento del pellegrino.
 Contesto:\n{context}'''),
             ("human", "{question}")
         ])
@@ -139,7 +129,6 @@ Contesto:\n{context}'''),
             search_kwargs={"k": 4}
         )
         
-        # FIX MODELLO: Cambiato in gpt-4o-mini (veloce ed economico)
         modello_llm = ChatOpenAI(
             model="gpt-4o-mini", 
             temperature=0.3,
@@ -153,9 +142,45 @@ Contesto:\n{context}'''),
             | modello_llm
             | StrOutputParser()
         )
-        
-        if domanda_utente:
-            risposta = catena.invoke(domanda_utente)
-            st.write(risposta)
 else:
-    st.error(f"Non ho trovato il file PDF nel percorso: {documento}. Assicurati che sia nella cartella 'RAG Samuele'.")
+    st.error(f"Non ho trovato il file PDF nel percorso: {documento}.")
+
+# -------------------------------------------------------------------
+# Gestione Cronologia e Messaggi Chat
+# -------------------------------------------------------------------
+if "cronologia" not in st.session_state:
+    st.session_state.cronologia = []
+
+def invia():
+    input_utente = st.session_state.domanda_utente
+    
+    if input_utente and catena is not None:  
+        # 1. Salva la domanda dell'utente
+        st.session_state.cronologia.append({"role": "user", "content": input_utente})
+        
+        # 2. Genera la risposta REALE usando LangChain
+        with st.spinner("Il chatbot sta rispondendo..."):
+            risposta_bot = catena.invoke(input_utente)
+        
+        # 3. Salva la risposta del bot
+        st.session_state.cronologia.append({"role": "assistant", "content": risposta_bot})
+        
+        # 4. Resetta il campo di input
+        st.session_state.domanda_utente = ""
+
+# Mostra la cronologia a schermo
+st.write("---")
+for messaggio in st.session_state.cronologia:
+    with st.chat_message(messaggio["role"]):
+        st.write(messaggio["content"])
+
+# Input dell'utente (Posizionato in fondo)
+if catena is not None:
+    st.text_input(
+        "Label nascosta", 
+        placeholder="Chiedi alla Via...", 
+        key="domanda_utente", 
+        on_change=invia,
+        label_visibility="collapsed"
+    )
+    
