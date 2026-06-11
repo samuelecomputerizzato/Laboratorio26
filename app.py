@@ -104,8 +104,7 @@ def invia():
 
             st.text_input("Chiedi alla Via", key="domanda_utente", on_change=invia)
             domanda_utente = st.session_state.get("domanda_inviata", "")
-
-        def formatta_documento(documenti):
+ def formatta_documento(documenti):
             return "\n\n".join([doc.page_content for doc in documenti])
         
         prompt = ChatPromptTemplate.from_messages([
