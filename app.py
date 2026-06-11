@@ -46,6 +46,7 @@ st.image("ImmagineOrizzontale.webp")
 
 
 
+
 # Gestione dinamica del percorso dell'immagine
 
 
@@ -102,7 +103,10 @@ if os.path.exists(documento):
 
         st.text_input("Chiedi alla Via", key="domanda_utente", on_change=invia)
         domanda_utente = st.session_state.get("domanda_inviva", "")
-        	
+        
+        #modifica
+
+        if prompt := st.chat_input("Chiedi alla via):
 
         def formatta_documento(documenti):
             return "\n\n".join([doc.page_content for doc in documenti])
