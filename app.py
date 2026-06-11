@@ -11,9 +11,8 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
 st.set_page_config(page_title="Verbum viae", page_icon=":walking_man:")
-st.sidebar.header("I tuoi passi")
-
 st.sidebar.image("ImmagineOrizzontale.webp",width=100)
+st.sidebar.header("I tuoi passi")
 # Personalizzazione colori
 st.markdown(
     """
