@@ -94,51 +94,16 @@ if os.path.exists(documento):
         
         vettori = crea_vectorstore(frammenti)
 
-    
-
-
-if "cronologia" not in st.session_state:
-    st.session_state.cronologia = []
 
 # -------------------------------------------------------------------
 # Gestione prompt e input
 # -------------------------------------------------------------------
 def invia():
-    # Recupera il testo inserito
-    input_utente = st.session_state.domanda_utente
-    
-    if input_utente:  # Evita di inviare messaggi vuoti
-        # Salva la domanda nell'ultimo stato inviato
-        st.session_state.domanda_inviata = input_utente
-        
-        # Aggiungi il messaggio dell'utente alla cronologia
-        st.session_state.cronologia.append({"role": "user", "content": input_utente})
-        
-        # --- QUI ANDRÀ LA LOGICA DEL TUO CHATBOT ---
-        # Esempio di risposta fissa del bot:
-        risposta_bot = f"Hai detto: '{input_utente}'. Sono il tuo assistente!"
-        st.session_state.cronologia.append({"role": "assistant", "content": risposta_bot})
-        # ------------------------------------------
-        
-        # Resetta il campo di input
-        st.session_state.domanda_utente = ""
+            st.session_state.domanda_inviva = st.session_state.domanda_utente
+            st.session_state.domanda_utente = ""
 
-# 2. Mostra la cronologia della chat LONTANO dal fondo (prima del campo di input)
-st.title("Il tuo Chatbot")
-
-for messaggio in st.session_state.cronologia:
-    with st.chat_message(messaggio["role"]):
-        st.write(messaggio["content"])
-
-# 3. Campo di input con il testo ALL'INTERNO (placeholder)
-st.text_input(
-    "Label nascosta", # Etichetta obbligatoria per accessibilità
-    placeholder="Chiedi alla Via...", 
-    key="domanda_utente", 
-    on_change=invia,
-    label_visibility="collapsed" # Nasconde l'etichetta sopra la barra
-)
-
+        st.text_input("Chiedi alla Via", key="domanda_utente", on_change=invia)
+        domanda_utente = st.session_state.get("domanda_inviata", "")
 
         def formatta_documento(documenti):
             return "\n\n".join([doc.page_content for doc in documenti])
