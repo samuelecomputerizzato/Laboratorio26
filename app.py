@@ -42,12 +42,11 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Interfaccia grafica principale
-st.sidebar.image("ImmagineOrizzontale.webp", width=100)
+# Interfaccia grafica principal
 st.sidebar.header("I tuoi passi")
 
 st.header("Verbum viae")
-st.image("ImmagineOrizzontale.webp")
+st.image("Logo figo.png")
 
 # -------------------------------------------------------------------
 # Elaborazione Documento PDF e RAG
