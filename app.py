@@ -46,6 +46,7 @@ st.markdown(
 st.sidebar.header("I tuoi passi")
 
 st.header("Verbum viae")
+st.logo("Logo figo.png)
 st.image("Logo figo.png")
 
 # -------------------------------------------------------------------
