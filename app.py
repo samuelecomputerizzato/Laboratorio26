@@ -46,7 +46,10 @@ st.markdown(
 st.sidebar.image("LOGO.png", width=200)
 st.sidebar.header("  I tuoi passi")
 
-st.markdown("<div style='text-align: center;'><img src='LOGO.png' width='200'></div>", unsafe_allow_html=True)
+col1, col2, col3 = st.columns([1, 2, 1]) # Regola i pesi [1, 2, 1] per modificare la larghezza
+with col2:
+    st.image("LOGO.png")
+
 
 st.header("La Magna Via", text_alignment="center")
 
