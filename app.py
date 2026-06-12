@@ -46,7 +46,8 @@ st.markdown(
 st.sidebar.image("LOGO.png", width=200)
 st.sidebar.header("  I tuoi passi")
 
-st.image("LOGO.png", width=300)
+st.markdown("<div style='text-align: center;'><img src='LOGO.png' width='200'></div>", unsafe_allow_html=True)
+
 st.header("La Magna Via", text_alignment="center")
 
 # -------------------------------------------------------------------
