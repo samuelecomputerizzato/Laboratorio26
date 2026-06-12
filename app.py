@@ -47,7 +47,7 @@ st.markdown(
 )
 
 # Interfaccia grafica principale
-st.sidebar.image("LOGO.png", width=200)
+st.sidebar.image("LOGO.png", width=150)
 st.sidebar.header("  I tuoi passi")
 
 col1, col2, col3 = st.columns([1, 2, 1]) # Regola i pesi [1, 2, 1] per modificare la larghezza
