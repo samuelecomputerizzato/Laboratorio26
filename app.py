@@ -10,8 +10,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
-st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:")
-initial_sidebar_state="expanded"
+st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", initial_sidebar_state="expanded"
+)
 
 # -------------------------------------------------------------------
 # Configurazione Stile CSS (Corretto senza st.divider all'interno)
