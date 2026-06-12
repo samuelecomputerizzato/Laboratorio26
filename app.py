@@ -176,7 +176,7 @@ for messaggio in st.session_state.cronologia:
 
     # Assegna l'avatar corretto in base al ruolo
     if messaggio["role"] == "user":
-        icona = "Logo Utente.png"  # Un'emoji per il pellegrino, oppure un percorso immagine "user.png"
+        icona = "Utente.png"  # Un'emoji per il pellegrino, oppure un percorso immagine "user.png"
     else:
         icona = "LOGO.png"  # Il logo del tuo chatbot (o "bot_icon.png")
 
