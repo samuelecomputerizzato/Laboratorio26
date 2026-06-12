@@ -39,12 +39,9 @@ st.markdown(
     }
     /* Cambia il colore di sfondo della barra laterale */
     [data-testid="stSidebar"] {
-        background-color: #3D2314; /* Qui ho messo il Dark Chocolate, cambialo con il codice che preferisci */
+        background-color: #3D2314; 
     }
     
-    .stAppHeader {
-        display: none;
-    }
     
     /* Configurazione dell'applicazione */
     .stApp {
