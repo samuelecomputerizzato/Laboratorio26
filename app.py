@@ -46,8 +46,8 @@ st.markdown(
 st.sidebar.image("LOGO.png", width=200)
 st.sidebar.header("  I tuoi passi")
 
-st.image("LOGO.png")
-st.header("Verbum Viae", text_alignment="center")
+st.image("LOGO.png", text_alignment='left')
+st.header("La Magna Via", text_alignment="center")
 
 # -------------------------------------------------------------------
 # Elaborazione Documento PDF e RAG
