@@ -182,11 +182,7 @@ def invia():
 # Mostra la cronologia a schermo
 st.write("---")
 for messaggio in st.session_state.cronologia:
-with st.chat_message(messaggio["role"], avatar=icona):
-    # Sostituisci st.write con st.markdown abilitando l'HTML
-    # Puoi cambiare "#FF5733" con il codice esadecimale del colore che preferisci
-    testo_colorato = f'<span style="color: #542E17;">{messaggio["content"]}</span>'
-    st.markdown(testo_colorato, unsafe_allow_html=True)
+
     # Assegna l'avatar corretto in base al ruolo
     if messaggio["role"] == "user":
         icona = "Utente.png"  # Un'emoji per il pellegrino, oppure un percorso immagine "user.png"
