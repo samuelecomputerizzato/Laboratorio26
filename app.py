@@ -41,10 +41,7 @@ st.markdown(
     [data-testid="stSidebar"] {
         background-color: #3D2314; /* Qui ho messo il Dark Chocolate, cambialo con il codice che preferisci */
     }
-    /* Nasconde i menu e l'header di Streamlit */
-    header, #MainMenu, footer {
-        visibility: hidden;
-    }
+    
     .stAppHeader {
         display: none;
     }
