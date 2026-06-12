@@ -39,7 +39,7 @@ st.markdown(
     }
     /* Cambia il colore di sfondo della barra laterale */
     [data-testid="stSidebar"] {
-        background-color: #ac512f; 
+        background-color: #863f25; 
     }
     
     
