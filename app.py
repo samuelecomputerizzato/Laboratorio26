@@ -57,7 +57,7 @@ st.header("La Magna Via", text_alignment="center")
 # Elaborazione Documento PDF e RAG
 # -------------------------------------------------------------------
 cartella_corrente = os.path.dirname(__file__)
-documento = os.path.join(cartella_corrente, "Tappe.pdf")
+documento = os.path.join(cartella_corrente, "TAPPE AGGIORNATE.pdf")
 
 # Inizializziamo la variabile del retriever (catena) fuori dall'if
 catena = None
