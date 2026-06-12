@@ -37,6 +37,10 @@ st.markdown(
         background-color: #4F7942;
         color: #ffffff;
     }
+    /* Cambia il colore di sfondo della barra laterale */
+    [data-testid="stSidebar"] {
+        background-color: #3D2314; /* Qui ho messo il Dark Chocolate, cambialo con il codice che preferisci */
+    }
     </style>
     """,
     unsafe_allow_html=True
