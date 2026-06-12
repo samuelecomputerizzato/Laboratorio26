@@ -185,12 +185,17 @@ for messaggio in st.session_state.cronologia:
 
     # Assegna l'avatar corretto in base al ruolo
     if messaggio["role"] == "user":
-        icona = "Utente.png"  # Un'emoji per il pellegrino, oppure un percorso immagine "user.png"
+        icona = "Utente.png"  
+        # Puoi anche differenziare le tonalità se vuoi (es. un marrone leggermente diverso per l'utente)
+        colore_testo = "#4A2E1B"  # Dark Chocolate
     else:
-        icona = "LOGO.png"  # Il logo del tuo chatbot (o "bot_icon.png")
+        icona = "LOGO.png"  
+        colore_testo = "#3D2314"  # Un Dark Chocolate ancora più intenso per il Bot
 
     with st.chat_message(messaggio["role"], avatar=icona):
-        st.write(messaggio["content"])
+        # Usiamo st.markdown con un tag span per applicare il colore dark chocolate
+        testo_colorato = f'<span style="color: {colore_testo};">{messaggio["content"]}</span>'
+        st.markdown(testo_colorato, unsafe_allow_html=True)
         
 
 # Input dell'utente (Posizionato in fondo)
@@ -202,4 +207,3 @@ if catena is not None:
         on_change=invia,
         label_visibility="collapsed"
     )
-    
