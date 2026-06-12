@@ -46,7 +46,7 @@ st.markdown(
 st.sidebar.image("LOGO.png", width=200)
 st.sidebar.header("  I tuoi passi")
 
-
+st.image("LOGO.png")
 st.header("Verbum Viae", text_alignment="center")
 
 # -------------------------------------------------------------------
