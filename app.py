@@ -22,7 +22,9 @@ st.markdown(
         background-color:#B5A585;
         background-attachment: fixed;
         color: #231709;
-        font-size: 36px;
+        font-size: 36px
+        font-weight: bold !important;
+
     }
     
     /* Configurazione scritta "Chiedi al chatbot" */
