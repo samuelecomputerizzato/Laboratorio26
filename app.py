@@ -231,12 +231,24 @@ for messaggio in st.session_state.cronologia:
         st.markdown(testo_colorato, unsafe_allow_html=True)
         
 
-# Input dell'utente (Posizionato in fondo)
+# Blocco di Input Interattivo ancorato in basso
 if catena is not None:
-    st.text_input(
-        "Label nascosta", 
-        placeholder="Chiedi alla Via...", 
-        key="domanda_utente", 
-        on_change=invia,
-        label_visibility="collapsed"
-    )
+    # L'operatore := cattura l'input quando l'utente preme invio sulla tastiera o sul tasto freccia
+    if input_utente := st.chat_input("Chiedi alla Via..."):
+        
+        # 1. Salva e mostra subito il messaggio dell'utente
+        st.session_state.cronologia.append({"role": "user", "content": input_utente})
+        with st.chat_message("user", avatar="Utente.png"):
+            st.markdown(f'<div style="color: #4A2E1B; font-size: 16px;">{input_utente}</div>', unsafe_allow_html=True)
+        
+        # 2. Genera e mostra live la risposta del Modello RAG
+        with st.chat_message("assistant", avatar="LOGO.png"):
+            with st.spinner("Il chatbot sta rispondendo..."):
+                risposta_bot = catena.invoke(input_utente)
+                st.markdown(f'<div style="color: #3D2314; font-size: 16px; line-height: 1.5;">{risposta_bot}</div>', unsafe_allow_html=True)
+        
+        # 3. Salva la risposta del bot nella cronologia per mantenerla nei refresh futuri
+        st.session_state.cronologia.append({"role": "assistant", "content": risposta_bot})
+        
+        # 4. Aggiorna la pagina per allineare tutto lo stato interno
+        st.rerun()
