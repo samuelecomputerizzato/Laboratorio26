@@ -60,7 +60,7 @@ st.markdown(
     /* Rettangolo di input */
     .stTextInput input {
         background-color: #793921;
-        color: #524E17;
+        color: #ffffff;
     }
         /* ELIMINA LA BARRA GRIGIA: Rende trasparenti i contenitori dei messaggi */
     [data-testid="stChatMessage"] {
