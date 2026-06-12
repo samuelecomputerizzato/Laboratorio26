@@ -198,7 +198,7 @@ for messaggio in st.session_state.cronologia:
 
     with st.chat_message(messaggio["role"], avatar=icona):
         # Usiamo st.markdown con un tag span per applicare il colore dark chocolate
-        testo_colorato = f'<span style="color: {colore_testo};">{messaggio["content"]}</span>'
+        testo_colorato = f'<span style="color: {colore_testo}; font-size: 20px;">{messaggio["content"]}</span>'
         st.markdown(testo_colorato, unsafe_allow_html=True)
         
 
