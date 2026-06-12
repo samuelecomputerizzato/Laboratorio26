@@ -21,7 +21,7 @@ st.markdown(
     .stApp {
         background-color:#B5A585;
         background-attachment: fixed;
-        color: #524E17;
+        color: #000000;
         font-size: 36px;
     }
     
@@ -35,7 +35,7 @@ st.markdown(
     /* Rettangolo di input */
     .stTextInput input {
         background-color: #4F7942;
-        color: #524E17;
+        color: #ffffff;
     }
     </style>
     """,
