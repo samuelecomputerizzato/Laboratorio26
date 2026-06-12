@@ -41,6 +41,33 @@ st.markdown(
     [data-testid="stSidebar"] {
         background-color: #3D2314; /* Qui ho messo il Dark Chocolate, cambialo con il codice che preferisci */
     }
+    /* Nasconde i menu e l'header di Streamlit */
+    header, #MainMenu, footer {
+        visibility: hidden;
+    }
+    .stAppHeader {
+        display: none;
+    }
+    
+    /* Configurazione dell'applicazione */
+    .stApp {
+        background-color: #B5A585;
+        background-attachment: fixed;
+        color: #524E17;
+    }
+    
+    /* Configurazione scritta "Chiedi al chatbot" */
+    .stTextInput label div p {
+        color: #542E17 !important;
+        font-size: 24px !important;
+        font-weight: bold !important;
+    }
+    
+    /* Rettangolo di input */
+    .stTextInput input {
+        background-color: #4F7942;
+        color: #524E17;
+    
     </style>
     """,
     unsafe_allow_html=True
