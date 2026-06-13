@@ -110,6 +110,9 @@ st.markdown(
             transform: translateX(-50%) !important; /* Bilancia il posizionamento per una centratura perfetta */
             top: auto !important;        /* Evita che scivoli troppo in alto o in basso */
         }
+          [data-testid="stChatFloatingInputContainer"] {
+    background-color: #B5A585 !important;
+        }
     }
         
     </style>
@@ -335,6 +338,4 @@ if catena is not None:
         
         # 4. Aggiorna la pagina per allineare tutto lo stato interno
         st.rerun()
-        [data-testid="stChatFloatingInputContainer"] {
-    background-color: #B5A585 !important;
-            }
+    
