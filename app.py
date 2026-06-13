@@ -51,7 +51,7 @@ st.markdown(
 
     /* Cambia il colore di sfondo della barra laterale */
     [data-testid="stSidebar"] {
-        background-color: #C67B59; 
+        background-color: #7A8B74; 
     }
 
     /* SISTEMAZIONE DELLA TENDINA (POPOVER BODY) */
