@@ -76,6 +76,105 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+# ... (lascia invariata la configurazione iniziale di st.set_page_config e st.markdown CSS)
+
+# -------------------------------------------------------------------
+# Gestione Multi-Chat nella Sessione
+# -------------------------------------------------------------------
+# Inizializziamo il dizionario delle chat se non esiste
+if "tutte_le_chat" not in st.session_state:
+    st.session_state.tutte_le_chat = {
+        "Chat 1": [] # Una chat iniziale vuota
+    }
+
+# Inizializziamo la chat attualmente selezionata dall'utente
+if "chat_attiva" not in st.session_state:
+    st.session_state.chat_attiva = "Chat 1"
+
+# -------------------------------------------------------------------
+# Sidebar (Configurazione con Cronologia Chat)
+# -------------------------------------------------------------------
+st.sidebar.image("LOGO.png", width=150)
+st.sidebar.header("  I tuoi passi")
+
+# Pulsante per creare una nuova cammino/conversazione
+if st.sidebar.button("➕ Nuova Chat", use_container_width=True):
+    nuovo_id = f"Chat {len(st.session_state.tutte_le_chat) + 1}"
+    st.session_state.tutte_le_chat[nuovo_id] = []
+    st.session_state.chat_attiva = nuovo_id
+    st.rerun()
+
+st.sidebar.write("---")
+st.sidebar.subheader("Le tue vie precedenti:")
+
+# Ciclo per mostrare l'elenco delle chat nella sidebar come pulsanti
+for nome_chat in st.session_state.tutte_le_chat.keys():
+    # Se la chat è quella attiva, cambiamo stile visivo (opzionale) o la evidenziamo
+    etichetta = f"📍 {nome_chat}" if nome_chat == st.session_state.chat_attiva else f"🗺️ {nome_chat}"
+    
+    if st.sidebar.button(etichetta, key=f"btn_{nome_chat}", use_container_width=True):
+        st.session_state.chat_attiva = nome_chat
+        st.rerun()
+
+
+# Interfaccia centrale (LOGO e Titolo)
+col1, col2, col3 = st.columns([1, 2, 1]) 
+with col2:
+    st.image("LOGO.png")
+
+st.header("La Magna Via", text_alignment="center")
+
+# -------------------------------------------------------------------
+# Elaborazione Documento PDF e RAG (Lascia il tuo codice identico qui)
+# -------------------------------------------------------------------
+# ... [Mantieni qui tutto il blocco 'if os.path.exists(documento):' con la catena RAG] ...
+
+
+# -------------------------------------------------------------------
+# Visualizzazione della Chat Attiva e Input
+# -------------------------------------------------------------------
+# Recuperiamo la cronologia specifica della chat selezionata
+cronologia_corrente = st.session_state.tutte_le_chat[st.session_state.chat_attiva]
+
+st.write(f"### In cammino su: {st.session_state.chat_attiva}")
+st.write("---")
+
+# Mostra i messaggi della chat attiva
+for messaggio in cronologia_corrente:
+    if messaggio["role"] == "user":
+        icona = "Utente.png"  
+        colore_testo = "#4A2E1B"  
+    else:
+        icona = "LOGO.png"  
+        colore_testo = "#3D2314"  
+
+    with st.chat_message(messaggio["role"], avatar=icona):
+        testo_colorato = f'<div style="color: {colore_testo}; font-size: 16px; line-height: 1.5;">{messaggio["content"]}</div>'
+        st.markdown(testo_colorato, unsafe_allow_html=True)
+
+# Blocco di Input Interattivo ancorato in basso
+if catena is not None:
+    if input_utente := st.chat_input("Chiedi alla Via..."):
+        
+        # 1. Salva e mostra subito nella chat attiva
+        cronologia_corrente.append({"role": "user", "content": input_utente})
+        with st.chat_message("user", avatar="Utente.png"):
+            st.markdown(f'<div style="color: #4A2E1B; font-size: 16px;">{input_utente}</div>', unsafe_allow_html=True)
+        
+        # 2. Genera e mostra live la risposta del Modello RAG
+        with st.chat_message("assistant", avatar="LOGO.png"):
+            with st.spinner("Il chatbot sta rispondendo..."):
+                risposta_bot = catena.invoke(input_utente)
+                st.markdown(f'<div style="color: #3D2314; font-size: 16px; line-height: 1.5;">{risposta_bot}</div>', unsafe_allow_html=True)
+        
+        # 3. Salva la risposta del bot nella cronologia corrente
+        cronologia_corrente.append({"role": "assistant", "content": risposta_bot})
+        
+        # Aggiorna la struttura globale
+        st.session_state.tutte_le_chat[st.session_state.chat_attiva] = cronologia_corrente
+        
+        st.rerun()
+
 # Interfaccia grafica principale
 st.sidebar.image("LOGO.png", width=150)
 st.sidebar.header("  I tuoi passi")
@@ -150,9 +249,8 @@ Regole di comportamento:
 - Usa esclusivamente le informazioni presenti nel contesto fornito
 - Non inventare informazioni mancanti
 - Se l’informazione richiesta non è disponibile nel contesto, rispondi in modo accogliente e coerente con il ruolo di guida del cammino:
-“Caro pellegrino, al momento non riesco a guidarti su questa informazione:cry:.”
+“Caro pellegrino, al momento non riesco a guidarti su questa informazione :cry:.”
 - Se non sai la risposta non devi inserire :blush: dopo 'Caro pellegrino'
-- Quando dirai 'Caro pellegrino' dovrai la forma dovrà essere: 'Caro pellegrino :blush: ,'
 - Nel caso in cui l'utente ponga una domanda in una lingua diversa dall'italiano rispondi nella stessa lingua.
 - Quando l'utente ti pone una domanda senza utilizzare la lingua italiana devi recuperare le informazioni al pdf e tradurle allineandoti alla lingua utilizzata dall'utente
 - Nel caso in cui l'utente utilizzi un alfabeto diverso dalle lingue indoeuropee (cirillico, alfabeti asiatici ecc.) rispondi utilizzando lo stesso alfabeto
