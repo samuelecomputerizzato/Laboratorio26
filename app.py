@@ -335,3 +335,6 @@ if catena is not None:
         
         # 4. Aggiorna la pagina per allineare tutto lo stato interno
         st.rerun()
+        [data-testid="stChatFloatingInputContainer"] {
+    background-color: #B5A585 !important;
+            }
