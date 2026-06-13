@@ -17,7 +17,7 @@ st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", initial
 # -------------------------------------------------------------------
 st.markdown(
     """
- <style>
+       <style>
     /* 1. NASCONDE I BOTTONI IN ALTO A DESTRA (Deploy, Menu, Github) */
     /* stHeaderActionElements è il nome ufficiale aggiornato del blocco di destra */
     [data-testid="stHeaderActionElements"] {
