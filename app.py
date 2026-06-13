@@ -18,17 +18,6 @@ st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", initial
 st.markdown(
     """
     <style>
-    /* 1. DISATTIVA E NASCONDE COMPLETAMENTE L'INTERA BARRA IN ALTO (Share, Edit, GitHub, Menu) */
-    header, [data-testid="stHeader"] {
-        display: none !important;
-        visibility: hidden !important;
-        height: 0px !important;
-    }
-
-    /* 2. NASCONDE IL FOOTER IN BASSO */
-    footer {
-        display: none !important;
-    }    
     
     /* 3. STILE GLOBALE APP E PAGINA CENTRALE */
     .stApp {
