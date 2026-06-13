@@ -70,7 +70,77 @@ st.markdown(
         border: none !important;
         padding-left: 0px !important; /* Opzionale: allinea meglio l'avatar a sinistra */
      }
+
+    /* ================================================================= */
+    /* OTTIMIZZAZIONE SIDEBAR E MENÙ A SCOMPARSA (POPOVER) RESPONSIVE   */
+    /* ================================================================= */
     
+    /* Sfondo della sidebar */
+    [data-testid="stSidebar"] {
+        background-color: #b25431 !important; 
+    }
+    
+    /* Forza il testo della sidebar e del Popover a essere bianco e leggibile */
+    [data-testid="stSidebar"] p, 
+    [data-testid="stSidebar"] span, 
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] li {
+        color: #ffffff !important;
+        font-size: 15px !important;
+        line-height: 1.4 !important;
+    }
+    
+    /* Titolo dentro il popover */
+    [data-testid="stSidebar"] h3 {
+        color: #ffffff !important;
+        font-size: 18px !important;
+        font-weight: bold !important;
+        margin-bottom: 10px !important;
+    }
+
+    /* SISTEMAZIONE DELLA TENDINA (POPOVER BODY) */
+    /* Questo intercetta il riquadro fluttuante che si apre quando clicchi */
+    [data-testid="stPopoverBody"] {
+        background-color: #793921 !important; /* Colore marrone scuro coerente con la Via */
+        border: 2px solid #542E17 !important;
+        border-radius: 10px !important;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3) !important;
+        min-width: 320px !important; /* Impedisce che su PC si apra troppo stretta */
+        max-width: 90vw !important;  /* Impedisce che su mobile esca dallo schermo */
+        padding: 15px !important;
+    }
+
+    /* Modifica il pulsante del popover prima di essere cliccato */
+    [data-testid="stPopover"] button {
+        background-color: #793921 !important;
+        color: #ffffff !important;
+        border: 1px solid #ffffff !important;
+        border-radius: 8px !important;
+        padding: 10px !important;
+    }
+    
+    [data-testid="stPopover"] button:hover {
+        background-color: #542E17 !important;
+        border-color: #ffffff !important;
+    }
+
+    /* Trasparenti i messaggi della chat */
+    [data-testid="stChatMessage"] {
+        background-color: transparent !important;
+        border: none !important;
+        padding: 5px 0px !important;
+    }
+
+    /* Rende responsive il menù della sidebar su schermi piccoli (smartphone) */
+    @media (max-width: 768px) {
+        [data-testid="stSidebar"] {
+            width: 80vw !important;
+        }
+        /* Riposiziona e adatta la tendina per il touch dello smartphone */
+        [data-testid="stPopoverBody"] {
+            min-width: 260px !important; 
+            left: 10px !important; /* Evita che si decentri sul display del telefono */
+        }
     </style>
     """,
     unsafe_allow_html=True
