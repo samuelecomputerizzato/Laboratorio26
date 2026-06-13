@@ -59,25 +59,7 @@ st.markdown(
     .stTextInput input {
         background-color: #793921;
         color: #000000;
-    }
 
-   /* Colora di beige la fascia di sfondo */
-    [data-testid="stChatFloatingInputContainer"], 
-    .stChatFloatingInputContainer,
-    footer[data-testid="stChatFloatingInputContainer"] {
-        background-color: #B5A585 !important;
-        background: #B5A585 !important;
-        box-shadow: none !important;
-        background-image: none !important;
-    }
-
-    /* Colora di beige anche i contenitori invisibili interni che Streamlit crea */
-    [data-testid="stChatFloatingInputContainer"] > div,
-    .stChatFloatingInputContainer div {
-        background-color: #B5A585 !important;
-        background: #B5A585 !important;
-        border: none !important;
-    }
     }
 
    /* SISTEMAZIONE DELLA TENDINA (POPOVER BODY) - VERSIONE PULITA       */
@@ -333,6 +315,21 @@ for messaggio in st.session_state.cronologia:
 
 # Blocco di Input Interattivo ancorato in basso
 if catena is not None:
+    st.markdown(
+        """
+        <style>
+        [data-testid="stChatFloatingInputContainer"],
+        .stChatFloatingInputContainer,
+        .stChatFloatingInputContainer div {
+            background-color: #B5A585 !important;
+            background: #B5A585 !important;
+            box-shadow: none !important;
+            border: none !important;
+        }
+        </style>
+        """, 
+        unsafe_allow_html=True
+    )
     # L'operatore := cattura l'input quando l'utente preme invio sulla tastiera o sul tasto freccia
     if input_utente := st.chat_input("Chiedi alla Via..."):
         
