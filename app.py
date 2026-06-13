@@ -104,49 +104,9 @@ st.markdown(
             left: 50% !important;        /* Lo sposta al centro esatto della sidebar */
             transform: translateX(-50%) !important; /* Bilancia il posizionamento per una centratura perfetta */
             top: auto !important;        /* Evita che scivoli troppo in alto o in basso */
-    }
-          [data-testid="stChatFloatingInputContainer"] {
-    background-color: #B5A585 !important;
-    }
-        /* ================================================================= */
-    /* RIMOZIONE MENÙ SUPERIORE (HEADER) E BORDI NATIVI                 */
-    /* ================================================================= */
-    
-    /* Nasconde il pulsante "Deploy", il menù ad hamburger e le opzioni in alto a destra */
-    [data-testid="stHeaderToolbar"],
-    .stAppToolbar,
-    [data-testid="stToolbar"] {
-        display: none !important;
-        visibility: hidden !important;
+
     }
 
-    /* Nasconde la linea colorata decorativa in cima alla pagina */
-    [data-testid="stDecoration"],
-    #stDecoration {
-        display: none !important;
-        visibility: hidden !important;
-    }
-
-    /* Recupera lo spazio vuoto in alto sulla pagina centrale per non lasciare una fascia vuota */
-    .stMainBlockContainer,
-    [data-testid="stMainBlockContainer"] {
-        padding-top: 2rem !important;
-    }
-
-    /* ================================================================= */
-    /* RIMOZIONE FOOTER (BARRA IN BASSO DI GESTIONE APP)                 */
-    /* ================================================================= */
-    
-    /* Elimina la scritta "Made with Streamlit" o "Manage App" in basso a destra */
-    footer {
-        visibility: hidden !important;
-        display: none !important;
-    }
-    
-    /* Sistema la zona inferiore per evitare che rimanga una fascia nera vuota */
-    [data-testid="stAppViewBlockContainer"] {
-        padding-bottom: 3rem !important;
-    }
 
 }
         
