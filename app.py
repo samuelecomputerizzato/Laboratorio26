@@ -71,48 +71,22 @@ st.markdown(
         padding-left: 0px !important; /* Opzionale: allinea meglio l'avatar a sinistra */
      }
 
+   /* SISTEMAZIONE DELLA TENDINA (POPOVER BODY) - VERSIONE PULITA       */
     /* ================================================================= */
-    /* OTTIMIZZAZIONE SIDEBAR E MENÙ A SCOMPARSA (POPOVER) RESPONSIVE   */
-    /* ================================================================= */
     
-    /* Sfondo della sidebar */
-    [data-testid="stSidebar"] {
-        background-color: #b25431 !important; 
-    }
-    
-    /* Forza il testo della sidebar e del Popover a essere bianco e leggibile */
-    [data-testid="stSidebar"] p, 
-    [data-testid="stSidebar"] span, 
-    [data-testid="stSidebar"] label,
-    [data-testid="stSidebar"] li {
-        color: #ffffff !important;
-        font-size: 15px !important;
-        line-height: 1.4 !important;
-    }
-    
-    /* Titolo dentro il popover */
-    [data-testid="stSidebar"] h3 {
-        color: #ffffff !important;
-        font-size: 18px !important;
-        font-weight: bold !important;
-        margin-bottom: 10px !important;
-    }
-
-    /* SISTEMAZIONE DELLA TENDINA (POPOVER BODY) */
-    /* Questo intercetta il riquadro fluttuante che si apre quando clicchi */
     [data-testid="stPopoverBody"] {
-        background-color: #793921 !important; /* Colore marrone scuro coerente con la Via */
-        border: 2px solid #542E17 !important;
-        border-radius: 10px !important;
-        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3) !important;
-        min-width: 320px !important; /* Impedisce che su PC si apra troppo stretta */
-        max-width: 90vw !important;  /* Impedisce che su mobile esca dallo schermo */
-        padding: 15px !important;
+        background-color: #793921 !important; /* Mantiene lo sfondo interno per leggere il testo bianco */
+        border: none !important;              /* LEVA IL QUADRATO/BORDO ATTORNO */
+        border-radius: 12px !important;       /* Smussa gli angoli per renderlo meno spigoloso */
+        box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.4) !important; /* Un'ombra morbida al posto del bordo */
+        min-width: 320px !important;          /* Ottimo per PC */
+        max-width: 85vw !important;           /* Perfetto per non toccare i bordi del telefono */
+        padding: 18px !important;
     }
 
-    /* Modifica il pulsante del popover prima di essere cliccato */
+    /* Modifica il pulsante "Il Codice del Viandante" prima di cliccarlo */
     [data-testid="stPopover"] button {
-        background-color: #793921 !important;
+        background-color: transparent !important; /* Rende il bottone trasparente integrato nella sidebar */
         color: #ffffff !important;
         border: 1px solid #ffffff !important;
         border-radius: 8px !important;
@@ -120,27 +94,28 @@ st.markdown(
     }
     
     [data-testid="stPopover"] button:hover {
-        background-color: #542E17 !important;
-        border-color: #ffffff !important;
+        background-color: rgba(255, 255, 255, 0.1) !important;
     }
 
-    /* Trasparenti i messaggi della chat */
-    [data-testid="stChatMessage"] {
-        background-color: transparent !important;
-        border: none !important;
-        padding: 5px 0px !important;
-    }
-
-    /* Rende responsive il menù della sidebar su schermi piccoli (smartphone) */
+    /* ================================================================= */
+    /* OTTIMIZZAZIONE SPECIFICA PER IL TELEFONO (RESPONSIVE CENTERING)   */
+    /* ================================================================= */
     @media (max-width: 768px) {
         [data-testid="stSidebar"] {
-            width: 80vw !important;
+            width: 85vw !important; /* Diamo un po' di respiro in più alla sidebar su mobile */
         }
-        /* Riposiziona e adatta la tendina per il touch dello smartphone */
+        
+        /* FORZA IL CENTRAMENTO DELLA TENDINA SU MOBILE */
         [data-testid="stPopoverBody"] {
-            min-width: 260px !important; 
-            left: 10px !important; /* Evita che si decentri sul display del telefono */
+            min-width: 280px !important;
+            max-width: 80vw !important;
+            position: fixed !important;  /* Lo sblocca dalla posizione nativa di Streamlit */
+            left: 50% !important;        /* Lo sposta al centro esatto della sidebar */
+            transform: translateX(-50%) !important; /* Bilancia il posizionamento per una centratura perfetta */
+            top: auto !important;        /* Evita che scivoli troppo in alto o in basso */
         }
+    }
+        
     </style>
     """,
     unsafe_allow_html=True
