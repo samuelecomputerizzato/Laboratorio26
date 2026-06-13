@@ -106,6 +106,12 @@ st.markdown(
             top: auto !important;        /* Evita che scivoli troppo in alto o in basso */
 
     }
+    /* --- VECCHIO CODICE NEL TUO FILE --- */
+[data-testid="stChatMessage"] {
+    background-color: transparent !important;
+    border: none !important;
+    padding-left: 0px !important;
+}
 
 
 }
