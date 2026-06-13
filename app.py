@@ -18,19 +18,27 @@ st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", initial
 st.markdown(
     """
     <style>
-    /* Nasconde solo i menu e i bottoni di gestione in alto a destra */
-    [data-testid="stToolbar"] {
-        visibility: hidden !important;
+   st.markdown(
+    """
+    <style>
+    /* 1. NASCONDE IL PULSANTE DEI TRE PUNTINI (MENU OPZIONI) */
+    [data-testid="stActionButtonIcon"] {
         display: none !important;
     }
     
-    /* Nasconde il footer ufficiale in basso "Made with Streamlit" */
-    footer {
-        visibility: hidden !important;
+    /* 2. NASCONDE I PULSANTI SHARE, EDIT, GITHUB IN ALTO A DESTRA */
+    [data-testid="stAppHeader"] div[role="navigation"] {
+        display: none !important;
     }
     
-    /* Nasconde il pulsante di deploy / icona della corona */
-    .stAppDeployButton {
+    /* Se i selettori sopra variano, questo blocca solo i bottoni di destra dell'header */
+    [data-testid="stHeader"] > div:nth-child(2) {
+        display: none !important;
+    }
+
+    /* 3. NASCONDE IL FOOTER IN BASSO */
+    footer {
+        visibility: hidden !important;
         display: none !important;
     }
     /* ================================================================= */
