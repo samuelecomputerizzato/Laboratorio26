@@ -148,7 +148,7 @@ st.markdown(
         padding-bottom: 3rem !important;
     }
 
-    }
+}
         
     </style>
     """,
