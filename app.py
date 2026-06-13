@@ -33,12 +33,8 @@ st.markdown(
         font-size: 24px !important;
         font-weight: bold !important;
     }
-    
-    /* Rettangolo di input */
-    .stTextInput input {
-        background-color: #4F7942;
-        color: #ffffff;
-    }
+
+
     /* Cambia il colore di sfondo della barra laterale */
     [data-testid="stSidebar"] {
         background-color: #b25431; 
@@ -62,7 +58,7 @@ st.markdown(
     /* Rettangolo di input */
     .stTextInput input {
         background-color: #793921;
-        color: #ffffff;
+        color: #000000;
     }
         /* ELIMINA LA BARRA GRIGIA: Rende trasparenti i contenitori dei messaggi */
     [data-testid="stChatMessage"] {
