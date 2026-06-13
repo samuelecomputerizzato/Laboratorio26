@@ -137,7 +137,7 @@ st.header("La Magna Via", text_alignment="center")
 # Barra Laterale (Sidebar) - Il Codice del Viandante
 # -------------------------------------------------------------------
 st.sidebar.image("LOGO.png", width=120)
-st.sidebar.header("I tuoi passi")
+st.sidebar.header("Ultreya, viandante!")
 
 st.sidebar.write("---") # Una linea di separazione visiva
     
