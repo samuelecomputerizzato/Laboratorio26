@@ -315,21 +315,7 @@ for messaggio in st.session_state.cronologia:
 
 # Blocco di Input Interattivo ancorato in basso
 if catena is not None:
-    st.markdown(
-        """
-        <style>
-        [data-testid="stChatFloatingInputContainer"],
-        .stChatFloatingInputContainer,
-        .stChatFloatingInputContainer div {
-            background-color: #B5A585 !important;
-            background: #B5A585 !important;
-            box-shadow: none !important;
-            border: none !important;
-        }
-        </style>
-        """, 
-        unsafe_allow_html=True
-    )
+
     # L'operatore := cattura l'input quando l'utente preme invio sulla tastiera o sul tasto freccia
     if input_utente := st.chat_input("Chiedi alla Via..."):
         
