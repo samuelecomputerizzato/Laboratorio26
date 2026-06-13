@@ -78,8 +78,6 @@ st.markdown(
 
 
 
-    }
-
 # Interfaccia centrale (LOGO e Titolo)
 col1, col2, col3 = st.columns([1, 2, 1]) 
 with col2:
