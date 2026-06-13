@@ -18,8 +18,13 @@ st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", initial
 st.markdown(
     """
     <style>
+    /* Nasconde solo i menu e i bottoni di gestione in alto a destra */
+    [data-testid="stToolbar"] {
+        visibility: hidden !important;
+        display: none !important;
+    }
     
-    /* Nasconde il footer ufficiale "Made with Streamlit" */
+    /* Nasconde il footer ufficiale in basso "Made with Streamlit" */
     footer {
         visibility: hidden !important;
     }
