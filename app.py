@@ -90,10 +90,40 @@ st.header("La Magna Via", text_alignment="center")
 st.sidebar.image("LOGO.png", width=150)
 st.sidebar.header("  I tuoi passi")
 
+st.header("La Magna Via", text_alignment="center")
+
+# Creiamo due schede nella pagina centrale
+tab_chat, tab_regole = st.tabs(["💬 Chiedi alla Via", "📜 Regole del Pellegrino"])
+
+# --- SCHEDA 1: CHATBOT ---
+with tab_chat:
+    # Qui dentro sposti tutto il codice attuale che mostra i messaggi e l'input della chat
+    st.write("---")
+    for messaggio in st.session_state.cronologia:
+        # ... (il tuo codice per mostrare i messaggi)
+        pass
+        
+    if catena is not None:
+        if input_utente := st.chat_input("Chiedi alla Via..."):
+            # ... (il tuo codice per gestire l'input)
+            pass
+
+# --- SCHEDA 2: REGOLE DOVE SPIEGHI COSA FARE ---
+with tab_regole:
+    st.markdown("## 📜 Il Decalogo del Pellegrino Custode")
+    st.write("Benvenuto sui passi della Magna Via Francigena. Prima di partire, custodisci queste indicazioni:")
+    
+    # Puoi usare i componenti Streamlit per renderlo bellissimo
+    st.info("💡 **Consiglio:** Porta sempre con te una borraccia da almeno 1.5 litri e un cappello per il sole.")
+    
+    with st.expander("🔥 Sicurezza e Prevenzione Incendi"):
+        st.write("La Sicilia è un dono prezioso. Proteggiamola insieme dal rischio incendi. Non accendere fuochi e porta i mozziconi con te fino al prossimo borgo.")
+        
+    with st.expander("🎒 Equipaggiamento e Comportamento"):
+        st.write("Rispetta i sentieri, non disturbare la fauna locale e lascia i luoghi di sosta puliti come li hai trovati.")
 
 
 
-)
 # -------------------------------------------------------------------
 # Elaborazione Documento PDF e RAG
 # -------------------------------------------------------------------
