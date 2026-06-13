@@ -92,7 +92,7 @@ st.markdown(
     [data-testid="stImage"] img {
         display: block !important;
         margin: 0 auto !important;
-        max-width: 180px !important; /* Modifica questo valore per ingrandirlo o rimpicciolirlo */
+        max-width:200px !important; /* Modifica questo valore per ingrandirlo o rimpicciolirlo */
         height: auto !important;
     }
 
