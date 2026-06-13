@@ -75,7 +75,7 @@ st.markdown(
     /* ================================================================= */
     
     [data-testid="stPopoverBody"] {
-        background-color: #793921 !important; /* Mantiene lo sfondo interno per leggere il testo bianco */
+        background-color: #transparent !important; /* Mantiene lo sfondo interno per leggere il testo bianco */
         border: none !important;              /* LEVA IL QUADRATO/BORDO ATTORNO */
         border-radius: 12px !important;       /* Smussa gli angoli per renderlo meno spigoloso */
         box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.4) !important; /* Un'ombra morbida al posto del bordo */
