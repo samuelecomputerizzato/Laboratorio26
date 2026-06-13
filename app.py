@@ -20,7 +20,7 @@ st.markdown(
     <style>
     /* 1. STILE GLOBALE APP E PAGINA CENTRALE */
     .stApp {
-        background-color: #B5A585;
+        background-color: #F4F1EA;
         background-attachment: fixed;
         color: #231709;
     }
