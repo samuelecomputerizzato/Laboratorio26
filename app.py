@@ -117,6 +117,11 @@ st.markdown(
 # Interfaccia centrale (LOGO e Titolo)
 
 st.header("La Magna Via", text_alignment="center")
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    st.image("LOGO.png")
+    st.markdown("<h1 style='text-align: center;'>La Magna Via</h1>", unsafe_allow_html=True)
+
 with st.sidebar:
     # Usiamo le colonne per centrare l'immagine perfettamente
     col_sinistra, col_centro, col_destra = st.columns([1, 3, 1])
