@@ -128,7 +128,7 @@ st.header("La Magna Via", text_alignment="center")
 # Elaborazione Documento PDF e RAG (Lascia il tuo codice identico qui)
 # -------------------------------------------------------------------
 # ... [Mantieni qui tutto il blocco 'if os.path.exists(documento):' con la catena RAG] ...
-
+catena = None
 
 # -------------------------------------------------------------------
 # Visualizzazione della Chat Attiva e Input
