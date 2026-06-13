@@ -121,16 +121,6 @@ st.markdown(
             transform: translateX(-50%) !important; 
             top: auto !important;        
         }
-      
-    /* Nasconde il menu principale (i tre puntini in alto a destra) - Versione Aggiornata */
-    [data-testid="stHeader"] {background: transparent;}
-    [data-testid="stToolbar"] {visibility: hidden !important;}
-    
-    /* Nasconde il footer di Streamlit in basso */
-    footer {visibility: hidden !important;}
-    
-    /* Nasconde il pulsante di deploy / corona in alto a destra */
-    .stAppDeployButton {display: none !important;}
     
     }
         
