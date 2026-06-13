@@ -149,7 +149,6 @@ with st.sidebar.popover("📜 Il Codice del Viandante", use_container_width=True
     # Serie di scritte all'interno del menù
     st.markdown("""
     **📜Il Codice del Viandante
- Il rispetto è il primo passo del pellegrino.
 * 🍃 **Rispetta la Natura:**
 Non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.
 * 🏡 **Rispetta il Territorio:**
