@@ -133,8 +133,6 @@ st.header("La Magna Via", text_alignment="center")
            
 # Interfaccia grafica sidebar
 
-st.header("La Magna Via", text_alignment="center")
-
 # -------------------------------------------------------------------
 # Barra Laterale (Sidebar) - Il Codice del Viandante
 # -------------------------------------------------------------------
