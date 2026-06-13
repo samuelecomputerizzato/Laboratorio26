@@ -92,7 +92,22 @@ st.markdown(
             transform: translateX(-50%) !important; 
             top: auto !important;        
         }
-    } /* <-- PRIMA MANCAVA QUESTA CHIUSURA CHIAVE DEL MEDIA QUERY */
+            /* FORZA LA CENTRATURA DEL LOGO SU DESKTOP, TABLET E MOBILE */
+    [data-testid="stImage"] {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        width: 100% !important;
+    }
+
+    [data-testid="stImage"] img {
+        display: block !important;
+        margin: 0 auto !important;
+    }
+    
+}
         
     </style>
     """,
