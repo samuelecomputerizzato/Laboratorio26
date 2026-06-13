@@ -19,25 +19,22 @@ st.markdown(
     """
     <style>
     <style>
-    /* 1. NASCONDE IL PULSANTE DEI TRE PUNTINI (MENU OPZIONI) */
-    [data-testid="stActionButtonIcon"] {
-        display: none !important;
-    }
-    
-    /* 2. NASCONDE I PULSANTI SHARE, EDIT, GITHUB IN ALTO A DESTRA */
-    [data-testid="stAppHeader"] div[role="navigation"] {
-        display: none !important;
-    }
-    
-    /* Se i selettori sopra variano, questo blocca solo i bottoni di destra dell'header */
+  /* 1. NASCONDE TUTTI I BOTTONI DI DESTRA NELL'HEADER (Share, GitHub, Modifica, Tre puntini) */
+    /* Lascia l'header intatto a sinistra così le freccette della sidebar funzionano perfettamente */
     [data-testid="stHeader"] > div:nth-child(2) {
         display: none !important;
     }
+    
+    /* Alternativo per sicurezza: nasconde la barra degli strumenti di destra */
+    div[class^="stToolbar"] {
+        display: none !important;
+    }
 
-    /* 3. NASCONDE IL FOOTER IN BASSO */
+    /* 2. NASCONDE IL FOOTER IN BASSO */
     footer {
         visibility: hidden !important;
         display: none !important;
+    }
     }
     /* ================================================================= */
     
