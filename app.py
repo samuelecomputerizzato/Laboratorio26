@@ -33,7 +33,7 @@ st.markdown(
     footer {
         visibility: hidden !important;
         display: none !important;
-    }
+    
     }
     /* ================================================================= */
     
