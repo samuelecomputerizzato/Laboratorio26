@@ -18,7 +18,6 @@ st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", initial
 st.markdown(
     """
     <style>
-    <style>
   /* 1. NASCONDE TUTTI I BOTTONI DI DESTRA NELL'HEADER (Share, GitHub, Modifica, Tre puntini) */
     /* Lascia l'header intatto a sinistra così le freccette della sidebar funzionano perfettamente */
     [data-testid="stHeader"] > div:nth-child(2) {
