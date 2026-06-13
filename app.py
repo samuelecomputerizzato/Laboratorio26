@@ -13,39 +13,28 @@ from langchain_core.output_parsers import StrOutputParser
 st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", initial_sidebar_state="expanded")
 
 # -------------------------------------------------------------------
-# Configurazione Stile CSS (Corretto senza st.divider all'interno)
+# Configurazione Stile CSS (Nuke totale della barra superiore)
 # -------------------------------------------------------------------
 st.markdown(
     """
     <style>
+    /* 1. DISATTIVA E NASCONDE COMPLETAMENTE L'INTERA BARRA IN ALTO (Share, Edit, GitHub, Menu) */
+    header, [data-testid="stHeader"] {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0px !important;
+    }
+
+    /* 2. NASCONDE IL FOOTER IN BASSO */
+    footer {
+        display: none !important;
+    }    
+    
+    /* 3. STILE GLOBALE APP E PAGINA CENTRALE */
     .stApp {
-        background-color:#B5A585;
+        background-color: #F1F0E6;
         background-attachment: fixed;
         color: #231709;
-        font-size: 36px
-        font-weight: bold !important;
-
-    }
-    
-     /* Configurazione scritta "Chiedi al chatbot" */
-    .stTextInput label div p {
-        color: #542E17 !important;
-        font-size: 24px !important;
-        font-weight: bold !important;
-    }
-
-
-    /* Cambia il colore di sfondo della barra laterale */
-    [data-testid="stSidebar"] {
-        background-color: #b25431; 
-    }
-    
-    
-    /* Configurazione dell'applicazione */
-    .stApp {
-        background-color: #B5A585;
-        background-attachment: fixed;
-        color: #524E17;
     }
     
     /* Configurazione scritta "Chiedi al chatbot" */
@@ -54,30 +43,43 @@ st.markdown(
         font-size: 24px !important;
         font-weight: bold !important;
     }
-    
+
     /* Rettangolo di input */
     .stTextInput input {
         background-color: #793921;
         color: #000000;
-
     }
 
-    /* SISTEMAZIONE DELLA TENDINA (POPOVER BODY) - VERSIONE PULITA       */
-    /* ================================================================= */
-    
+    /* ELIMINA LA BARRA GRIGIA: Rende trasparenti i messaggi della chat */
+    [data-testid="stChatMessage"],
+    [data-testid="stChatMessage"] > div,
+    .stChatMessage {
+        background-color: transparent !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding-left: 0px !important;
+    }
+
+    /* Cambia il colore di sfondo della barra laterale */
+    [data-testid="stSidebar"] {
+        background-color: #7A8B74; 
+    }
+
+    /* SISTEMAZIONE DELLA TENDINA (POPOVER BODY) */
     [data-testid="stPopoverBody"] {
-        background-color: #transparent !important; /* Mantiene lo sfondo interno per leggere il testo bianco */
-        border: none !important;              /* LEVA IL QUADRATO/BORDO ATTORNO */
-        border-radius: 12px !important;       /* Smussa gli angoli per renderlo meno spigoloso */
-        box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.4) !important; /* Un'ombra morbida al posto del bordo */
-        min-width: 320px !important;          /* Ottimo per PC */
-        max-width: 85vw !important;           /* Perfetto per non toccare i bordi del telefono */
+        background-color: transparent !important; 
+        border: none !important;              
+        border-radius: 12px !important;       
+        box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.4) !important; 
+        min-width: 320px !important;          
+        max-width: 85vw !important;           
         padding: 18px !important;
     }
 
-    /* Modifica il pulsante "Il Codice del Viandante" prima di cliccarlo */
+    /* Modifica il pulsante prima di cliccarlo */
     [data-testid="stPopover"] button {
-        background-color: transparent !important; /* Rende il bottone trasparente integrato nella sidebar */
+        background-color: transparent !important; 
         color: #ffffff !important;
         border: 1px solid #ffffff !important;
         border-radius: 8px !important;
@@ -88,61 +90,69 @@ st.markdown(
         background-color: rgba(255, 255, 255, 0.1) !important;
     }
 
-    /* ================================================================= */
-    /* OTTIMIZZAZIONE SPECIFICA PER IL TELEFONO (RESPONSIVE CENTERING)   */
-    /* ================================================================= */
+    /* FORZA LA CENTRATURA PERFETTA E RIDUCE IL LOGO CENTRALE */
+    [data-testid="stImage"] {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        width: 100% !important;
+    }
+
+    /* Imposta la dimensione massima del logo centrale */
+    [data-testid="stImage"] img {
+        display: block !important;
+        margin: 0 auto !important;
+        max-width: 200px !important;
+        height: auto !important;
+    }
+
+    /* Rimpicciolisce il titolo h1 sotto il logo */
+    h1 {
+        font-size: 2rem !important;
+        margin-top: 10px !important;
+    }
+
+    /* Forzatura specifica per centrare il logo anche dentro la sidebar */
+    [data-testid="stSidebar"] [data-testid="stImage"] img {
+        max-width: 100px !important;
+    }
+
+    /* OTTIMIZZAZIONE SPECIFICA PER IL TELEFONO */
     @media (max-width: 768px) {
         [data-testid="stSidebar"] {
-            width: 85vw !important; /* Diamo un po' di respiro in più alla sidebar su mobile */
-    }
+            width: 85vw !important; 
+        }
         
-        /* FORZA IL CENTRAMENTO DELLA TENDINA SU MOBILE */
         [data-testid="stPopoverBody"] {
             min-width: 280px !important;
             max-width: 80vw !important;
-            position: fixed !important;  /* Lo sblocca dalla posizione nativa di Streamlit */
-            left: 50% !important;        /* Lo sposta al centro esatto della sidebar */
-            transform: translateX(-50%) !important; /* Bilancia il posizionamento per una centratura perfetta */
-            top: auto !important;        /* Evita che scivoli troppo in alto o in basso */
-
+            position: fixed !important;  
+            left: 50% !important;        
+            transform: translateX(-50%) !important; 
+            top: auto !important;        
+        }
     }
-    /* --- VECCHIO CODICE NEL TUO FILE --- */
-[data-testid="stChatMessage"] {
-    background-color: transparent !important;
-    border: none !important;
-    padding-left: 0px !important;
-}
-
-
-}
-        
     </style>
     """,
     unsafe_allow_html=True
 )
 
-
-
 # Interfaccia centrale (LOGO e Titolo)
-col1, col2, col3 = st.columns([1, 2, 1]) 
+col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     st.image("LOGO.png")
-
-st.header("La Magna Via", text_alignment="center")
-
-           
-# Interfaccia grafica sidebar
+    st.markdown("<h1 style='text-align: center;'>La Magna Via</h1>", unsafe_allow_html=True)
 
 # -------------------------------------------------------------------
-# Barra Laterale (Sidebar) - Il Codice del Viandante
+# Barra Laterale (Sidebar)
 # -------------------------------------------------------------------
 st.sidebar.image("LOGO.png", width=120)
 st.sidebar.header("Ultreya, viandante!")
+st.sidebar.write("---") 
 
-st.sidebar.write("---") # Una linea di separazione visiva
-    
-
-# Menù a scomparsa con il Codice del Viandante
+# PRIMO PULSANTE: Il Codice del Viandante
 with st.sidebar.popover("📜 Il Codice del Viandante", use_container_width=True):
     st.markdown("<p style='text-align: center; font-style: italic; margin-bottom: 15px;'>Il rispetto è il primo passo del pellegrino.</p>", unsafe_allow_html=True)
     st.markdown("""
@@ -154,22 +164,23 @@ with st.sidebar.popover("📜 Il Codice del Viandante", use_container_width=True
     * 🙏 **Sii grato e umile:** ringrazia chi ti ospita. Accetta con curiosità i ritmi e la cultura che incontri.
     """)
     
-    with st.sidebar.popover("📍 Le tue Credenziali", use_container_width=True):
-        st.markdown("<p style='text-align: center; font-style: italic; margin-bottom: 15px;'>La tua Credenziale è la memoria del tuo spirito, custodiscila con cura.</p>", unsafe_allow_html=True)
-        st.markdown("""
-*  **Palermo:** Cattedrale (9:00-17:30) | Centro "Padre Nostro" (feriali 9:30-12:30; mar/gio 15:00-18:00).
-*  **Monreale:** Duomo (8:30-12:45 / 14:30-17:00).
-* **Altofonte:** Ufficio Comunale, Parrocchie.
-* **Santa Cristina Gela:** Ufficio Comunale.
-* **Corleone:** Ufficio Comunale, Parrocchie.
-* **Prizzi:** Sportello Turistico (lun-ven 9:00-14:00) | Museo (sab 16:00-20:00; dom 9:00-13:00).
-* **Castronovo di Sicilia:** Ufficio Turistico, Parrocchia.
-* **Cammarata:** Comune, Ufficio Turistico.
-* **Sutera:** Ufficio Comunale, Parrocchia, Museo del Pellegrino.
-* **Grotte:** Centralino Comune (Piazza Umberto I), Parrocchia.
-* **Joppolo Giancaxio:** Ufficio Comunale, Parrocchie, Ristoratori.
-* **Agrigento:**  Mudia (Via Duomo 96) per il Testimonium, Parrocchie.
-      """)
+# SECONDO PULSANTE: Le tue Credenziali
+with st.sidebar.popover("📍 Le tue Credenziali", use_container_width=True):
+    st.markdown("<p style='text-align: center; font-style: italic; margin-bottom: 15px;'>La tua Credenziale è la memoria del tuo spirito, custodiscila con cura.</p>", unsafe_allow_html=True)
+    st.markdown("""
+    * **Palermo:** Cattedrale (9:00-17:30) | Centro "Padre Nostro" (feriali 9:30-12:30; mar/gio 15:00-18:00).
+    * **Monreale:** Duomo (8:30-12:45 / 14:30-17:00).
+    * **Altofonte:** Ufficio Comunale, Parrocchie.
+    * **Santa Cristina Gela:** Ufficio Comunale.
+    * **Corleone:** Ufficio Comunale, Parrocchie.
+    * **Prizzi:** Sportello Turistico (lun-ven 9:00-14:00) | Museo (sab 16:00-20:00; dom 9:00-13:00).
+    * **Castronovo di Sicilia:** Ufficio Turistico, Parrocchia.
+    * **Cammarata:** Comune, Ufficio Turistico.
+    * **Sutera:** Ufficio Comunale, Parrocchia, Museo del Pellegrino.
+    * **Grotte:** Centralino Comune (Piazza Umberto I), Parrocchia.
+    * **Joppolo Giancaxio:** Ufficio Comunale, Parrocchie, Ristoratori.
+    * **Agrigento:** Mudia (Via Duomo 96) per il Testimonium, Parrocchie.
+    """)
 
 # -------------------------------------------------------------------
 # Elaborazione Documento PDF e RAG
@@ -177,7 +188,6 @@ with st.sidebar.popover("📜 Il Codice del Viandante", use_container_width=True
 cartella_corrente = os.path.dirname(__file__)
 documento = os.path.join(cartella_corrente, "TAPPE AGGIORNATE.pdf")
 
-# Inizializziamo la variabile del retriever (catena) fuori dall'if
 catena = None
 
 if os.path.exists(documento):
@@ -217,7 +227,6 @@ if os.path.exists(documento):
         
         vettori = crea_vectorstore(frammenti)
         
-        # --- CONFIGURAZIONE LANGCHAIN (Spostata qui per essere pronta subito) ---
         def formatta_documento(documenti):
             return "\n\n".join([doc.page_content for doc in documenti])
         
@@ -225,7 +234,7 @@ if os.path.exists(documento):
             ("system", 
              '''Sei “La Magna via”, un assistente digitale dedicato ai pellegrini della Magna Via Francigena in Sicilia.
  
-Il tuo ruolo è accompagnare l’utente durante il cammino fornendo:
+Il tuo ruolo è accompagner l’utente durante il cammino fornendo:
 - informazioni pratiche (punti/fontanelle/fonti d'acqua, distanza, difficoltà delle tappe, punti di appproviggionamento)
 - supporto culturale e narrativo sul territorio
 - indicazioni su ospitalità, ristoro e luoghi di interesse
@@ -282,46 +291,22 @@ else:
 if "cronologia" not in st.session_state:
     st.session_state.cronologia = []
 
-def invia():
-    input_utente = st.session_state.domanda_utente
-    
-    if input_utente and catena is not None:  
-        # 1. Salva la domanda dell'utente
-        st.session_state.cronologia.append({"role": "user", "content": input_utente})
-        
-        # 2. Genera la risposta REALE usando LangChain
-        with st.spinner("Il chatbot sta rispondendo..."):
-            risposta_bot = catena.invoke(input_utente)
-        
-        # 3. Salva la risposta del bot
-        st.session_state.cronologia.append({"role": "assistant", "content": risposta_bot})
-        
-        # 4. Resetta il campo di input
-        st.session_state.domanda_utente = ""
-
 # Mostra la cronologia a schermo
 st.write("---")
 for messaggio in st.session_state.cronologia:
-
-    # Assegna l'avatar corretto in base al ruolo
     if messaggio["role"] == "user":
         icona = "Utente.png"  
-        # Puoi anche differenziare le tonalità se vuoi (es. un marrone leggermente diverso per l'utente)
-        colore_testo = "#4A2E1B"  # Dark Chocolate
+        colore_testo = "#4A2E1B"  
     else:
         icona = "LOGO.png"  
-        colore_testo = "#3D2314"  # Un Dark Chocolate ancora più intenso per il Bot
+        colore_testo = "#3D2314"  
 
     with st.chat_message(messaggio["role"], avatar=icona):
-        # Usiamo st.markdown con un tag span per applicare il colore dark chocolate
         testo_colorato = f'<span style="color: {colore_testo}; font-size: 15px;">{messaggio["content"]}</span>'
         st.markdown(testo_colorato, unsafe_allow_html=True)
         
-
 # Blocco di Input Interattivo ancorato in basso
 if catena is not None:
-
-    # L'operatore := cattura l'input quando l'utente preme invio sulla tastiera o sul tasto freccia
     if input_utente := st.chat_input("Chiedi alla Via..."):
         
         # 1. Salva e mostra subito il messaggio dell'utente
@@ -335,7 +320,7 @@ if catena is not None:
                 risposta_bot = catena.invoke(input_utente)
                 st.markdown(f'<div style="color: #3D2314; font-size: 16px; line-height: 1.5;">{risposta_bot}</div>', unsafe_allow_html=True)
         
-        # 3. Salva la risposta del bot nella cronologia per mantenerla nei refresh futuri
+        # 3. Salva la risposta del bot nella cronologia
         st.session_state.cronologia.append({"role": "assistant", "content": risposta_bot})
         
         # 4. Aggiorna la pagina per allineare tutto lo stato interno
