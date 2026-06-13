@@ -90,6 +90,21 @@ st.header("La Magna Via", text_alignment="center")
 st.sidebar.image("LOGO.png", width=150)
 st.sidebar.header("  I tuoi passi")
 
+st.sidebar.image("LOGO.png", width=150)
+st.sidebar.header("  I tuoi passi")
+
+# Finestra a comparsa con il decalogo del pellegrino
+with st.sidebar.popover("📜 Il Decalogo del Custode", use_container_width=True):
+    st.markdown("### 🗺️ Le Regole del Cammino")
+    st.write("Caro pellegrino, per vivere al meglio la Magna Via Francigena, segui queste semplici regole:")
+    
+    st.markdown("""
+    1. **Cammina da custode**: Rispetta la natura e non abbandonare rifiuti.
+    2. **Attenzione al fuoco**: :herb: Evita assolutamente di fumare nei boschi o nelle zone di macchia mediterranea.
+    3. **Rispetta l'acqua**: Le fonti sono preziose, usale senza sprechi.
+    4. **Sostieni i borghi**: Rispetta le comunità locali che ti ospitano.
+    5. **Segui la traccia**: Non uscire dai sentieri segnalati per la tua sicurezza.
+    """)
 # -------------------------------------------------------------------
 # Elaborazione Documento PDF e RAG
 # -------------------------------------------------------------------
