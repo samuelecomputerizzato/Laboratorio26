@@ -1,19 +1,5 @@
-import streamlit as st
-import pdfplumber
-import os
-
-# Langchain
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_openai import OpenAIEmbeddings, ChatOpenAI
-from langchain_community.vectorstores import FAISS
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.runnables import RunnablePassthrough
-from langchain_core.output_parsers import StrOutputParser
-
-st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", initial_sidebar_state="expanded")
-
 # -------------------------------------------------------------------
-# Configurazione Stile CSS (Allineato e Senza Errori)
+# Configurazione Stile CSS (Allineato, Ridotto e Senza Errori)
 # -------------------------------------------------------------------
 st.markdown(
     """
@@ -78,6 +64,35 @@ st.markdown(
         background-color: rgba(255, 255, 255, 0.1) !important;
     }
 
+    /* FORZA LA CENTRATURA PERFETTA E RIDUCE IL LOGO CENTRALE */
+    [data-testid="stImage"] {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        width: 100% !important;
+    }
+
+    /* Imposta la dimensione massima del logo centrale (ridotto rispetto a prima) */
+    [data-testid="stImage"] img {
+        display: block !important;
+        margin: 0 auto !important;
+        max-width: 180px !important; /* Modifica questo valore per ingrandirlo o rimpicciolirlo */
+        height: auto !important;
+    }
+
+    /* Rimpicciolisce il titolo h1 sotto il logo */
+    h1 {
+        font-size: 2rem !important; /* Rende il testo "La Magna Via" più compatto */
+        margin-top: 10px !important;
+    }
+
+    /* Forzatura specifica per centrare il logo anche dentro la sidebar */
+    [data-testid="stSidebar"] [data-testid="stImage"] img {
+        max-width: 100px !important; /* Dimensione del logo della sidebar */
+    }
+
     /* OTTIMIZZAZIONE SPECIFICA PER IL TELEFONO */
     @media (max-width: 768px) {
         [data-testid="stSidebar"] {
@@ -92,27 +107,13 @@ st.markdown(
             transform: translateX(-50%) !important; 
             top: auto !important;        
         }
-            /* FORZA LA CENTRATURA DEL LOGO SU DESKTOP, TABLET E MOBILE */
-    [data-testid="stImage"] {
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-        width: 100% !important;
     }
-
-    [data-testid="stImage"] img {
-        display: block !important;
-        margin: 0 auto !important;
-    }
-    
-}
         
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 # Interfaccia centrale (LOGO e Titolo)
 
