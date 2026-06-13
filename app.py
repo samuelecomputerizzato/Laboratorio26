@@ -147,24 +147,20 @@ with st.sidebar.popover("📜 Il Codice del Viandante", use_container_width=True
     st.write("Caro pellegrino, per vivere al meglio la Magna Via Francigena, custodisci queste indicazioni nel tuo cuore:")
     
     # Serie di scritte all'interno del menù
+ st.sidebar.write("---")
+
+# Menù a scomparsa con il Codice del Viandante
+with st.sidebar.popover("📜 Il Codice del Viandante", use_container_width=True):
+    st.markdown("### 📜 Il Codice del Viandante")
+    st.markdown("<p style='text-align: center; font-style: italic; margin-bottom: 15px;'>Il rispetto è il primo passo del pellegrino.</p>", unsafe_allow_html=True)
     st.markdown("""
-    **📜Il Codice del Viandante
-* 🍃 **Rispetta la Natura:**
-Non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.
-* 🏡 **Rispetta il Territorio:**
-Sei ospite di terreni agricoli: chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.
-* 🤫 **Rispetta il Silenzio:**
-Il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e negli ospitali.
-* 🎒 **Sii Essenziale:**
-Viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.
-* 🤝 **Sii Solidale:**
-Aiuta chi è in difficoltà. Un sorriso o un consiglio possono fare la differenza per un altro viandante.
-* 🙏 **Sii Grato e Umile:**
-Ringrazia chi ti ospita. Accetta con curiosità i ritmi e la cultura che incontri. La tua Credenziale è la memoria del tuo spirito: custodiscila con cura.
-    
+    * 🍃 **Rispetta la Natura:** Non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.
+    * 🏡 **Rispetta il Territorio:** Sei ospite di terreni agricoli: chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.
+    * 🤫 **Rispetta il Silenzio:** Il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e negli ospitali.
+    * 🎒 **Sii Essenziale:** Viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.
+    * 🤝 **Sii Solidale:** Aiuta chi è in difficoltà. Un sorriso o un consiglio possono fare la differenza per un altro viandante.
+    * 🙏 **Sii Grato e Umile:** Ringrazia chi ti ospita. Accetta con curiosità i ritmi e la cultura che incontri. La tua Credenziale è la memoria del tuo spirito: custodiscila con cura.
     """)
-    
-    st.caption("Buon cammino, custode della Via! ✨")
 # -------------------------------------------------------------------
 # Elaborazione Documento PDF e RAG
 # -------------------------------------------------------------------
