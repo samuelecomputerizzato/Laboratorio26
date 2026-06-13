@@ -146,12 +146,12 @@ st.sidebar.write("---") # Una linea di separazione visiva
 with st.sidebar.popover("📜 Il Codice del Viandante", use_container_width=True):
     st.markdown("<p style='text-align: center; font-style: italic; margin-bottom: 15px;'>Il rispetto è il primo passo del pellegrino.</p>", unsafe_allow_html=True)
     st.markdown("""
-    * 🍃 **Rispetta la Natura:** non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.
-    * 🏡 **Rispetta il Territorio:** sei ospite di terreni agricoli: chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.
-    * 🤫 **Rispetta il Silenzio:** il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e negli ospitali.
-    * 🎒 **Sii Essenziale:** viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.
-    * 🤝 **Sii Solidale:** aiuta chi è in difficoltà. Un sorriso o un consiglio possono fare la differenza per un altro viandante.
-    * 🙏 **Sii Grato e Umile:** ringrazia chi ti ospita. Accetta con curiosità i ritmi e la cultura che incontri. La tua Credenziale è la memoria del tuo spirito: custodiscila con cura.
+    * 🍃 **Rispetta la natura:** non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.
+    * 🏡 **Rispetta il territorio:** sei ospite di terreni agricoli: chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.
+    * 🤫 **Rispetta il silenzio:** il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e negli ospitali.
+    * 🎒 **Sii essenziale:** viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.
+    * 🤝 **Sii solidale:** aiuta chi è in difficoltà. Un sorriso o un consiglio possono fare la differenza per un altro viandante.
+    * 🙏 **Sii grato e umile:** ringrazia chi ti ospita. Accetta con curiosità i ritmi e la cultura che incontri. La tua Credenziale è la memoria del tuo spirito: custodiscila con cura.
     """)
 # -------------------------------------------------------------------
 # Elaborazione Documento PDF e RAG
