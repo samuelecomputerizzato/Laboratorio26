@@ -92,38 +92,29 @@ st.sidebar.header("  I tuoi passi")
 
 st.header("La Magna Via", text_alignment="center")
 
-# Creiamo due schede nella pagina centrale
-tab_chat, tab_regole = st.tabs(["💬 Chiedi alla Via", "📜 Regole del Pellegrino"])
+# -------------------------------------------------------------------
+# Barra Laterale (Sidebar) - Il Codice del Viandante
+# -------------------------------------------------------------------
+st.sidebar.image("LOGO.png", width=120)
+st.sidebar.header("I tuoi passi")
 
-# --- SCHEDA 1: CHATBOT ---
-with tab_chat:
-    # Qui dentro sposti tutto il codice attuale che mostra i messaggi e l'input della chat
-    st.write("---")
-    for messaggio in st.session_state.cronologia:
-        # ... (il tuo codice per mostrare i messaggi)
-        pass
-        
-    if catena is not None:
-        if input_utente := st.chat_input("Chiedi alla Via..."):
-            # ... (il tuo codice per gestire l'input)
-            pass
+st.sidebar.write("---") # Una linea di separazione visiva
 
-# --- SCHEDA 2: REGOLE DOVE SPIEGHI COSA FARE ---
-with tab_regole:
-    st.markdown("## 📜 Il Decalogo del Pellegrino Custode")
-    st.write("Benvenuto sui passi della Magna Via Francigena. Prima di partire, custodisci queste indicazioni:")
+# Creazione del pulsante con menù a scomparsa (popover)
+with st.sidebar.popover("📜 Il Codice del Viandante", use_container_width=True):
+    st.markdown("### 🗺️ Le Regole del Cammino")
+    st.write("Caro pellegrino, per vivere al meglio la Magna Via Francigena, custodisci queste indicazioni nel tuo cuore:")
     
-    # Puoi usare i componenti Streamlit per renderlo bellissimo
-    st.info("💡 **Consiglio:** Porta sempre con te una borraccia da almeno 1.5 litri e un cappello per il sole.")
+    # Serie di scritte all'interno del menù
+    st.markdown("""
+    * 🌲 **Non lasciare traccia:** Porta via con te ogni rifiuto fino al borgo successivo.
+    * 🔥 **Custodisci il fuoco:** :herb: Evita tassativamente di fumare nei boschi e nelle zone di macchia mediterranea.
+    * 💧 **Rispetta l'acqua:** Usa le fonti e le fontanelle pubbliche senza alcuno spreco.
+    * 🏡 **Onora l'ospitalità:** Rispetta i luoghi che ti accolgono e le comunità locali.
+    * 🚶‍♂️ **Passo dopo passo:** Segui sempre la traccia ufficiale per la tua sicurezza.
+    """)
     
-    with st.expander("🔥 Sicurezza e Prevenzione Incendi"):
-        st.write("La Sicilia è un dono prezioso. Proteggiamola insieme dal rischio incendi. Non accendere fuochi e porta i mozziconi con te fino al prossimo borgo.")
-        
-    with st.expander("🎒 Equipaggiamento e Comportamento"):
-        st.write("Rispetta i sentieri, non disturbare la fauna locale e lascia i luoghi di sosta puliti come li hai trovati.")
-
-
-
+    st.caption("Buon cammino, custode della Via! ✨")
 # -------------------------------------------------------------------
 # Elaborazione Documento PDF e RAG
 # -------------------------------------------------------------------
