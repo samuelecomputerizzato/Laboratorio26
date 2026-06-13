@@ -27,7 +27,7 @@ st.markdown(
 
     }
     
-    /* Configurazione scritta "Chiedi al chatbot" */
+     /* Configurazione scritta "Chiedi al chatbot" */
     .stTextInput label div p {
         color: #542E17 !important;
         font-size: 24px !important;
@@ -62,7 +62,7 @@ st.markdown(
 
     }
 
-   /* SISTEMAZIONE DELLA TENDINA (POPOVER BODY) - VERSIONE PULITA       */
+    /* SISTEMAZIONE DELLA TENDINA (POPOVER BODY) - VERSIONE PULITA       */
     /* ================================================================= */
     
     [data-testid="stPopoverBody"] {
