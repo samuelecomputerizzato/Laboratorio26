@@ -153,9 +153,20 @@ with st.sidebar.popover("📜 Il Codice del Viandante", use_container_width=True
     * 🤝 **Sii solidale:** aiuta chi è in difficoltà. Un sorriso o un consiglio possono fare la differenza per un altro viandante.
     * 🙏 **Sii grato e umile:** ringrazia chi ti ospita. Accetta con curiosità i ritmi e la cultura che incontri.
     """)
-    with st.sidebar.popover("Palermo", use_container_width=True):
+    with st.sidebar.popover("📍 Le tue credenziali", use_container_width=True):
             st.markdown("""
-  Cattedrale (9:00-17:30) | Centro "Padre Nostro" (feriali 9:30-12:30; mar/gio 15:00-18:00).
+*  **Palermo:** Cattedrale (9:00-17:30) | Centro "Padre Nostro" (feriali 9:30-12:30; mar/gio 15:00-18:00).
+*  **Monreale:** Duomo (8:30-12:45 / 14:30-17:00).
+* **Altofonte:** Ufficio Comunale, Parrocchie.
+* **Santa Cristina Gela:** Ufficio Comunale.
+* **Corleone:** Ufficio Comunale, Parrocchie.
+* **Prizzi:** Sportello Turistico (lun-ven 9:00-14:00) | Museo (sab 16:00-20:00; dom 9:00-13:00).
+* **Castronovo di Sicilia:** Ufficio Turistico, Parrocchia.
+* **Cammarata:** Comune, Ufficio Turistico.
+* **Sutera:** Ufficio Comunale, Parrocchia, Museo del Pellegrino.
+* **Grotte:** Centralino Comune (Piazza Umberto I), Parrocchia.
+* **Joppolo Giancaxio:** Ufficio Comunale, Parrocchie, Ristoratori.
+* **Agrigento:**  Mudia (Via Duomo 96) per il Testimonium, Parrocchie.
       """)
 
 # -------------------------------------------------------------------
