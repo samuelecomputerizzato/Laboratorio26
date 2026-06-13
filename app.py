@@ -18,25 +18,16 @@ st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", initial
 st.markdown(
     """
     <style>
-  /* 1. NASCONDE TUTTI I BOTTONI DI DESTRA NELL'HEADER (Share, GitHub, Modifica, Tre puntini) */
-    /* Lascia l'header intatto a sinistra così le freccette della sidebar funzionano perfettamente */
-    [data-testid="stHeader"] > div:nth-child(2) {
-        display: none !important;
-    }
-    
-    /* Alternativo per sicurezza: nasconde la barra degli strumenti di destra */
-    div[class^="stToolbar"] {
+ 
+/* 1. NASCONDE I BOTTONI IN ALTO A DESTRA (Deploy, Menu) SENZA TOCCARE LA SIDEBAR */
+    .stAppDeployButton, [data-testid="stToolbar"], [data-testid="stToolbarActions"] {
         display: none !important;
     }
 
     /* 2. NASCONDE IL FOOTER IN BASSO */
     footer {
-        visibility: hidden !important;
         display: none !important;
-    
-    }
-    /* ================================================================= */
-    
+    }    
     /* 1. STILE GLOBALE APP E PAGINA CENTRALE */
     .stApp {
         background-color: #F1F0E6;
