@@ -116,7 +116,6 @@ st.markdown(
 
 # Interfaccia centrale (LOGO e Titolo)
 
-st.header("La Magna Via", text_alignment="center")
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     st.image("LOGO.png")
