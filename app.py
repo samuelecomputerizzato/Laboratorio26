@@ -66,14 +66,7 @@ st.markdown(
         border: none !important;
         padding-left: 0px !important; /* Opzionale: allinea meglio l'avatar a sinistra */
      }
-     .stChatFloatingInputContainer, 
-    [data-testid="stChatFloatingInputContainer"],
-    .stChatFloatingInputContainer > div {
-        background-color: #B5A585 !important;
-        background: #B5A585 !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
+    
 
    /* SISTEMAZIONE DELLA TENDINA (POPOVER BODY) - VERSIONE PULITA       */
     /* ================================================================= */
@@ -121,6 +114,15 @@ st.markdown(
           [data-testid="stChatFloatingInputContainer"] {
     background-color: #B5A585 !important;
         }
+        .stChatFloatingInputContainer, 
+    [data-testid="stChatFloatingInputContainer"],
+    .stChatFloatingInputContainer > div {
+        background-color: #B5A585 !important;
+        background: #B5A585 !important;
+        border: none !important;
+        box-shadow: none !important;
+        }
+    }
     }
         
     </style>
