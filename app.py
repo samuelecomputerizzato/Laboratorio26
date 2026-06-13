@@ -18,8 +18,6 @@ st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", initial
 st.markdown(
     """
     <style>
-   st.markdown(
-    """
     <style>
     /* 1. NASCONDE IL PULSANTE DEI TRE PUNTINI (MENU OPZIONI) */
     [data-testid="stActionButtonIcon"] {
