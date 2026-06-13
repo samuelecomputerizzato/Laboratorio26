@@ -61,13 +61,23 @@ st.markdown(
         color: #000000;
     }
 
-    /* === INSERISCI QUESTO ALLA RIGA 68 === */
-    footer[data-testid="stChatFloatingInputContainer"],
-    footer[data-testid="stChatFloatingInputContainer"] * {
+   /* Colora di beige la fascia di sfondo */
+    [data-testid="stChatFloatingInputContainer"], 
+    .stChatFloatingInputContainer,
+    footer[data-testid="stChatFloatingInputContainer"] {
+        background-color: #B5A585 !important;
+        background: #B5A585 !important;
+        box-shadow: none !important;
+        background-image: none !important;
+    }
+
+    /* Colora di beige anche i contenitori invisibili interni che Streamlit crea */
+    [data-testid="stChatFloatingInputContainer"] > div,
+    .stChatFloatingInputContainer div {
         background-color: #B5A585 !important;
         background: #B5A585 !important;
         border: none !important;
-        box-shadow: none !important;
+    }
     }
 
    /* SISTEMAZIONE DELLA TENDINA (POPOVER BODY) - VERSIONE PULITA       */
