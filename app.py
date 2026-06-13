@@ -140,11 +140,6 @@ st.sidebar.image("LOGO.png", width=120)
 st.sidebar.header("I tuoi passi")
 
 st.sidebar.write("---") # Una linea di separazione visiva
-
-# Creazione del pulsante con menù a scomparsa (popover)
-with st.sidebar.popover("📜 Il Codice del Viandante", use_container_width=True):
-    st.markdown("### 🗺️ Le Regole del Cammino")
-    st.write("Caro pellegrino, per vivere al meglio la Magna Via Francigena, custodisci queste indicazioni nel tuo cuore:")
     
     # Serie di scritte all'interno del menù
  st.sidebar.write("---")
