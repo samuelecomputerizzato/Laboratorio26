@@ -66,7 +66,14 @@ st.markdown(
         border: none !important;
         padding-left: 0px !important; /* Opzionale: allinea meglio l'avatar a sinistra */
      }
-    
+    /* === INSERISCI QUESTO ALLA RIGA 68 === */
+    footer[data-testid="stChatFloatingInputContainer"],
+    footer[data-testid="stChatFloatingInputContainer"] * {
+        background-color: #B5A585 !important;
+        background: #B5A585 !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
 
    /* SISTEMAZIONE DELLA TENDINA (POPOVER BODY) - VERSIONE PULITA       */
     /* ================================================================= */
