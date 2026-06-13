@@ -18,14 +18,6 @@ st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", initial
 st.markdown(
     """
     <style>
-
-    /* ================================================================= */
-    /* RIMOZIONE ELEMENTI DI SISTEMA SICURA (Sidebar e Chat Sbloccate) */
-    /* ================================================================= */
-    /* Nasconde solo i tre puntini in alto a destra senza toccare l'header intero */
-    [data-testid="stToolbar"] {
-        visibility: hidden !important;
-    }
     
     /* Nasconde il footer ufficiale "Made with Streamlit" */
     footer {
@@ -36,7 +28,6 @@ st.markdown(
     .stAppDeployButton {
         display: none !important;
     }
-    /* ================================================================= */
     /* ================================================================= */
     
     /* 1. STILE GLOBALE APP E PAGINA CENTRALE */
