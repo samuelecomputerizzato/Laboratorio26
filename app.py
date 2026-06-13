@@ -151,8 +151,13 @@ with st.sidebar.popover("📜 Il Codice del Viandante", use_container_width=True
     * 🤫 **Rispetta il silenzio:** il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e negli ospitali.
     * 🎒 **Sii essenziale:** viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.
     * 🤝 **Sii solidale:** aiuta chi è in difficoltà. Un sorriso o un consiglio possono fare la differenza per un altro viandante.
-    * 🙏 **Sii grato e umile:** ringrazia chi ti ospita. Accetta con curiosità i ritmi e la cultura che incontri. La tua Credenziale è la memoria del tuo spirito: custodiscila con cura.
+    * 🙏 **Sii grato e umile:** ringrazia chi ti ospita. Accetta con curiosità i ritmi e la cultura che incontri.
     """)
+    with st.sidebar.popover("Palermo", use_container_width=True):
+            st.markdown("""
+  Cattedrale (9:00-17:30) | Centro "Padre Nostro" (feriali 9:30-12:30; mar/gio 15:00-18:00).
+      """)
+
 # -------------------------------------------------------------------
 # Elaborazione Documento PDF e RAG
 # -------------------------------------------------------------------
