@@ -149,7 +149,6 @@ with st.sidebar.popover("📜 Il Codice del Viandante", use_container_width=True
     # Serie di scritte all'interno del menù
     st.markdown("""
     **📜Il Codice del Viandante
-
 * 📍 Guida per il tuo Cammino
 Il rispetto è il primo passo del pellegrino.
 * 🍃 Rispetta la Natura
