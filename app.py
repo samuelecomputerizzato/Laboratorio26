@@ -60,12 +60,7 @@ st.markdown(
         background-color: #793921;
         color: #000000;
     }
-        /* ELIMINA LA BARRA GRIGIA: Rende trasparenti i contenitori dei messaggi */
-    [data-testid="stChatMessage"] {
-        background-color: transparent !important;
-        border: none !important;
-        padding-left: 0px !important; /* Opzionale: allinea meglio l'avatar a sinistra */
-     }
+
     /* === INSERISCI QUESTO ALLA RIGA 68 === */
     footer[data-testid="stChatFloatingInputContainer"],
     footer[data-testid="stChatFloatingInputContainer"] * {
@@ -121,15 +116,7 @@ st.markdown(
           [data-testid="stChatFloatingInputContainer"] {
     background-color: #B5A585 !important;
         }
-        .stChatFloatingInputContainer, 
-    [data-testid="stChatFloatingInputContainer"],
-    .stChatFloatingInputContainer > div {
-        background-color: #B5A585 !important;
-        background: #B5A585 !important;
-        border: none !important;
-        box-shadow: none !important;
-        }
-    }
+
     }
         
     </style>
