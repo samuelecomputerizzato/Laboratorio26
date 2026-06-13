@@ -148,11 +148,23 @@ with st.sidebar.popover("📜 Il Codice del Viandante", use_container_width=True
     
     # Serie di scritte all'interno del menù
     st.markdown("""
-    * 🌲 **Non lasciare traccia:** Porta via con te ogni rifiuto fino al borgo successivo.
-    * 🔥 **Custodisci il fuoco:** :herb: Evita tassativamente di fumare nei boschi e nelle zone di macchia mediterranea.
-    * 💧 **Rispetta l'acqua:** Usa le fonti e le fontanelle pubbliche senza alcuno spreco.
-    * 🏡 **Onora l'ospitalità:** Rispetta i luoghi che ti accolgono e le comunità locali.
-    * 🚶‍♂️ **Passo dopo passo:** Segui sempre la traccia ufficiale per la tua sicurezza.
+    **📜Il Codice del Viandante
+
+* 📍 Guida per il tuo Cammino
+Il rispetto è il primo passo del pellegrino.
+* 🍃 Rispetta la Natura
+Non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.
+* 🏡 Rispetta il Territorio
+Sei ospite di terreni agricoli: chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.
+* 🤫 Rispetta il Silenzio
+Il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e negli ospitali.
+* 🎒 Sii Essenziale
+Viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.
+* 🤝 Sii Solidale
+Aiuta chi è in difficoltà. Un sorriso o un consiglio possono fare la differenza per un altro viandante.
+* 🙏 Sii Grato e Umile
+Ringrazia chi ti ospita. Accetta con curiosità i ritmi e la cultura che incontri. La tua Credenziale è la memoria del tuo spirito: custodiscila con cura.
+    
     """)
     
     st.caption("Buon cammino, custode della Via! ✨")
