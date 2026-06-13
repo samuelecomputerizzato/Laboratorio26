@@ -115,11 +115,17 @@ st.markdown(
 )
 
 # Interfaccia centrale (LOGO e Titolo)
-col1, col2, col3 = st.columns([1, 2, 1]) 
+    col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
-    st.image("LOGO.png")
+    st.image("logo.png")
+    st.markdown("<h1 style='text-align: center;'>La Magna Via</h1>", unsafe_allow_html=True)
 
 st.header("La Magna Via", text_alignment="center")
+with st.sidebar:
+    # Usiamo le colonne per centrare l'immagine perfettamente
+    col_sinistra, col_centro, col_destra = st.columns([1, 3, 1])
+    with col_centro:
+        st.image("33884.jpg") # Oppure il nome del tuo file logo
 
 # -------------------------------------------------------------------
 # Barra Laterale (Sidebar) - Allineamento Pulsanti Corretto
