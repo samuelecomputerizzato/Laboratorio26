@@ -141,8 +141,6 @@ st.sidebar.header("I tuoi passi")
 
 st.sidebar.write("---") # Una linea di separazione visiva
     
-    # Serie di scritte all'interno del menù
- st.sidebar.write("---")
 
 # Menù a scomparsa con il Codice del Viandante
 with st.sidebar.popover("📜 Il Codice del Viandante", use_container_width=True):
