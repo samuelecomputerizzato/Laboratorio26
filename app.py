@@ -102,6 +102,46 @@ with st.sidebar.popover("📜 Il Decalogo del Custode", use_container_width=True
     4. **Sostieni i borghi**: Rispetta le comunità locali che ti ospitano.
     5. **Segui la traccia**: Non uscire dai sentieri segnalati per la tua sicurezza.
     """)
+    st.markdown(
+    """
+    <style>
+    /* ... (mantieni pure il tuo CSS precedente) ... */
+
+    /* ================================================================= */
+    /* OTTIMIZZAZIONE SPECIFICA PER IL MENÙ A SCOMPARSA SU MOBILE       */
+    /* ================================================================= */
+    
+    /* Questo comando intercetta solo gli schermi dei telefoni (sotto i 768 pixel) */
+    @media (max-width: 768px) {
+        /* Regola la larghezza del menù quando si apre sul telefono */
+        [data-testid="stSidebar"] {
+            width: 75vw !important; /* Copre il 75% dello schermo, lasciando vedere la chat sotto */
+            max-width: 300px !important;
+        }
+        
+        /* Sistema lo spazio interno (padding) per evitare che il testo tocchi i bordi del telefono */
+        [data-testid="stSidebarUserContent"] {
+            padding: 20px 10px !important;
+        }
+        
+        /* Rimpicciolisce il logo del menù solo sui telefoni per non rubare spazio */
+        [data-testid="stSidebar"] .stImage img {
+            max-width: 60% !important;
+        }
+        
+        /* Rimpicciolisce il titolo "I tuoi passi" o le regole sul telefono */
+        [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 {
+            font-size: 18px !important;
+        }
+        
+        [data-testid="stSidebar"] p, [data-testid="stSidebar"] span {
+            font-size: 14px !important;
+        }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 # -------------------------------------------------------------------
 # Elaborazione Documento PDF e RAG
 # -------------------------------------------------------------------
