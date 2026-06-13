@@ -144,8 +144,8 @@ st.sidebar.write("---") # Una linea di separazione visiva
 
 # Menù a scomparsa con il Codice del Viandante
 with st.sidebar.popover("📜 Il Codice del Viandante", use_container_width=True):
-st.markdown("<p style='text-align: center; font-style: italic; margin-bottom: 15px;'>Il rispetto è il primo passo del pellegrino.</p>", unsafe_allow_html=True)
-st.markdown("""
+    st.markdown("<p style='text-align: center; font-style: italic; margin-bottom: 15px;'>Il rispetto è il primo passo del pellegrino.</p>", unsafe_allow_html=True)
+    st.markdown("""
     * 🍃 **Rispetta la Natura:** non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.
     * 🏡 **Rispetta il Territorio:** sei ospite di terreni agricoli: chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.
     * 🤫 **Rispetta il Silenzio:** il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e negli ospitali.
