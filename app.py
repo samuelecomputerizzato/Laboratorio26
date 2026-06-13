@@ -90,9 +90,6 @@ st.header("La Magna Via", text_alignment="center")
 st.sidebar.image("LOGO.png", width=150)
 st.sidebar.header("  I tuoi passi")
 
-st.sidebar.image("LOGO.png", width=150)
-st.sidebar.header("  I tuoi passi")
-
 # Finestra a comparsa con il decalogo del pellegrino
 with st.sidebar.popover("📜 Il Decalogo del Custode", use_container_width=True):
     st.markdown("### 🗺️ Le Regole del Cammino")
