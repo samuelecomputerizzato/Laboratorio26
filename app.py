@@ -93,6 +93,39 @@ st.markdown(
             top: auto !important;        
         }
     } /* <-- PRIMA MANCAVA QUESTA CHIUSURA CHIAVE DEL MEDIA QUERY */
+    /* ================================================================= */
+    /* 4. RESET DELLA FASCIA IN BASSO E CURA DEL RETTANGOLO DI INPUT    */
+    /* ================================================================= */
+    
+    /* Applica la trasparenza SOLO alla fascia esterna fissa sul fondo */
+    [data-testid="stChatFloatingInputContainer"] {
+        background-color: transparent !important;
+        background: transparent !important;
+        background-image: none !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    /* FORZA LA VISIBILITÀ E IL COLORE DEL RETTANGOLO DOVE DIGITI */
+    .stChatInput,
+    [data-testid="stChatInput"],
+    [data-testid="stChatInput"] textarea {
+        background-color: #793921 !important; /* Marrone scuro per staccare dal beige */
+        color: #ffffff !important;            /* Scritta bianca mentre digiti */
+        border-radius: 10px !important;
+        border: 1px solid #542E17 !important;
+    }
+    
+    /* Gestione del testo d'aiuto dentro il rettangolo ("Chiedi alla Via...") */
+    [data-testid="stChatInput"] textarea::placeholder {
+        color: rgba(255, 255, 255, 0.6) !important;
+    }
+
+    /* Mantiene visibile l'icona della freccia per inviare il messaggio */
+    [data-testid="stChatInput"] button {
+        background-color: transparent !important;
+        color: #ffffff !important;
+    }
         
     </style>
     """,
