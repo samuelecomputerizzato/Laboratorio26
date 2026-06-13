@@ -87,8 +87,6 @@ st.header("La Magna Via", text_alignment="center")
 
            
 # Interfaccia grafica sidebar
-st.sidebar.image("LOGO.png", width=150)
-st.sidebar.header("  I tuoi passi")
 
 st.header("La Magna Via", text_alignment="center")
 
