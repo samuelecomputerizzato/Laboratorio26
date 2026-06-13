@@ -34,7 +34,7 @@ st.markdown(
     footer {
         display: none !important;
     }
-    }    
+    
     /* 1. STILE GLOBALE APP E PAGINA CENTRALE */
     .stApp {
         background-color: #F1F0E6;
