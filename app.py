@@ -94,7 +94,7 @@ st.markdown(
     @media (max-width: 768px) {
         [data-testid="stSidebar"] {
             width: 85vw !important; /* Diamo un po' di respiro in più alla sidebar su mobile */
-        }
+    }
         
         /* FORZA IL CENTRAMENTO DELLA TENDINA SU MOBILE */
         [data-testid="stPopoverBody"] {
@@ -104,10 +104,10 @@ st.markdown(
             left: 50% !important;        /* Lo sposta al centro esatto della sidebar */
             transform: translateX(-50%) !important; /* Bilancia il posizionamento per una centratura perfetta */
             top: auto !important;        /* Evita che scivoli troppo in alto o in basso */
-        }
+    }
           [data-testid="stChatFloatingInputContainer"] {
     background-color: #B5A585 !important;
-        }
+    }
         /* ================================================================= */
     /* RIMOZIONE MENÙ SUPERIORE (HEADER) E BORDI NATIVI                 */
     /* ================================================================= */
