@@ -17,16 +17,23 @@ st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", initial
 # -------------------------------------------------------------------
 st.markdown(
     """
-    <style>
- 
-/* 1. NASCONDE I BOTTONI IN ALTO A DESTRA (Deploy, Menu) SENZA TOCCARE LA SIDEBAR */
-    .stAppDeployButton, [data-testid="stToolbar"], [data-testid="stToolbarActions"] {
+ <style>
+    /* 1. NASCONDE I BOTTONI IN ALTO A DESTRA (Deploy, Menu, Github) */
+    /* stHeaderActionElements è il nome ufficiale aggiornato del blocco di destra */
+    [data-testid="stHeaderActionElements"] {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    /* Sicurezza aggiuntiva per il pulsante di deploy */
+    .stAppDeployButton {
         display: none !important;
     }
 
     /* 2. NASCONDE IL FOOTER IN BASSO */
     footer {
         display: none !important;
+    }
     }    
     /* 1. STILE GLOBALE APP E PAGINA CENTRALE */
     .stApp {
