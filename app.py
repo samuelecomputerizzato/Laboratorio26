@@ -19,19 +19,24 @@ st.markdown(
     """
     <style>
 
-
     /* ================================================================= */
-    /* RIMOZIONE ELEMENTI DI SISTEMA (Senza intaccare la Sidebar o la Chat) */
+    /* RIMOZIONE ELEMENTI DI SISTEMA SICURA (Sidebar e Chat Sbloccate) */
     /* ================================================================= */
-    /* Nasconde la barra degli strumenti superiore (i tre puntini in alto a destra) */
-    [data-testid="stHeader"] {background: transparent;}
-    [data-testid="stToolbar"] {visibility: hidden !important;}
+    /* Nasconde solo i tre puntini in alto a destra senza toccare l'header intero */
+    [data-testid="stToolbar"] {
+        visibility: hidden !important;
+    }
     
     /* Nasconde il footer ufficiale "Made with Streamlit" */
-    footer {visibility: hidden !important;}
+    footer {
+        visibility: hidden !important;
+    }
     
     /* Nasconde il pulsante di deploy / icona della corona */
-    .stAppDeployButton {display: none !important;}
+    .stAppDeployButton {
+        display: none !important;
+    }
+    /* ================================================================= */
     /* ================================================================= */
     
     /* 1. STILE GLOBALE APP E PAGINA CENTRALE */
