@@ -1,3 +1,4 @@
+```python
 import streamlit as st
 import pdfplumber
 import os
@@ -13,7 +14,7 @@ from langchain_core.output_parsers import StrOutputParser
 st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", initial_sidebar_state="expanded")
 
 # -------------------------------------------------------------------
-# Configurazione Stile CSS (Nuke totale della barra superiore)
+# Configurazione Stile CSS (Nuke totale della barra superiore e gestione temi)
 # -------------------------------------------------------------------
 st.markdown(
     """
@@ -48,6 +49,33 @@ st.markdown(
         border: none !important;
         box-shadow: none !important;
         padding-left: 0px !important;
+    }
+
+    /* CLASSI PERSONALIZZATE PER IL TESTO CHAT RESPONSIVE AI TEMI */
+    .chat-user-msg {
+        color: #4A2E1B; /* Colore marrone scuro per tema chiaro */
+        font-size: 15px;
+        font-weight: 500;
+    }
+    
+    .chat-assistant-msg {
+        color: #3D2314; /* Colore marrone terra per tema chiaro */
+        font-size: 15px;
+        line-height: 1.5;
+    }
+
+    /* GESTIONE TEMA SCURO (Media Query di sistema) */
+    @media (prefers-color-scheme: dark) {
+        .stApp {
+            background-color: #1E1E1E !important;
+            color: #F1F0E6 !important;
+        }
+        .chat-user-msg {
+            color: #E6D8B8 !important; /* Crema/Beige chiaro leggibile su fondo scuro */
+        }
+        .chat-assistant-msg {
+            color: #F1F0E6 !important; /* Bianco sporco/Panna per l'assistente */
+        }
     }
 
     /* Cambia il colore di sfondo della barra laterale */
@@ -147,7 +175,7 @@ with st.sidebar.popover("📜 Il Codice del Viandante", use_container_width=True
     st.markdown("""
     * 🍃 **Rispetta la natura:** non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.
     * 🏡 **Rispetta il territorio:** sei ospite di terreni agricoli: chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.
-    * 🤫 **Rispetta il silenzio:** il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e negli ospitali.
+    * 🤫 **Rispetta il silenzio:** il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e nei ospitali.
     * 🎒 **Sii essenziale:** viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.
     * 🤝 **Sii solidale:** aiuta chi è in difficoltà. Un sorriso o un consiglio possono fare la differenza per un altro viandante.
     * 🙏 **Sii grato e umile:** ringrazia chi ti ospita. Accetta con curiosità i ritmi e la cultura che incontri.
@@ -285,13 +313,14 @@ st.write("---")
 for messaggio in st.session_state.cronologia:
     if messaggio["role"] == "user":
         icona = "Utente.png"  
-        colore_testo = "#4A2E1B"  
+        classe_css = "chat-user-msg"  
     else:
         icona = "LOGO.png"  
-        colore_testo = "#3D2314"  
+        classe_css = "chat-assistant-msg"  
 
     with st.chat_message(messaggio["role"], avatar=icona):
-        testo_colorato = f'<span style="color: {colore_testo}; font-size: 15px;">{messaggio["content"]}</span>'
+        # Utilizziamo le classi CSS rimosse dallo stile inline hardcoded
+        testo_colorato = f'<div class="{classe_css}">{messaggio["content"]}</div>'
         st.markdown(testo_colorato, unsafe_allow_html=True)
         
 # Blocco di Input Interattivo ancorato in basso
@@ -301,16 +330,18 @@ if catena is not None:
         # 1. Salva e mostra subito il messaggio dell'utente
         st.session_state.cronologia.append({"role": "user", "content": input_utente})
         with st.chat_message("user", avatar="Utente.png"):
-            st.markdown(f'<div style="color: #4A2E1B; font-size: 16px;">{input_utente}</div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="chat-user-msg">{input_utente}</div>', unsafe_allow_html=True)
         
         # 2. Genera e mostra live la risposta del Modello RAG
         with st.chat_message("assistant", avatar="LOGO.png"):
             with st.spinner("Il chatbot sta rispondendo..."):
                 risposta_bot = catena.invoke(input_utente)
-                st.markdown(f'<div style="color: #3D2314; font-size: 16px; line-height: 1.5;">{risposta_bot}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="chat-assistant-msg">{risposta_bot}</div>', unsafe_allow_html=True)
         
         # 3. Salva la risposta del bot nella cronologia
         st.session_state.cronologia.append({"role": "assistant", "content": risposta_bot})
         
         # 4. Aggiorna la pagina per allineare tutto lo stato interno
         st.rerun()
+
+```
