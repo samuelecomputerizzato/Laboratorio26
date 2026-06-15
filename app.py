@@ -54,6 +54,19 @@ st.markdown(
         background-color: #793921;
         color: #000000;
     }
+    
+    /* Nasconde il menù ad hamburger in alto a destra */
+    #MainMenu {visibility: hidden;}
+    
+    /* Nasconde la barra degli strumenti/opzioni in alto a destra */
+    [data-testid="stToolbar"] {visibility: hidden !important;}
+    
+    /* Nasconde il pulsante "Deploy" (se presente) */
+    .stDeployButton {display: none !important;}
+    
+    /* Nasconde il footer "Made with Streamlit" in fondo alla pagina */
+    footer {visibility: hidden;}
+
 
     /* ELIMINA LA BARRA GRIGIA: Rende trasparenti i messaggi della chat */
     [data-testid="stChatMessage"],
