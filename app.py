@@ -1,44 +1,353 @@
+import streamlit as st
+import pdfplumber
+import os
+import re  # Importato per la gestione della formattazione del testo
+
+st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", initial_sidebar_state="collapsed")
+
 # -------------------------------------------------------------------
-# Interfaccia centrale (LOGO, Titolo e Menu Opzioni)
+# Funzione di utilità per formattare i messaggi mantenendo il Markdown attivo
+# -------------------------------------------------------------------
+def formatta_messaggio(testo: str, colore: str, font_size: str = "15px") -> str:
+    """
+    Converte la sintassi dei grassetti e degli a capo in HTML sicuro,
+    evitando che gli asterischi rimangano visibili all'interno dei div personalizzati.
+    """
+    # Converte **testo** in <strong>testo</strong>
+    testo_html = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', testo)
+    # Converte i ritorni a capo in tag <br> per non perdere la struttura del testo
+    testo_html = testo_html.replace('\n', '<br>')
+    return f'<div style="color: {colore}; font-size: {font_size}; line-height: 1.5;">{testo_html}</div>'
+
+
+# Langchain
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+from langchain_community.vectorstores import FAISS
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.output_parsers import StrOutputParser
+
+# -------------------------------------------------------------------
+# Configurazione Stile CSS (Eliminazione totale menu nativi e personalizzazione)
+# -------------------------------------------------------------------
+st.markdown(
+    """
+    <style>
+    
+    /* 1. ELIMINAZIONE TOTALE HEADER, FOOTER E MENU STREAMLIT */
+    header, footer, #MainMenu, [data-testid="stToolbar"], .stDeployButton, [data-testid="stManageAppButton"] {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0px !important;
+    }
+    
+    /* 2. STILE GLOBALE APP E PAGINA CENTRALE */
+    .stApp {
+        background-color: #F1F0E6;
+        background-attachment: fixed;
+        color: #231709;
+    }
+    
+    /* Configurazione scritta "Chiedi al chatbot" */
+    .stTextInput label div p {
+        color: #542E17 !important;
+        font-size: 24px !important;
+        font-weight: bold !important;
+    }
+
+    /* Rettangolo di input */
+    .stTextInput input {
+        background-color: #793921;
+        color: #000000;
+    }
+
+    /* ELIMINA LA BARRA GRIGIA: Rende trasparenti i messaggi della chat */
+    [data-testid="stChatMessage"],
+    [data-testid="stChatMessage"] > div,
+    .stChatMessage {
+        background-color: transparent !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding-left: 0px !important;
+    }
+
+    /* SOLUZIONE BUG TEMA SCURO: Costringe i blocchi di testo generati dal RAG (p, li, strong, ecc.)
+       a ereditare il colore scuro dei tuoi div personalizzati invece di diventare bianchi */
+    [data-testid="stChatMessage"] p,
+    [data-testid="stChatMessage"] li,
+    [data-testid="stChatMessage"] strong,
+    [data-testid="stChatMessage"] em,
+    [data-testid="stChatMessage"] span,
+    [data-testid="stChatMessage"] div {
+        color: inherit !important;
+    }
+
+    /* SISTEMAZIONE DELLA TENDINA DEI POPOVER (POPOVER BODY) */
+    [data-testid="stPopoverBody"] {
+        background-color: #ffffff !important; 
+        border: 1px solid #7A8B74 !important;              
+        border-radius: 12px !important;       
+        box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15) !important; 
+        min-width: 320px !important;          
+        max-width: 85vw !important;           
+        padding: 18px !important;
+    }
+    
+    /* Mantiene i testi interni del popover scuri e leggibili */
+    [data-testid="stPopoverBody"] p, [data-testid="stPopoverBody"] li, [data-testid="stPopoverBody"] span {
+        color: #231709 !important;
+    }
+
+    /* Modifica i pulsanti menu (Stile Verde Coordinato) */
+    [data-testid="stPopover"] button {
+        background-color: #7A8B74 !important; 
+        color: #ffffff !important;
+        border: none !important;
+        border-radius: 8px !important;
+        padding: 12px !important;
+        font-weight: bold !important;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05) !important;
+    }
+    
+    [data-testid="stPopover"] button:hover {
+        background-color: #677761 !important;
+        color: #ffffff !important;
+    }
+
+    /* FORZA LA CENTRATURA PERFETTA E RIDUCE IL LOGO CENTRALE */
+    .main [data-testid="stImage"] {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        width: 100% !important;
+    }
+
+    /* Imposta la dimensione massima del logo centrale */
+    .main [data-testid="stImage"] img {
+        display: block !important;
+        margin: 0 auto !important;
+        max-width: 180px !important;
+        height: auto !important;
+    }
+
+    /* Rimpicciolisce e centra il titolo h1 sotto il logo */
+    h1 {
+        font-size: 2.2rem !important;
+        margin-top: 15px !important;
+        text-align: center !important;
+        width: 100% !important;
+        color: #542E17 !important;
+    }
+
+    /* OTTIMIZZAZIONE SPECIFICA PER IL TELEFONO */
+    @media (max-width: 768px) {
+        [data-testid="stPopoverBody"] {
+            min-width: 280px !important;
+            max-width: 85vw !important;
+            position: fixed !important;  
+            left: 50% !important;        
+            transform: translateX(-50%) !important; 
+            top: auto !important;        
+        }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# -------------------------------------------------------------------
+# Interfaccia centrale (LOGO e Titolo perfettamente centrati)
 # -------------------------------------------------------------------
 st.image("LOGO.png")
 st.markdown("<h1>La Magna Via</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #542E17; font-weight: bold;'>Ultreya, viandante!</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #542E17; font-weight: bold; font-size: 1.1rem; margin-bottom: 20px;'>Ultreya, viandante!</p>", unsafe_allow_html=True)
 
-# Creiamo due colonne per i pulsanti del menu principale
+# -------------------------------------------------------------------
+# Menu Alternativo (Ex Sidebar) - Disposto su due colonne centrali
+# -------------------------------------------------------------------
 menu_col1, menu_col2 = st.columns(2)
 
 with menu_col1:
     # PRIMO PULSANTE: Il Codice del Viandante
     with st.popover("📜 Il Codice del Viandante", use_container_width=True):
-        st.markdown("<p style='text-align: center; font-style: italic; margin-bottom: 15px; color: #231709;'>Il rispetto è il primo passo del pellegrino.</p>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; font-style: italic; margin-bottom: 15px;'>Il rispetto è il primo passo del pellegrino.</p>", unsafe_allow_html=True)
         st.markdown("""
-        * 🍃 **Rispetta la natura:** non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi.
-        * 🏡 **Rispetta il territorio:** sei ospite di terreni agricoli: chiudi i cancelli.
-        * 🤫 **Rispetta il silenzio:** il cammino è meditazione.
-        * 🎒 **Sii essenziale:** viaggia leggero. Negli ostelli, sii ordinato.
-        * 🤝 **Sii solidale:** aiuta chi è in difficoltà.
-        * 🙏 **Sii grato e umile:** ringrazia chi ti ospita.
+        * 🍃 **Rispetta la natura:** non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.
+        * 🏡 **Rispetta il territorio:** sei ospite di terreni agricoli: chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.
+        * 🤫 **Rispetta il silenzio:** il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e negli ospitali.
+        * 🎒 **Sii essenziale:** viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.
+        * 🤝 **Sii solidale:** aiuta chi è in difficoltà. Un sorriso o un consiglio possono fare la differenza per un altro viandante.
+        * 🙏 **Sii grato e umile:** ringrazia chi ti ospita. Accetta con curiosità i ritmi e la cultura che incontri.
         """)
 
 with menu_col2:
     # SECONDO PULSANTE: Le tue Credenziali
     with st.popover("📍 Le tue Credenziali", use_container_width=True):
-        st.markdown("<p style='text-align: center; font-style: italic; margin-bottom: 15px; color: #231709;'>La tua Credenziale è la memoria del tuo spirito.</p>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; font-style: italic; margin-bottom: 15px;'>La tua Credenziale è la memoria del tuo spirito, custodiscila con cura.</p>", unsafe_allow_html=True)
         st.markdown("""
-        * **Palermo:** Cattedrale (9:00-17:30) | Centro "Padre Nostro".
+        * **Palermo:** Cattedrale (9:00-17:30) | Centro "Padre Nostro" (feriali 9:30-12:30; mar/gio 15:00-18:00).
         * **Monreale:** Duomo (8:30-12:45 / 14:30-17:00).
         * **Altofonte:** Ufficio Comunale, Parrocchie.
         * **Santa Cristina Gela:** Ufficio Comunale.
         * **Corleone:** Ufficio Comunale, Parrocchie.
-        * **Prizzi:** Sportello Turistico | Museo.
-        * **Castronovo di Sicilia:** Ufficio Turistico.
+        * **Prizzi:** Sportello Turistico (lun-ven 9:00-14:00) | Museo (sab 16:00-20:00; dom 9:00-13:00).
+        * **Castronovo di Sicilia:** Ufficio Turistico, Parrocchia.
         * **Cammarata:** Comune, Ufficio Turistico.
-        * **Sutera:** Ufficio Comunale, Museo del Pellegrino.
-        * **Grotte:** Centralino Comune, Parrocchia.
-        * **Joppolo Giancaxio:** Ufficio Comunale, Parrocchie.
-        * **Agrigento:** Mudia per il Testimonium, Parrocchie.
+        * **Sutera:** Ufficio Comunale, Parrocchia, Museo del Pellegrino.
+        * **Grotte:** Centralino Comune (Piazza Umberto I), Parrocchia.
+        * **Joppolo Giancaxio:** Ufficio Comunale, Parrocchie, Ristoratori.
+        * **Agrigento:** Mudia (Via Duomo 96) per il Testimonium, Parrocchie.
         """)
 
-# Riga di separazione prima della chat
+# -------------------------------------------------------------------
+# Elaborazione Documento PDF e RAG
+# -------------------------------------------------------------------
+cartella_corrente = os.path.dirname(__file__)
+documento = os.path.join(cartella_corrente, "TAPPE AGGIORNATE.pdf")
+
+catena = None
+
+if os.path.exists(documento):
+    
+    @st.cache_data(show_spinner="Sto leggendo il PDF...")
+    def estrai_testo_pdf(percorso_pdf: str) -> str:
+        testo = ""
+        with pdfplumber.open(percorso_pdf) as pdf: 
+            for pagina in pdf.pages:
+                testo_pagina = pagina.extract_text() or ""
+                testo = testo + testo_pagina + "\n"
+        return testo.strip()
+    
+    testo = estrai_testo_pdf(documento)
+
+    @st.cache_data(show_spinner=False)
+    def crea_frammenti(testo_estratto: str):
+        taglierina = RecursiveCharacterTextSplitter(
+            separators=["\n\n", "\n", ". ", " "],
+            chunk_size=1000,
+            chunk_overlap=200
+        )
+        return [f for f in taglierina.split_text(testo_estratto) if f.strip()]
+
+    frammenti = crea_frammenti(testo)
+
+    if not frammenti:
+        st.error("Il file PDF è stato trovato, ma non è stato possibile estrarre testo. È un PDF scannerizzato?")
+    else:
+        @st.cache_resource(show_spinner=False)
+        def crea_vectorstore(lista_frammenti):
+            embeddings = OpenAIEmbeddings(
+                model="text-embedding-3-small",
+                openai_api_key=st.secrets["OPENAI_API_KEY"]
+            )
+            return FAISS.from_texts(lista_frammenti, embedding=embeddings) 
+        
+        vettori = crea_vectorstore(frammenti)
+        
+        def formatta_documento(documenti):
+            return "\n\n".join([doc.page_content for doc in documenti])
+        
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", 
+             '''Sei “La Magna via”, un assistente digitale dedicato ai pellegrini della Magna Via Francigena in Sicilia.
+ 
+Il tuo ruolo è accompagner l’utente durante il cammino fornendo:
+- informazioni pratiche (punti/fontanelle/fonti d'acqua, distanza, difficoltà delle tappe, punti di appproviggionamento)
+- supporto culturale e narrativo sul territorio
+- indicazioni su ospitalità, ristoro e luoghi di interesse
+ 
+Regole di comportamento:
+- Usa esclusivamente le informazioni presenti nel contesto fornito
+- Non inventare informazioni mancanti
+- Se l’informazione richiesta non è disponibile nel contesto, rispondi in modo accogliente e coerente con il ruolo di guida del cammino:
+“Caro pellegrino, al momento non riesco a guidarti su questa informazione :cry:.”
+- Se non sai la risposta non devi inserire :blush: dopo 'Caro pellegrino'
+- Nel caso in cui l'utente ponga una domanda in una lingua diversa dall'italiano rispondi nella stessa lingua.
+- Quando l'utente ti pone una domanda senza utilizzare la lingua italiana devi recuperare le informazioni al pdf e tradurle allineandoti alla lingua utilizzata dall'utente
+- Nel caso in cui l'utente utilizzi un alfabeto diverso dalle lingue indoeuropee (cirillico, alfabeti asiatici ecc.) rispondi utilizzando lo stesso alfabeto
+- Quando il pellegrino scriverà "Ultreya" tu dovrai rispondere "Et suseia!" con entusiasmo.
+- i nomi  delle tappe e informazioni importanti come km, presenza di cani, acqua, cibo ecc. devono essere visualizzati in grassetto nella cronologia della chat. 
+
+Le risposte devono essere:
+- chiare
+- utili durante il cammino
+- semplici da consultare anche in mobilità
+- coerenti con l’esperienza del pellegrinaggio
+- accoglienti e orientate all’accompagnamento del pellegrino.
+- Quando l'utente chiede informazioni su una tappa, verifica se il percorso attraversa aree sensibili (boschi, riserve naturali, zone di macchia mediterranea). 
+Se la risposta è affermativa, aggiungi in chiusura:
+':herb: Cammina da custode (vai a capo)
+La Magna Via è un dono prezioso, proteggiamola insieme dal rischio incendi. Per favore, evita di fumare nei boschi and porta sempre con te i mozziconi fino al prossimo borgo. Non lasciare traccia, solo impronte. Grazie!'
+
+Contesto:\n{context}'''),
+            ("human", "{question}")
+        ])
+
+        comparatore = vettori.as_retriever(
+            search_type="mmr",
+            search_kwargs={"k": 4}
+        )
+        
+        modello_llm = ChatOpenAI(
+            model="gpt-4o-mini", 
+            temperature=0.3,
+            max_tokens=1000,
+            openai_api_key=st.secrets["OPENAI_API_KEY"]
+        )
+        
+        catena = (
+            {"context": comparatore | formatta_documento, "question": RunnablePassthrough()}
+            | prompt
+            | modello_llm
+            | StrOutputParser()
+        )
+else:
+    st.error(f"Non ho trovato il file PDF nel percorso: {documento}.")
+
+# -------------------------------------------------------------------
+# Gestione Cronologia e Messaggi Chat
+# -------------------------------------------------------------------
+if "cronologia" not in st.session_state:
+    st.session_state.cronologia = []
+
+# Mostra la cronologia a schermo
 st.write("---")
+for messaggio in st.session_state.cronologia:
+    if messaggio["role"] == "user":
+        icona = "Utente.png"  
+        colore_testo = "#4A2E1B"  
+    else:
+        icona = "LOGO.png"  
+        colore_testo = "#3D2314"  
+
+    with st.chat_message(messaggio["role"], avatar=icona):
+        # Applicata la funzione di formattazione sicura per preservare i grassetti
+        testo_colorato = formatta_messaggio(messaggio["content"], colore_testo, "15px")
+        st.markdown(testo_colorato, unsafe_allow_html=True)
+        
+# Blocco di Input Interattivo ancorato in basso
+if catena is not None:
+    if input_utente := st.chat_input("Chiedi alla Via..."):
+        
+        # 1. Salva e mostra subito il messaggio dell'utente
+        st.session_state.cronologia.append({"role": "user", "content": input_utente})
+        with st.chat_message("user", avatar="Utente.png"):
+            # Applicata la funzione anche all'input live dell'utente
+            st.markdown(formatta_messaggio(input_utente, "#4A2E1B", "16px"), unsafe_allow_html=True)
+        
+        # 2. Genera e mostra live la risposta del Modello RAG
+        with st.chat_message("assistant", avatar="LOGO.png"):
+            with st.spinner("Il chatbot sta rispondendo..."):
+                risposta_bot = catena.invoke(input_utente)
+                # Applicata la funzione alla risposta live del bot RAG
+                st.markdown(formatta_messaggio(risposta_bot, "#3D2314", "16px"), unsafe_allow_html=True)
+        
+        # 3. Salva la risposta del bot nella cronologia
+        st.session_state.cronologia.append({"role": "assistant", "content": risposta_bot})
+        
+        # 4. Aggiorna la pagina per allineare tutto lo stato interno
+        st.rerun()
