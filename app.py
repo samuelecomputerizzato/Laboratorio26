@@ -106,8 +106,8 @@ html_sidebar = """
 <label for="side-menu-switch" class="sidebar-toggle-button">☰ Lo spazio del pellegrino</label>
 <div class="custom-sidebar">
 <label for="side-menu-switch" class="sidebar-close">✕</label>
-<h3 style="text-align: center; margin-bottom: 5px;">Menu del Viandante</h3>
-<p style="text-align: center; font-size: 0.85rem; font-style: italic; opacity: 0.9; margin-bottom: 20px;">Informazioni per il Cammino</p>
+<h3 style="text-align: center; margin-bottom: 5px;">Lo spazio del Viandante</h3>
+<p style="text-align: center; font-size: 0.85rem; font-style: italic; opacity: 0.9; margin-bottom: 20px;"> </p>
 <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.3); margin-bottom: 20px;">
 <details>
 <summary>📜 Il Codice del Viandante</summary>
@@ -123,8 +123,7 @@ html_sidebar = """
 </details>
 <details>
 <summary>📍 Le tue Credenziali</summary>
-<p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">La tua Credenziale è la memoria del tuo spirito, custodiscila con cura.</p>
-<ul>
+<p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">La tua Credenziale è la memoria del tuo spirito, custodiscila con cura.</p>Ultreya, viandante!<ul>
 <li><strong>Palermo:</strong> Cattedrale (9:00-17:30) | Centro "Padre Nostro" (feriali 9:30-12:30; mar/gio 15:00-18:00).</li>
 <li><strong>Monreale:</strong> Duomo (8:30-12:45 / 14:30-17:00).</li>
 <li><strong>Altofonte:</strong> Ufficio Comunale, Parrocchie.</li>
