@@ -41,6 +41,36 @@ st.markdown(
         background-attachment: fixed;
         color: #231709;
     }
+        /* ==========================================
+       PULIZIA INTERFACCIA (TUTTI I DISPOSITIVI)
+       ========================================== */
+    
+    /* Elimina menù, toolbar e pulsante Deploy ovunque */
+    #MainMenu, 
+    [data-testid="stToolbar"], 
+    .stDeployButton, 
+    footer {
+        visibility: hidden !important;
+        display: none !important;
+    }
+    
+    /* Rende l'header superiore totalmente invisibile e trasparente */
+    /* Questo evita che rimanga una striscia vuota o grigia in cima alla pagina su PC */
+    header[data-testid="stHeader"] {
+        background-color: transparent !important;
+        background: transparent !important;
+        height: 0px !important;
+    }
+
+    /* Protegge l'icona della sidebar (hamburger) su mobile e tablet */
+    /* Le permette di rimanere visibile e cliccabile anche se l'header è azzerato */
+    [data-testid="stSidebarCollapseButton"] {
+        background-color: #7A8B74 !important; /* Stesso colore della tua sidebar */
+        color: white !important;
+        border-radius: 50% !important;
+        margin-top: 10px !important;
+        margin-left: 10px !important;
+    }
     
     /* Configurazione scritta "Chiedi al chatbot" */
     .stTextInput label div p {
@@ -55,18 +85,6 @@ st.markdown(
         color: #000000;
     }
     
-    /* Nasconde il menù ad hamburger in alto a destra */
-    #MainMenu {visibility: hidden;}
-    
-    /* Nasconde la barra degli strumenti/opzioni in alto a destra */
-    [data-testid="stToolbar"] {visibility: hidden !important;}
-    
-    /* Nasconde il pulsante "Deploy" (se presente) */
-    .stDeployButton {display: none !important;}
-    
-    /* Nasconde il footer "Made with Streamlit" in fondo alla pagina */
-    footer {visibility: hidden;}
-    }
 
 
     /* ELIMINA LA BARRA GRIGIA: Rende trasparenti i messaggi della chat */
