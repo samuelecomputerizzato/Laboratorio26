@@ -27,19 +27,27 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
-
 # -------------------------------------------------------------------
-# Configurazione Stile CSS (Eliminazione totale menu nativi e personalizzazione)
+# Configurazione Stile CSS (Fix Tema Scuro + Nuke Loghi Mobile)
 # -------------------------------------------------------------------
 st.markdown(
     """
     <style>
     
-    /* 1. ELIMINAZIONE TOTALE HEADER, FOOTER E MENU STREAMLIT */
-    header, footer, #MainMenu, [data-testid="stToolbar"], .stDeployButton, [data-testid="stManageAppButton"] {
+    /* 1. ELIMINAZIONE TOTALE DI OGNI ELEMENTO E LOGO STREAMLIT (PC E MOBILE) */
+    header, 
+    footer, 
+    [data-testid="stHeader"], 
+    [data-testid="stAppHeader"], 
+    [data-testid="stDecoration"], 
+    #MainMenu, 
+    [data-testid="stToolbar"], 
+    .stDeployButton, 
+    [data-testid="stManageAppButton"] {
         display: none !important;
         visibility: hidden !important;
         height: 0px !important;
+        opacity: 0 !important;
     }
     
     /* 2. STILE GLOBALE APP E PAGINA CENTRALE */
@@ -62,7 +70,7 @@ st.markdown(
         color: #000000;
     }
 
-    /* ELIMINA LA BARRA GRIGIA: Rende trasparenti i messaggi della chat */
+    /* Rende trasparenti i messaggi della chat per eliminare la barra grigia */
     [data-testid="stChatMessage"],
     [data-testid="stChatMessage"] > div,
     .stChatMessage {
@@ -73,21 +81,20 @@ st.markdown(
         padding-left: 0px !important;
     }
 
-    /* SOLUZIONE BUG TEMA SCURO: Costringe i blocchi di testo generati dal RAG (p, li, strong, ecc.)
-       a ereditare il colore scuro dei tuoi div personalizzati invece di diventare bianchi */
+    /* Forza i testi della chat a rimanere scuri */
     [data-testid="stChatMessage"] p,
     [data-testid="stChatMessage"] li,
     [data-testid="stChatMessage"] strong,
     [data-testid="stChatMessage"] em,
     [data-testid="stChatMessage"] span,
     [data-testid="stChatMessage"] div {
-        color: inherit !important;
+        color: #231709 !important;
     }
 
-    /* SISTEMAZIONE DELLA TENDINA DEI POPOVER (POPOVER BODY) */
+    /* 3. FIX TEMA SCURO: BLOCCO POPOVER (IL CONTENITORE) */
     [data-testid="stPopoverBody"] {
         background-color: #ffffff !important; 
-        border: 1px solid #7A8B74 !important;              
+        border: 2px solid #7A8B74 !important;              
         border-radius: 12px !important;       
         box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15) !important; 
         min-width: 320px !important;          
@@ -95,8 +102,10 @@ st.markdown(
         padding: 18px !important;
     }
     
-    /* Mantiene i testi interni del popover scuri e leggibili */
-    [data-testid="stPopoverBody"] p, [data-testid="stPopoverBody"] li, [data-testid="stPopoverBody"] span {
+    /* FIX DEFINITIVO TEMA SCURO: Il selettore universale '*' costringe 
+       QUALSIASI testo, lista o paragrafo dentro il popover a rimanere scuro 
+       sovrascrivendo la modalità scura del telefono */
+    [data-testid="stPopoverBody"] * {
         color: #231709 !important;
     }
 
@@ -126,7 +135,6 @@ st.markdown(
         width: 100% !important;
     }
 
-    /* Imposta la dimensione massima del logo centrale */
     .main [data-testid="stImage"] img {
         display: block !important;
         margin: 0 auto !important;
@@ -134,7 +142,6 @@ st.markdown(
         height: auto !important;
     }
 
-    /* Rimpicciolisce e centra il titolo h1 sotto il logo */
     h1 {
         font-size: 2.2rem !important;
         margin-top: 15px !important;
@@ -158,6 +165,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 # -------------------------------------------------------------------
 # Interfaccia centrale (LOGO e Titolo perfettamente centrati)
