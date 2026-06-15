@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pdfplumber
 import os
@@ -14,17 +13,22 @@ from langchain_core.output_parsers import StrOutputParser
 st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", initial_sidebar_state="expanded")
 
 # -------------------------------------------------------------------
-# Configurazione Stile CSS (Nuke totale della barra superiore e gestione temi)
+# Configurazione Stile CSS (Standardizzazione del tema - No Dark Mode)
 # -------------------------------------------------------------------
 st.markdown(
     """
     <style>
     
-    /* 3. STILE GLOBALE APP E PAGINA CENTRALE */
-    .stApp {
-        background-color: #F1F0E6;
+    /* 1. BLOCCO DEI COLORI DI SFONDO E DEL TESTO DELL'INTERA APP */
+    html, body, [data-testid="stAppViewContainer"], .stApp {
+        background-color: #F1F0E6 !important;
         background-attachment: fixed;
-        color: #231709;
+        color: #231709 !important;
+    }
+    
+    /* Forza il testo di tutti i paragrafi, intestazioni e scritte standard a rimanere scuro */
+    .stApp p, .stApp span, .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6, .stApp li {
+        color: #231709 !important;
     }
     
     /* Configurazione scritta "Chiedi al chatbot" */
@@ -34,10 +38,10 @@ st.markdown(
         font-weight: bold !important;
     }
 
-    /* Rettangolo di input */
+    /* Rettangolo di input - Testo scuro su sfondo mattone */
     .stTextInput input {
-        background-color: #793921;
-        color: #000000;
+        background-color: #793921 !important;
+        color: #FFFFFF !important; /* Testo bianco per contrasto leggibile sul mattone */
     }
 
     /* ELIMINA LA BARRA GRIGIA: Rende trasparenti i messaggi della chat */
@@ -51,47 +55,51 @@ st.markdown(
         padding-left: 0px !important;
     }
 
-    /* CLASSI PERSONALIZZATE PER IL TESTO CHAT RESPONSIVE AI TEMI */
+    /* CLASSI PERSONALIZZATE PER IL TESTO CHAT (IDENTICHE SU TUTTI I TEMI) */
     .chat-user-msg {
-        color: #4A2E1B; /* Colore marrone scuro per tema chiaro */
-        font-size: 15px;
-        font-weight: 500;
+        color: #4A2E1B !important; 
+        font-size: 15px !important;
+        font-weight: 500 !important;
     }
     
     .chat-assistant-msg {
-        color: #3D2314; /* Colore marrone terra per tema chiaro */
-        font-size: 15px;
-        line-height: 1.5;
-    }
-
-    /* GESTIONE TEMA SCURO (Media Query di sistema) */
-    @media (prefers-color-scheme: dark) {
-        .stApp {
-            background-color: #1E1E1E !important;
-            color: #F1F0E6 !important;
-        }
-        .chat-user-msg {
-            color: #E6D8B8 !important; /* Crema/Beige chiaro leggibile su fondo scuro */
-        }
-        .chat-assistant-msg {
-            color: #F1F0E6 !important; /* Bianco sporco/Panna per l'assistente */
-        }
+        color: #3D2314 !important; 
+        font-size: 15px !important;
+        line-height: 1.5 !important;
     }
 
     /* Cambia il colore di sfondo della barra laterale */
     [data-testid="stSidebar"] {
-        background-color: #7A8B74; 
+        background-color: #7A8B74 !important; 
+    }
+    
+    /* Forza il testo all'interno della Sidebar a rimanere bianco/leggibile */
+    [data-testid="stSidebar"] p, 
+    [data-testid="stSidebar"] h1, 
+    [data-testid="stSidebar"] h2, 
+    [data-testid="stSidebar"] h3, 
+    [data-testid="stSidebar"] h4, 
+    [data-testid="stSidebar"] header {
+        color: #FFFFFF !important;
     }
 
     /* SISTEMAZIONE DELLA TENDINA (POPOVER BODY) */
     [data-testid="stPopoverBody"] {
-        background-color: transparent !important; 
-        border: none !important;              
+        background-color: #7A8B74 !important; /* Forza lo sfondo verde della sidebar anche per il popup */
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;              
         border-radius: 12px !important;       
         box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.4) !important; 
         min-width: 320px !important;          
         max-width: 85vw !important;           
         padding: 18px !important;
+    }
+    
+    /* Forza il testo dentro i Popover ad essere bianco */
+    [data-testid="stPopoverBody"] p,
+    [data-testid="stPopoverBody"] li,
+    [data-testid="stPopoverBody"] span,
+    [data-testid="stPopoverBody"] ul {
+        color: #FFFFFF !important;
     }
 
     /* Modifica il pulsante prima di cliccarlo */
@@ -319,7 +327,6 @@ for messaggio in st.session_state.cronologia:
         classe_css = "chat-assistant-msg"  
 
     with st.chat_message(messaggio["role"], avatar=icona):
-        # Utilizziamo le classi CSS rimosse dallo stile inline hardcoded
         testo_colorato = f'<div class="{classe_css}">{messaggio["content"]}</div>'
         st.markdown(testo_colorato, unsafe_allow_html=True)
         
