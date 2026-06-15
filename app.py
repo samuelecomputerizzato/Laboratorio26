@@ -50,13 +50,15 @@ st.markdown(
         padding-left: 0px !important;
     }
 
-    /* FORZA IL TESTO DELLA CHAT A RIMANERE SCURO IN QUALSIASI TEMA (Risolve il bug del tema scuro) */
+    /* SOLUZIONE BUG TEMA SCURO: Costringe i blocchi di testo generati dal RAG (p, li, strong, ecc.)
+       a ereditare il colore scuro dei tuoi div personalizzati invece di diventare bianchi */
     [data-testid="stChatMessage"] p,
     [data-testid="stChatMessage"] li,
     [data-testid="stChatMessage"] strong,
+    [data-testid="stChatMessage"] em,
     [data-testid="stChatMessage"] span,
     [data-testid="stChatMessage"] div {
-        color: #3D2314 !important;
+        color: inherit !important;
     }
 
     /* Cambia il colore di sfondo della barra laterale */
@@ -300,7 +302,8 @@ for messaggio in st.session_state.cronologia:
         colore_testo = "#3D2314"  
 
     with st.chat_message(messaggio["role"], avatar=icona):
-        testo_colorato = f'<span style="color: {colore_testo}; font-size: 15px;">{messaggio["content"]}</span>'
+        # Sostituito span con div per gestire correttamente i blocchi multiline della risposta
+        testo_colorato = f'<div style="color: {colore_testo}; font-size: 15px; line-height: 1.5;">{messaggio["content"]}</div>'
         st.markdown(testo_colorato, unsafe_allow_html=True)
         
 # Blocco di Input Interattivo ancorato in basso
@@ -323,4 +326,3 @@ if catena is not None:
         
         # 4. Aggiorna la pagina per allineare tutto lo stato interno
         st.rerun()
-
