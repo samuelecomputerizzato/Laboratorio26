@@ -3,7 +3,7 @@ import pdfplumber
 import os
 import re  # Importato per la gestione della formattazione del testo
 
-st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", layout="centered")
 
 # -------------------------------------------------------------------
 # Funzione di utilità per formattare i messaggi mantenendo il Markdown attivo
@@ -27,59 +27,26 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
+
 # -------------------------------------------------------------------
-# Configurazione Stile CSS (Fix Tema Scuro + Nuke Loghi Mobile)
+# Configurazione Stile CSS (Layout con Sidebar Custom + Nuke Streamlit)
 # -------------------------------------------------------------------
 st.markdown(
     """
     <style>
     
-       /* =================================================================
-       NUKE TOTALE LOGHI MOBILE E MANAGE APP (DEPLOIATO SU CLOUD)
-       ================================================================= */
-    
-    /* 1. ELIMINAZIONE LOGHI "MADE WITH STREAMLIT" E BADGE SU MOBILE */
-    footer, 
-    [data-testid="stFooter"], 
-    div[class*="viewerBadge"], 
-    div[class*="StyledFooter"],
-    a[href*="streamlit.io"] {
+    /* 1. NUKE TOTALE DI STREAMLIT (AZZERAMENTO DI OGNI LOGO, MENU E TASTO CLOUD) */
+    header, footer, [data-testid="stHeader"], [data-testid="stAppHeader"], [data-testid="stDecoration"], 
+    #MainMenu, [data-testid="stToolbar"], .stDeployButton, [data-testid="stManageAppButton"],
+    div[class*="viewerBadge"], div[class*="StyledFooter"], a[href*="streamlit.io"],
+    div[class*="StyledActionButton"], [data-testid="stStatusWidget"] {
         display: none !important;
         visibility: hidden !important;
         height: 0px !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
-    }
-
-    /* 2. ELIMINAZIONE TASTO "MANAGE APP" IN BASSO A DESTRA (PC, TABLET, MOBILE) */
-    [data-testid="stManageAppButton"], 
-    .stManageAppButton, 
-    div[class*="stManageAppButton"],
-    button[title*="Manage"],
-    div[class*="StyledActionButton"],
-    [data-testid="stStatusWidget"] {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
         width: 0px !important;
-        height: 0px !important;
-    }
-
-    /* 3. CANCELLAZIONE HEADER SUPERIORE DI SERVIZIO */
-    header, 
-    [data-testid="stHeader"], 
-    [data-testid="stAppHeader"], 
-    [data-testid="stDecoration"], 
-    #MainMenu, 
-    [data-testid="stToolbar"], 
-    .stDeployButton {
-        display: none !important;
-        visibility: hidden !important;
-        height: 0px !important;
         opacity: 0 !important;
+        pointer-events: none !important;
     }
- 
     
     /* 2. STILE GLOBALE APP E PAGINA CENTRALE */
     .stApp {
@@ -102,9 +69,7 @@ st.markdown(
     }
 
     /* Rende trasparenti i messaggi della chat per eliminare la barra grigia */
-    [data-testid="stChatMessage"],
-    [data-testid="stChatMessage"] > div,
-    .stChatMessage {
+    [data-testid="stChatMessage"], [data-testid="stChatMessage"] > div, .stChatMessage {
         background-color: transparent !important;
         background: transparent !important;
         border: none !important;
@@ -113,47 +78,9 @@ st.markdown(
     }
 
     /* Forza i testi della chat a rimanere scuri */
-    [data-testid="stChatMessage"] p,
-    [data-testid="stChatMessage"] li,
-    [data-testid="stChatMessage"] strong,
-    [data-testid="stChatMessage"] em,
-    [data-testid="stChatMessage"] span,
-    [data-testid="stChatMessage"] div {
+    [data-testid="stChatMessage"] p, [data-testid="stChatMessage"] li, [data-testid="stChatMessage"] strong,
+    [data-testid="stChatMessage"] em, [data-testid="stChatMessage"] span, [data-testid="stChatMessage"] div {
         color: #231709 !important;
-    }
-
-    /* 3. FIX TEMA SCURO: BLOCCO POPOVER (IL CONTENITORE) */
-    [data-testid="stPopoverBody"] {
-        background-color: #ffffff !important; 
-        border: 2px solid #7A8B74 !important;              
-        border-radius: 12px !important;       
-        box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15) !important; 
-        min-width: 320px !important;          
-        max-width: 85vw !important;           
-        padding: 18px !important;
-    }
-    
-    /* FIX DEFINITIVO TEMA SCURO: Il selettore universale '*' costringe 
-       QUALSIASI testo, lista o paragrafo dentro il popover a rimanere scuro 
-       sovrascrivendo la modalità scura del telefono */
-    [data-testid="stPopoverBody"] * {
-        color: #231709 !important;
-    }
-
-    /* Modifica i pulsanti menu (Stile Verde Coordinato) */
-    [data-testid="stPopover"] button {
-        background-color: #7A8B74 !important; 
-        color: #ffffff !important;
-        border: none !important;
-        border-radius: 8px !important;
-        padding: 12px !important;
-        font-weight: bold !important;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05) !important;
-    }
-    
-    [data-testid="stPopover"] button:hover {
-        background-color: #677761 !important;
-        color: #ffffff !important;
     }
 
     /* FORZA LA CENTRATURA PERFETTA E RIDUCE IL LOGO CENTRALE */
@@ -181,15 +108,90 @@ st.markdown(
         color: #542E17 !important;
     }
 
-    /* OTTIMIZZAZIONE SPECIFICA PER IL TELEFONO */
-    @media (max-width: 768px) {
-        [data-testid="stPopoverBody"] {
-            min-width: 280px !important;
-            max-width: 85vw !important;
-            position: fixed !important;  
-            left: 50% !important;        
-            transform: translateX(-50%) !important; 
-            top: auto !important;        
+    /* =================================================================
+       3. ENGINE DELLA NUOVA SIDEBAR CUSTOM (HTML/CSS PRIVATO)
+       ================================================================= */
+    
+    /* Stile dei blocchi collassabili <details> */
+    .custom-sidebar details {
+        background-color: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 8px;
+        margin-bottom: 12px;
+        padding: 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .custom-sidebar summary {
+        font-weight: bold;
+        font-size: 1.05rem;
+        cursor: pointer;
+        outline: none;
+        color: #ffffff !important;
+        user-select: none;
+    }
+    
+    .custom-sidebar .details-content {
+        margin-top: 10px;
+        font-size: 0.92rem;
+        line-height: 1.5;
+        color: #f8f9fa !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 8px;
+    }
+
+    .custom-sidebar .details-content ul {
+        padding-left: 18px;
+        margin: 0;
+    }
+
+    .custom-sidebar .details-content li {
+        margin-bottom: 8px;
+        color: #f8f9fa !important;
+    }
+
+    .custom-sidebar .details-content strong {
+        color: #ffffff !important;
+    }
+
+    /* CONFIGURAZIONE RESPONSIVA: COMPORTAMENTO PC VS TELEFONO */
+    
+    /* --- CONFIGURAZIONE MONITOR GRANDE (Vera Sidebar a Sinistra) --- */
+    @media (min-width: 992px) {
+        .custom-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 300px;
+            height: 100vh;
+            background-color: #7A8B74;
+            padding: 30px 20px;
+            box-shadow: 3px 0 15px rgba(0,0,0,0.08);
+            overflow-y: auto;
+            z-index: 99999;
+        }
+        
+        /* Sposta la colonna della chat verso destra per non accavallarsi alla sidebar */
+        .main .block-container {
+            max-width: 680px !important;
+            margin-left: 360px !important;
+            margin-right: auto !important;
+            padding-top: 40px !important;
+        }
+    }
+
+    /* --- CONFIGURAZIONE MOBILE/TABLET (Diventa un Menu Superiore Elegante) --- */
+    @media (max-width: 991px) {
+        .custom-sidebar {
+            background-color: #7A8B74;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            width: 100%;
+            box-shadow: 0px 4px 12px rgba(0,0,0,0.05);
+        }
+        .custom-sidebar h3 {
+            font-size: 1.2rem !important;
         }
     }
     </style>
@@ -197,50 +199,61 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+# -------------------------------------------------------------------
+# INIEZIONE HTML: La Nuova Sidebar Custom (Indipendente da Streamlit)
+# -------------------------------------------------------------------
+html_sidebar = """
+<div class="custom-sidebar">
+    <h3 style="color: #ffffff !important; text-align: center; margin-top: 0; margin-bottom: 10px; font-family: sans-serif;">Menu del Viandante</h3>
+    <p style="color: #e2e8f0 !important; text-align: center; font-size: 0.85rem; margin-bottom: 20px; font-style: italic;">Informazioni Utili per la Via</p>
+    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin-bottom: 20px;">
+    
+    <details>
+        <summary>📜 Il Codice del Viandante</summary>
+        <div class="details-content">
+            <p style="font-style: italic; text-align: center; margin-bottom: 10px;">Il rispetto è il primo passo del pellegrino.</p>
+            <ul>
+                <li><strong>Rispetta la natura:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.</li>
+                <li><strong>Rispetta il territorio:</strong> sei ospite di terreni agricoli: chiudi i cancelli e non calpestare i raccolti.</li>
+                <li><strong>Rispetta il silenzio:</strong> il cammino è meditazione. Rispetta la quiete nei borghi e negli ospitali.</li>
+                <li><strong>Sii essenziale:</strong> viaggia leggero. Negli ostelli, sii ordinato e rispettoso.</li>
+                <li><strong>Sii solidale:</strong> aiuta chi è in difficoltà. Un sorriso può fare la differenza.</li>
+                <li><strong>Sii grato e umile:</strong> ringrazia chi ti ospita.</li>
+            </ul>
+        </div>
+    </details>
+
+    <details>
+        <summary>📍 Le tue Credenziali</summary>
+        <div class="details-content">
+            <p style="font-style: italic; text-align: center; margin-bottom: 10px;">La tua Credenziale è la memoria del tuo spirito.</p>
+            <ul>
+                <li><strong>Palermo:</strong> Cattedrale (9:00-17:30) | Centro "Padre Nostro" (feriali 9:30-12:30; mar/gio 15:00-18:00).</li>
+                <li><strong>Monreale:</strong> Duomo (8:30-12:45 / 14:30-17:00).</li>
+                <li><strong>Altofonte:</strong> Ufficio Comunale, Parrocchie.</li>
+                <li><strong>Santa Cristina Gela:</strong> Ufficio Comunale.</li>
+                <li><strong>Corleone:</strong> Ufficio Comunale, Parrocchie.</li>
+                <li><strong>Prizzi:** Sportello Turistico (lun-ven 9:00-14:00) | Museo (sab 16:00-20:00; dom 9:00-13:00).</li>
+                <li><strong>Castronovo di Sicilia:</strong> Ufficio Turistico, Parrocchia.</li>
+                <li><strong>Cammarata:</strong> Comune, Ufficio Turistico.</li>
+                <li><strong>Sutera:</strong> Ufficio Comunale, Parrocchia, Museo del Pellegrino.</li>
+                <li><strong>Grotte:</strong> Centralino Comune, Parrocchia.</li>
+                <li><strong>Joppolo Giancaxio:</strong> Ufficio Comunale, Parrocchie.</li>
+                <li><strong>Agrigento:</strong> Mudia (Via Duomo 96) per il Testimonium, Parrocchie.</li>
+            </ul>
+        </div>
+    </details>
+</div>
+"""
+# Inietta la barra laterale custom nell'applicazione
+st.markdown(html_sidebar, unsafe_allow_html=True)
 
 # -------------------------------------------------------------------
-# Interfaccia centrale (LOGO e Titolo perfettamente centrati)
+# Interfaccia centrale (LOGO e Titolo)
 # -------------------------------------------------------------------
 st.image("LOGO.png")
 st.markdown("<h1>La Magna Via</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: #542E17; font-weight: bold; font-size: 1.1rem; margin-bottom: 20px;'>Ultreya, viandante!</p>", unsafe_allow_html=True)
-
-# -------------------------------------------------------------------
-# Menu Alternativo (Ex Sidebar) - Disposto su due colonne centrali
-# -------------------------------------------------------------------
-menu_col1, menu_col2 = st.columns(2)
-
-with menu_col1:
-    # PRIMO PULSANTE: Il Codice del Viandante
-    with st.popover("📜 Il Codice del Viandante", use_container_width=True):
-        st.markdown("<p style='text-align: center; font-style: italic; margin-bottom: 15px;'>Il rispetto è il primo passo del pellegrino.</p>", unsafe_allow_html=True)
-        st.markdown("""
-        * 🍃 **Rispetta la natura:** non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.
-        * 🏡 **Rispetta il territorio:** sei ospite di terreni agricoli: chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.
-        * 🤫 **Rispetta il silenzio:** il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e negli ospitali.
-        * 🎒 **Sii essenziale:** viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.
-        * 🤝 **Sii solidale:** aiuta chi è in difficoltà. Un sorriso o un consiglio possono fare la differenza per un altro viandante.
-        * 🙏 **Sii grato e umile:** ringrazia chi ti ospita. Accetta con curiosità i ritmi e la cultura che incontri.
-        """)
-
-with menu_col2:
-    # SECONDO PULSANTE: Le tue Credenziali
-    with st.popover("📍 Le tue Credenziali", use_container_width=True):
-        st.markdown("<p style='text-align: center; font-style: italic; margin-bottom: 15px;'>La tua Credenziale è la memoria del tuo spirito, custodiscila con cura.</p>", unsafe_allow_html=True)
-        st.markdown("""
-        * **Palermo:** Cattedrale (9:00-17:30) | Centro "Padre Nostro" (feriali 9:30-12:30; mar/gio 15:00-18:00).
-        * **Monreale:** Duomo (8:30-12:45 / 14:30-17:00).
-        * **Altofonte:** Ufficio Comunale, Parrocchie.
-        * **Santa Cristina Gela:** Ufficio Comunale.
-        * **Corleone:** Ufficio Comunale, Parrocchie.
-        * **Prizzi:** Sportello Turistico (lun-ven 9:00-14:00) | Museo (sab 16:00-20:00; dom 9:00-13:00).
-        * **Castronovo di Sicilia:** Ufficio Turistico, Parrocchia.
-        * **Cammarata:** Comune, Ufficio Turistico.
-        * **Sutera:** Ufficio Comunale, Parrocchia, Museo del Pellegrino.
-        * **Grotte:** Centralino Comune (Piazza Umberto I), Parrocchia.
-        * **Joppolo Giancaxio:** Ufficio Comunale, Parrocchie, Ristoratori.
-        * **Agrigento:** Mudia (Via Duomo 96) per il Testimonium, Parrocchie.
-        """)
 
 # -------------------------------------------------------------------
 # Elaborazione Documento PDF e RAG
@@ -275,7 +288,7 @@ if os.path.exists(documento):
     frammenti = crea_frammenti(testo)
 
     if not frammenti:
-        st.error("Il file PDF è stato trovato, ma non è stato possibile estrarre testo. È un PDF scannerizzato?")
+        st.error("Il file PDF è stato trovato, ma non è stato possibile estrarre testo.")
     else:
         @st.cache_resource(show_spinner=False)
         def crea_vectorstore(lista_frammenti):
@@ -364,7 +377,6 @@ for messaggio in st.session_state.cronologia:
         colore_testo = "#3D2314"  
 
     with st.chat_message(messaggio["role"], avatar=icona):
-        # Applicata la funzione di formattazione sicura per preservare i grassetti
         testo_colorato = formatta_messaggio(messaggio["content"], colore_testo, "15px")
         st.markdown(testo_colorato, unsafe_allow_html=True)
         
@@ -372,21 +384,14 @@ for messaggio in st.session_state.cronologia:
 if catena is not None:
     if input_utente := st.chat_input("Chiedi alla Via..."):
         
-        # 1. Salva e mostra subito il messaggio dell'utente
         st.session_state.cronologia.append({"role": "user", "content": input_utente})
         with st.chat_message("user", avatar="Utente.png"):
-            # Applicata la funzione anche all'input live dell'utente
             st.markdown(formatta_messaggio(input_utente, "#4A2E1B", "16px"), unsafe_allow_html=True)
         
-        # 2. Genera e mostra live la risposta del Modello RAG
         with st.chat_message("assistant", avatar="LOGO.png"):
             with st.spinner("Il chatbot sta rispondendo..."):
                 risposta_bot = catena.invoke(input_utente)
-                # Applicata la funzione alla risposta live del bot RAG
                 st.markdown(formatta_messaggio(risposta_bot, "#3D2314", "16px"), unsafe_allow_html=True)
         
-        # 3. Salva la risposta del bot nella cronologia
         st.session_state.cronologia.append({"role": "assistant", "content": risposta_bot})
-        
-        # 4. Aggiorna la pagina per allineare tutto lo stato interno
         st.rerun()
