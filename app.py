@@ -66,6 +66,7 @@ st.markdown(
     
     /* Nasconde il footer "Made with Streamlit" in fondo alla pagina */
     footer {visibility: hidden;}
+    }
 
 
     /* ELIMINA LA BARRA GRIGIA: Rende trasparenti i messaggi della chat */
