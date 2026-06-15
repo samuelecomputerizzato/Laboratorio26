@@ -13,29 +13,17 @@ from langchain_core.output_parsers import StrOutputParser
 st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", initial_sidebar_state="expanded")
 
 # -------------------------------------------------------------------
-# Configurazione Stile CSS (Blocco Totale Tema Chiaro e Disattivazione Dark Mode)
+# Configurazione Stile CSS (Nuke totale della barra superiore)
 # -------------------------------------------------------------------
 st.markdown(
     """
     <style>
     
-    /* 1. SOVRASCRITTURA DELLE VARIABILI DI SISTEMA DI STREAMLIT */
-    :root {
-        --primary-color: #793921 !important;
-        --background-color: #F1F0E6 !important;
-        --secondary-background-color: #7A8B74 !important;
-        --text-color: #231709 !important;
-    }
-
-    /* 2. FORZATURA SFONDO E TESTO SU TUTTI I CONTAINER PRINCIPALI */
-    html, body, [data-testid="stAppViewContainer"], .stApp, [data-testid="stHeader"] {
-        background-color: #F1F0E6 !important;
-        color: #231709 !important;
-    }
-    
-    /* Forza il testo di tutti i paragrafi, intestazioni e scritte standard a rimanere scuro */
-    .stApp p, .stApp span, .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6, .stApp li {
-        color: #231709 !important;
+    /* 3. STILE GLOBALE APP E PAGINA CENTRALE */
+    .stApp {
+        background-color: #F1F0E6;
+        background-attachment: fixed;
+        color: #231709;
     }
     
     /* Configurazione scritta "Chiedi al chatbot" */
@@ -45,10 +33,10 @@ st.markdown(
         font-weight: bold !important;
     }
 
-    /* Rettangolo di input - Testo scuro su sfondo mattone */
+    /* Rettangolo di input */
     .stTextInput input {
-        background-color: #793921 !important;
-        color: #FFFFFF !important; /* Testo bianco per contrasto leggibile sul mattone */
+        background-color: #793921;
+        color: #000000;
     }
 
     /* ELIMINA LA BARRA GRIGIA: Rende trasparenti i messaggi della chat */
@@ -62,51 +50,20 @@ st.markdown(
         padding-left: 0px !important;
     }
 
-    /* CLASSI PERSONALIZZATE PER IL TESTO CHAT (IDENTICHE SU TUTTI I TEMI) */
-    .chat-user-msg {
-        color: #4A2E1B !important; 
-        font-size: 15px !important;
-        font-weight: 500 !important;
-    }
-    
-    .chat-assistant-msg {
-        color: #3D2314 !important; 
-        font-size: 15px !important;
-        line-height: 1.5 !important;
-    }
-
     /* Cambia il colore di sfondo della barra laterale */
     [data-testid="stSidebar"] {
-        background-color: #7A8B74 !important; 
-    }
-    
-    /* Forza il testo all'interno della Sidebar a rimanere bianco/leggibile */
-    [data-testid="stSidebar"] p, 
-    [data-testid="stSidebar"] h1, 
-    [data-testid="stSidebar"] h2, 
-    [data-testid="stSidebar"] h3, 
-    [data-testid="stSidebar"] h4, 
-    [data-testid="stSidebar"] header {
-        color: #FFFFFF !important;
+        background-color: #7A8B74; 
     }
 
     /* SISTEMAZIONE DELLA TENDINA (POPOVER BODY) */
     [data-testid="stPopoverBody"] {
-        background-color: #7A8B74 !important; /* Sfondo verde coordinato alla sidebar */
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;              
+        background-color: transparent !important; 
+        border: none !important;              
         border-radius: 12px !important;       
         box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.4) !important; 
         min-width: 320px !important;          
         max-width: 85vw !important;           
         padding: 18px !important;
-    }
-    
-    /* Forza il testo dentro i Popover ad essere bianco */
-    [data-testid="stPopoverBody"] p,
-    [data-testid="stPopoverBody"] li,
-    [data-testid="stPopoverBody"] span,
-    [data-testid="stPopoverBody"] ul {
-        color: #FFFFFF !important;
     }
 
     /* Modifica il pulsante prima di cliccarlo */
@@ -143,7 +100,6 @@ st.markdown(
     /* Rimpicciolisce il titolo h1 sotto il logo */
     h1 {
         font-size: 2rem !important;
-        color: #231709 !important;
         margin-top: 10px !important;
     }
 
@@ -191,7 +147,7 @@ with st.sidebar.popover("📜 Il Codice del Viandante", use_container_width=True
     st.markdown("""
     * 🍃 **Rispetta la natura:** non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.
     * 🏡 **Rispetta il territorio:** sei ospite di terreni agricoli: chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.
-    * 🤫 **Rispetta il silenzio:** il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e nei ospitali.
+    * 🤫 **Rispetta il silenzio:** il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e negli ospitali.
     * 🎒 **Sii essenziale:** viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.
     * 🤝 **Sii solidale:** aiuta chi è in difficoltà. Un sorriso o un consiglio possono fare la differenza per un altro viandante.
     * 🙏 **Sii grato e umile:** ringrazia chi ti ospita. Accetta con curiosità i ritmi e la cultura che incontri.
@@ -329,13 +285,13 @@ st.write("---")
 for messaggio in st.session_state.cronologia:
     if messaggio["role"] == "user":
         icona = "Utente.png"  
-        classe_css = "chat-user-msg"  
+        colore_testo = "#4A2E1B"  
     else:
         icona = "LOGO.png"  
-        classe_css = "chat-assistant-msg"  
+        colore_testo = "#3D2314"  
 
     with st.chat_message(messaggio["role"], avatar=icona):
-        testo_colorato = f'<div class="{classe_css}">{messaggio["content"]}</div>'
+        testo_colorato = f'<span style="color: {colore_testo}; font-size: 15px;">{messaggio["content"]}</span>'
         st.markdown(testo_colorato, unsafe_allow_html=True)
         
 # Blocco di Input Interattivo ancorato in basso
@@ -345,13 +301,13 @@ if catena is not None:
         # 1. Salva e mostra subito il messaggio dell'utente
         st.session_state.cronologia.append({"role": "user", "content": input_utente})
         with st.chat_message("user", avatar="Utente.png"):
-            st.markdown(f'<div class="chat-user-msg">{input_utente}</div>', unsafe_allow_html=True)
+            st.markdown(f'<div style="color: #4A2E1B; font-size: 16px;">{input_utente}</div>', unsafe_allow_html=True)
         
         # 2. Genera e mostra live la risposta del Modello RAG
         with st.chat_message("assistant", avatar="LOGO.png"):
             with st.spinner("Il chatbot sta rispondendo..."):
                 risposta_bot = catena.invoke(input_utente)
-                st.markdown(f'<div class="chat-assistant-msg">{risposta_bot}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div style="color: #3D2314; font-size: 16px; line-height: 1.5;">{risposta_bot}</div>', unsafe_allow_html=True)
         
         # 3. Salva la risposta del bot nella cronologia
         st.session_state.cronologia.append({"role": "assistant", "content": risposta_bot})
