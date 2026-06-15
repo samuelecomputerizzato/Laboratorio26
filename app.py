@@ -41,12 +41,6 @@ st.markdown(
         background-attachment: fixed;
         color: #231709;
     }
- 
-        /* Nasconde solo il footer in fondo alla pagina (Made with Streamlit) */
-    footer {
-        visibility: hidden !important;
-        display: none !important;
-    }
 
     /* Nasconde solo il pulsante "Manage app" e il tasto Deploy */
     [data-testid="stManageAppButton"], .stDeployButton {
