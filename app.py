@@ -106,8 +106,8 @@ st.markdown(
         background-color: rgba(255, 255, 255, 0.1) !important;
     }
 
-    /* FORZA LA CENTRATURA PERFETTA E RIDUCE IL LOGO CENTRALE */
-    [data-testid="stImage"] {
+    /* CORREZIONE DECENTRAMENTO: Forza la centratura solo nell'area principale */
+    .main [data-testid="stImage"] {
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
@@ -117,22 +117,30 @@ st.markdown(
     }
 
     /* Imposta la dimensione massima del logo centrale */
-    [data-testid="stImage"] img {
+    .main [data-testid="stImage"] img {
         display: block !important;
         margin: 0 auto !important;
         max-width: 200px !important;
         height: auto !important;
     }
 
-    /* Rimpicciolisce il titolo h1 sotto il logo */
+    /* Rimpicciolisce e centra il titolo h1 sotto il logo */
     h1 {
-        font-size: 2rem !important;
-        margin-top: 10px !important;
+        font-size: 2.2rem !important;
+        margin-top: 15px !important;
+        text-align: center !important;
+        width: 100% !important;
     }
 
-    /* Forzatura specifica per centrare il logo anche dentro la sidebar */
+    /* Gestione logo interno alla sidebar (evita conflitti con il centro) */
+    [data-testid="stSidebar"] [data-testid="stImage"] {
+        display: flex !important;
+        justify-content: center !important;
+    }
+    
     [data-testid="stSidebar"] [data-testid="stImage"] img {
-        max-width: 100px !important;
+        max-width: 120px !important;
+        margin: 0 auto !important;
     }
 
     /* OTTIMIZZAZIONE SPECIFICA PER IL TELEFONO */
@@ -155,16 +163,16 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Interfaccia centrale (LOGO e Titolo)
-col1, col2, col3 = st.columns([1, 2, 1])
-with col2:
-    st.image("LOGO.png")
-    st.markdown("<h1 style='text-align: center;'>La Magna Via</h1>", unsafe_allow_html=True)
+# -------------------------------------------------------------------
+# Interfaccia centrale (LOGO e Titolo perfettamente centrati)
+# -------------------------------------------------------------------
+st.image("LOGO.png")
+st.markdown("<h1>La Magna Via</h1>", unsafe_allow_html=True)
 
 # -------------------------------------------------------------------
 # Barra Laterale (Sidebar)
 # -------------------------------------------------------------------
-st.sidebar.image("LOGO.png", width=120)
+st.sidebar.image("LOGO.png")
 st.sidebar.header("Ultreya, viandante!")
 st.sidebar.write("---") 
 
