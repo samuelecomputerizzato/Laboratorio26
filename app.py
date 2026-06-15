@@ -41,36 +41,19 @@ st.markdown(
         background-attachment: fixed;
         color: #231709;
     }
-        /* ==========================================
-       PULIZIA INTERFACCIA (TUTTI I DISPOSITIVI)
-       ========================================== */
-    
-    /* Elimina menù, toolbar e pulsante Deploy ovunque */
-    #MainMenu, 
-    [data-testid="stToolbar"], 
-    .stDeployButton, 
+ 
+        /* Nasconde solo il footer in fondo alla pagina (Made with Streamlit) */
     footer {
         visibility: hidden !important;
         display: none !important;
     }
-    
-    /* Rende l'header superiore totalmente invisibile e trasparente */
-    /* Questo evita che rimanga una striscia vuota o grigia in cima alla pagina su PC */
-    header[data-testid="stHeader"] {
-        background-color: transparent !important;
-        background: transparent !important;
-        height: 0px !important;
-    }
 
-    /* Protegge l'icona della sidebar (hamburger) su mobile e tablet */
-    /* Le permette di rimanere visibile e cliccabile anche se l'header è azzerato */
-    [data-testid="stSidebarCollapseButton"] {
-        background-color: #7A8B74 !important; /* Stesso colore della tua sidebar */
-        color: white !important;
-        border-radius: 50% !important;
-        margin-top: 10px !important;
-        margin-left: 10px !important;
+    /* Nasconde solo il pulsante "Manage app" e il tasto Deploy */
+    [data-testid="stManageAppButton"], .stDeployButton {
+        visibility: hidden !important;
+        display: none !important;
     }
+    
     
     /* Configurazione scritta "Chiedi al chatbot" */
     .stTextInput label div p {
