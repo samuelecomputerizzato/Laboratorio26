@@ -15,7 +15,7 @@ def formatta_messaggio(testo: str, colore: str, font_size: str = "15px") -> str:
     """
     # Converte **testo** in <strong>testo</strong>
     testo_html = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', testo)
-    # Converte i ritorni a capo in tag <br> per non perdere la struttura del testo
+    # Converte i ritornos a capo in tag <br> per non perdere la struttura del testo
     testo_html = testo_html.replace('\n', '<br>')
     return f'<div style="color: {colore}; font-size: {font_size}; line-height: 1.5;">{testo_html}</div>'
 
@@ -29,7 +29,7 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
 # -------------------------------------------------------------------
-# Configurazione Stile CSS (Layout con Sidebar Custom + Nuke Streamlit)
+# Configurazione Stile CSS (Nuova Sidebar a Scomparsa + Nuke Streamlit)
 # -------------------------------------------------------------------
 st.markdown(
     """
@@ -109,17 +109,94 @@ st.markdown(
     }
 
     /* =================================================================
-       3. ENGINE DELLA NUOVA SIDEBAR CUSTOM (HTML/CSS PRIVATO)
+       3. ENGINE CSS DELLA NUOVA SIDEBAR A SCOMPARSA GENERICA (HTML CUSTOM)
        ================================================================= */
     
-    /* Stile dei blocchi collassabili <details> */
-    .custom-sidebar details {
-        background-color: rgba(255, 255, 255, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.25);
+    /* Nascondiamo il checkbox di controllo */
+    .sidebar-checkbox {
+        display: none !important;
+    }
+
+    /* Pulsante Hamburger Fluttuante in alto a sinistra */
+    .sidebar-toggle-button {
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        background-color: #7A8B74;
+        color: #ffffff !important;
+        padding: 10px 16px;
         border-radius: 8px;
-        margin-bottom: 12px;
+        font-weight: bold;
+        font-family: sans-serif;
+        cursor: pointer;
+        z-index: 99998;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+        user-select: none;
+        transition: background-color 0.2s ease;
+    }
+    
+    .sidebar-toggle-button:hover {
+        background-color: #677761;
+    }
+
+    /* Sfondo scuro di copertura (Overlay) quando la barra è aperta */
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: 99996;
+        display: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    /* Contenitore principale della barra (Nascosto a sinistra di -340px) */
+    .custom-sidebar {
+        position: fixed;
+        top: 0;
+        left: -340px;
+        width: 320px;
+        height: 100vh;
+        background-color: #7A8B74;
+        padding: 40px 22px;
+        box-shadow: 4px 0 20px rgba(0,0,0,0.2);
+        overflow-y: auto;
+        z-index: 99999;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: sans-serif;
+    }
+
+    /* Tasto per chiudere a x interna */
+    .sidebar-close {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        color: #ffffff !important;
+        font-size: 1.4rem;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    /* SISTEMA DI APERTURA MECCANICO AL CLICK DEL PULSANTE */
+    .sidebar-checkbox:checked ~ .custom-sidebar {
+        left: 0 !important;
+    }
+    
+    .sidebar-checkbox:checked ~ .sidebar-overlay {
+        display: block !important;
+        opacity: 1 !important;
+    }
+
+    /* Stile interno dei sottomenu a fisarmonica <details> */
+    .custom-sidebar details {
+        background-color: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        margin-bottom: 14px;
         padding: 12px;
-        transition: all 0.3s ease;
     }
     
     .custom-sidebar summary {
@@ -131,67 +208,33 @@ st.markdown(
         user-select: none;
     }
     
+    /* Protezione totale anti-tema scuro per tutti gli elementi figli */
+    .custom-sidebar *, .custom-sidebar p, .custom-sidebar li, .custom-sidebar strong {
+        color: #ffffff !important;
+    }
+    
     .custom-sidebar .details-content {
         margin-top: 10px;
         font-size: 0.92rem;
         line-height: 1.5;
-        color: #f8f9fa !important;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        padding-top: 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        padding-top: 10px;
     }
 
-    .custom-sidebar .details-content ul {
+    .custom-sidebar ul {
         padding-left: 18px;
         margin: 0;
     }
 
-    .custom-sidebar .details-content li {
+    .custom-sidebar li {
         margin-bottom: 8px;
-        color: #f8f9fa !important;
     }
 
-    .custom-sidebar .details-content strong {
-        color: #ffffff !important;
-    }
-
-    /* CONFIGURAZIONE RESPONSIVA: COMPORTAMENTO PC VS TELEFONO */
-    
-    /* --- CONFIGURAZIONE MONITOR GRANDE (Vera Sidebar a Sinistra) --- */
-    @media (min-width: 992px) {
+    /* Ottimizzazione reattività mobile per la larghezza barra */
+    @media (max-width: 480px) {
         .custom-sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 300px;
-            height: 100vh;
-            background-color: #7A8B74;
-            padding: 30px 20px;
-            box-shadow: 3px 0 15px rgba(0,0,0,0.08);
-            overflow-y: auto;
-            z-index: 99999;
-        }
-        
-        /* Sposta la colonna della chat verso destra per non accavallarsi alla sidebar */
-        .main .block-container {
-            max-width: 680px !important;
-            margin-left: 360px !important;
-            margin-right: auto !important;
-            padding-top: 40px !important;
-        }
-    }
-
-    /* --- CONFIGURAZIONE MOBILE/TABLET (Diventa un Menu Superiore Elegante) --- */
-    @media (max-width: 991px) {
-        .custom-sidebar {
-            background-color: #7A8B74;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            width: 100%;
-            box-shadow: 0px 4px 12px rgba(0,0,0,0.05);
-        }
-        .custom-sidebar h3 {
-            font-size: 1.2rem !important;
+            width: 85vw;
+            left: -90vw;
         }
     }
     </style>
@@ -200,25 +243,33 @@ st.markdown(
 )
 
 # -------------------------------------------------------------------
-# INIEZIONE HTML: La Nuova Sidebar Custom (Indipendente da Streamlit)
+# INIEZIONE STRUTTURA: La Nuova Sidebar Custom a Scomparsa
 # -------------------------------------------------------------------
 html_sidebar = """
+<input type="checkbox" id="side-menu-switch" class="sidebar-checkbox">
+
+<label for="side-menu-switch" class="sidebar-toggle-button">☰ Menu</label>
+
+<label for="side-menu-switch" class="sidebar-overlay"></label>
+
 <div class="custom-sidebar">
-    <h3 style="color: #ffffff !important; text-align: center; margin-top: 0; margin-bottom: 10px; font-family: sans-serif;">Menu del Viandante</h3>
-    <p style="color: #e2e8f0 !important; text-align: center; font-size: 0.85rem; margin-bottom: 20px; font-style: italic;">Informazioni Utili per la Via</p>
-    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin-bottom: 20px;">
+    <label for="side-menu-switch" class="sidebar-close">✕</label>
+    
+    <h3 style="text-align: center; margin-top: 10px; margin-bottom: 5px; font-size: 1.3rem;">Menu del Viandante</h3>
+    <p style="text-align: center; font-size: 0.85rem; margin-bottom: 25px; font-style: italic; opacity: 0.9;">Informazioni per il Cammino</p>
+    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.25); margin-bottom: 25px;">
     
     <details>
         <summary>📜 Il Codice del Viandante</summary>
         <div class="details-content">
-            <p style="font-style: italic; text-align: center; margin-bottom: 10px;">Il rispetto è il primo passo del pellegrino.</p>
+            <p style="font-style: italic; text-align: center; margin-bottom: 12px; opacity: 0.9;">Il rispetto è il primo passo del pellegrino.</p>
             <ul>
                 <li><strong>Rispetta la natura:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.</li>
-                <li><strong>Rispetta il territorio:</strong> sei ospite di terreni agricoli: chiudi i cancelli e non calpestare i raccolti.</li>
-                <li><strong>Rispetta il silenzio:</strong> il cammino è meditazione. Rispetta la quiete nei borghi e negli ospitali.</li>
-                <li><strong>Sii essenziale:</strong> viaggia leggero. Negli ostelli, sii ordinato e rispettoso.</li>
-                <li><strong>Sii solidale:</strong> aiuta chi è in difficoltà. Un sorriso può fare la differenza.</li>
-                <li><strong>Sii grato e umile:</strong> ringrazia chi ti ospita.</li>
+                <li><strong>Rispetta il territorio:</strong> sei ospite di terreni agricoli: chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.</li>
+                <li><strong>Rispetta il silenzio:</strong> il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e negli ospitali.</li>
+                <li><strong>Sii essenziale:</strong> viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.</li>
+                <li><strong>Sii solidale:</strong> aiuta chi è in difficoltà. Un sorriso o un consiglio possono fare la differenza per un altro viandante.</li>
+                <li><strong>Sii grato e umile:</strong> ringrazia chi ti ospita. Accetta con curiosità i ritmi e la cultura che incontri.</li>
             </ul>
         </div>
     </details>
@@ -226,30 +277,29 @@ html_sidebar = """
     <details>
         <summary>📍 Le tue Credenziali</summary>
         <div class="details-content">
-            <p style="font-style: italic; text-align: center; margin-bottom: 10px;">La tua Credenziale è la memoria del tuo spirito.</p>
+            <p style="font-style: italic; text-align: center; margin-bottom: 12px; opacity: 0.9;">La tua Credenziale è la memoria del tuo spirito, custodiscila con cura.</p>
             <ul>
                 <li><strong>Palermo:</strong> Cattedrale (9:00-17:30) | Centro "Padre Nostro" (feriali 9:30-12:30; mar/gio 15:00-18:00).</li>
                 <li><strong>Monreale:</strong> Duomo (8:30-12:45 / 14:30-17:00).</li>
                 <li><strong>Altofonte:</strong> Ufficio Comunale, Parrocchie.</li>
                 <li><strong>Santa Cristina Gela:</strong> Ufficio Comunale.</li>
                 <li><strong>Corleone:</strong> Ufficio Comunale, Parrocchie.</li>
-                <li><strong>Prizzi:** Sportello Turistico (lun-ven 9:00-14:00) | Museo (sab 16:00-20:00; dom 9:00-13:00).</li>
+                <li><strong>Prizzi:</strong> Sportello Turistico (lun-ven 9:00-14:00) | Museo (sab 16:00-20:00; dom 9:00-13:00).</li>
                 <li><strong>Castronovo di Sicilia:</strong> Ufficio Turistico, Parrocchia.</li>
                 <li><strong>Cammarata:</strong> Comune, Ufficio Turistico.</li>
                 <li><strong>Sutera:</strong> Ufficio Comunale, Parrocchia, Museo del Pellegrino.</li>
-                <li><strong>Grotte:</strong> Centralino Comune, Parrocchia.</li>
-                <li><strong>Joppolo Giancaxio:</strong> Ufficio Comunale, Parrocchie.</li>
+                <li><strong>Grotte:</strong> Centralino Comune (Piazza Umberto I), Parrocchia.</li>
+                <li><strong>Joppolo Giancaxio:</strong> Ufficio Comunale, Parrocchie, Ristoratori.</li>
                 <li><strong>Agrigento:</strong> Mudia (Via Duomo 96) per il Testimonium, Parrocchie.</li>
             </ul>
         </div>
     </details>
 </div>
 """
-# Inietta la barra laterale custom nell'applicazione
 st.markdown(html_sidebar, unsafe_allow_html=True)
 
 # -------------------------------------------------------------------
-# Interfaccia centrale (LOGO e Titolo)
+# Interfaccia centrale (LOGO e Titolo perfettamente centrati)
 # -------------------------------------------------------------------
 st.image("LOGO.png")
 st.markdown("<h1>La Magna Via</h1>", unsafe_allow_html=True)
