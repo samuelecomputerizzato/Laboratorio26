@@ -1,6 +1,24 @@
 import streamlit as st
 import pdfplumber
 import os
+import re  # Importato per la gestione della formattazione del testo
+
+st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", initial_sidebar_state="expanded")
+
+# -------------------------------------------------------------------
+# Funzione di utilità per formattare i messaggi mantenendo il Markdown attivo
+# -------------------------------------------------------------------
+def formatta_messaggio(testo: str, colore: str, font_size: str = "15px") -> str:
+    """
+    Converte la sintassi dei grassetti e degli a capo in HTML sicuro,
+    evitando che gli asterischi rimangano visibili all'interno dei div personalizzati.
+    """
+    # Converte **testo** in <strong>testo</strong>
+    testo_html = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', testo)
+    # Converte i ritorni a capo in tag <br> per non perdere la struttura del testo
+    testo_html = testo_html.replace('\n', '<br>')
+    return f'<div style="color: {colore}; font-size: {font_size}; line-height: 1.5;">{testo_html}</div>'
+
 
 # Langchain
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -9,8 +27,6 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
-
-st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", initial_sidebar_state="expanded")
 
 # -------------------------------------------------------------------
 # Configurazione Stile CSS (Nuke totale della barra superiore)
@@ -304,8 +320,8 @@ for messaggio in st.session_state.cronologia:
         colore_testo = "#3D2314"  
 
     with st.chat_message(messaggio["role"], avatar=icona):
-        # Sostituito span con div per gestire correttamente i blocchi multiline della risposta
-        testo_colorato = f'<div style="color: {colore_testo}; font-size: 15px; line-height: 1.5;">{messaggio["content"]}</div>'
+        # Applicata la funzione di formattazione sicura per preservare i grassetti
+        testo_colorato = formatta_messaggio(messaggio["content"], colore_testo, "15px")
         st.markdown(testo_colorato, unsafe_allow_html=True)
         
 # Blocco di Input Interattivo ancorato in basso
@@ -315,13 +331,15 @@ if catena is not None:
         # 1. Salva e mostra subito il messaggio dell'utente
         st.session_state.cronologia.append({"role": "user", "content": input_utente})
         with st.chat_message("user", avatar="Utente.png"):
-            st.markdown(f'<div style="color: #4A2E1B; font-size: 16px;">{input_utente}</div>', unsafe_allow_html=True)
+            # Applicata la funzione anche all'input live dell'utente
+            st.markdown(formatta_messaggio(input_utente, "#4A2E1B", "16px"), unsafe_allow_html=True)
         
         # 2. Genera e mostra live la risposta del Modello RAG
         with st.chat_message("assistant", avatar="LOGO.png"):
             with st.spinner("Il chatbot sta rispondendo..."):
                 risposta_bot = catena.invoke(input_utente)
-                st.markdown(f'<div style="color: #3D2314; font-size: 16px; line-height: 1.5;">{risposta_bot}</div>', unsafe_allow_html=True)
+                # Applicata la funzione alla risposta live del bot RAG
+                st.markdown(formatta_messaggio(risposta_bot, "#3D2314", "16px"), unsafe_allow_html=True)
         
         # 3. Salva la risposta del bot nella cronologia
         st.session_state.cronologia.append({"role": "assistant", "content": risposta_bot})
