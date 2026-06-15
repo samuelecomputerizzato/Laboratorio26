@@ -21,14 +21,18 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
 # -------------------------------------------------------------------
-# Configurazione Stile CSS (Blindato + Ripristino Pulsanti)
+# Configurazione Stile CSS (Nuke Streamlit + Fix Grafici)
 # -------------------------------------------------------------------
 st.markdown(
     """
     <style>
     /* Nuke Streamlit */
     header, footer, [data-testid="stHeader"], [data-testid="stAppHeader"], 
-    [data-testid="stDecoration"], #MainMenu { display: none !important; }
+    [data-testid="stDecoration"], #MainMenu, [data-testid="stToolbar"], 
+    .stDeployButton, [data-testid="stManageAppButton"] { 
+        display: none !important; 
+        visibility: hidden !important;
+    }
     
     .stApp { background-color: #F1F0E6; color: #231709; }
 
@@ -52,9 +56,9 @@ st.markdown(
         font-family: sans-serif;
     }
 
-    /* Gestione dei blocchi a fisarmonica (I tuoi pulsanti) */
+    /* Struttura sottomenu a fisarmonica */
     .custom-sidebar details {
-        background-color: #677761 !important; /* Sfondo solido per il pulsante */
+        background-color: #677761 !important;
         border: 1px solid rgba(255, 255, 255, 0.3) !important;
         border-radius: 8px !important;
         margin-bottom: 14px !important;
@@ -67,15 +71,11 @@ st.markdown(
         font-size: 1.05rem !important;
         cursor: pointer !important;
         color: #ffffff !important;
-        list-style: list-item !important;
     }
 
-    /* Protezione testo anti-evidenziazione e anti-tema scuro */
-    .custom-sidebar h3,
-    .custom-sidebar p,
-    .custom-sidebar li,
-    .custom-sidebar strong,
-    .custom-sidebar span {
+    /* Protezione testi dagli stili ereditati */
+    .custom-sidebar h3, .custom-sidebar p, .custom-sidebar li, 
+    .custom-sidebar strong, .custom-sidebar span {
         color: #ffffff !important;
         background-color: transparent !important;
     }
@@ -99,52 +99,46 @@ st.markdown(
 )
 
 # -------------------------------------------------------------------
-# INIEZIONE STRUTTURA SIDEBAR CON CONTENUTO COMPLETO
+# INIEZIONE STRUTTURA SIDEBAR (Allineata a sinistra anti-glitch)
 # -------------------------------------------------------------------
 html_sidebar = """
 <input type="checkbox" id="side-menu-switch" class="sidebar-checkbox">
 <label for="side-menu-switch" class="sidebar-toggle-button">☰ Lo spazio del pellegrino</label>
-
 <div class="custom-sidebar">
-    <label for="side-menu-switch" class="sidebar-close">✕</label>
-    
-    <h3 style="text-align: center; margin-bottom: 5px;">Menu del Viandante</h3>
-    <p style="text-align: center; font-size: 0.85rem; font-style: italic; opacity: 0.9; margin-bottom: 20px;">Informazioni per il Cammino</p>
-    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.3); margin-bottom: 20px;">
-    
-    <!-- PULSANTE 1: IL CODICE DEL VIANDANTE -->
-    <details>
-        <summary>📜 Il Codice del Viandante</summary>
-        <p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Il rispetto è il primo passo del pellegrino.</p>
-        <ul>
-            <li><strong>Rispetta la natura:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.</li>
-            <li><strong>Rispetta il territorio:</strong> sei ospite di terreni agricoli: chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.</li>
-            <li><strong>Rispetta il silenzio:</strong> il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e negli ospitali.</li>
-            <li><strong>Sii essenziale:</strong> viaggia leggero. Negli ostelli, sii ordinato e respektoso: non è un hotel, ma una casa condivisa.</li>
-            <li><strong>Sii solidale:</strong> aiuta chi è in difficoltà. Un sorriso o un consiglio possono fare la differenza per un altro viandante.</li>
-            <li><strong>Sii grato e umile:</strong> ringrazia chi ti ospita. Accetta con curiosità i ritmi e la cultura che incontri.</li>
-        </ul>
-    </details>
-
-    <!-- PULSANTE 2: LE CREDENZIALI -->
-    <details>
-        <summary>📍 Le tue Credenziali</summary>
-        <p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">La tua Credenziale è la memoria del tuo spirito, custodiscila con cura.</p>
-        <ul>
-            <li><strong>Palermo:</strong> Cattedrale (9:00-17:30) | Centro "Padre Nostro" (feriali 9:30-12:30; mar/gio 15:00-18:00).</li>
-            <li><strong>Monreale:</strong> Duomo (8:30-12:45 / 14:30-17:00).</li>
-            <li><strong>Altofonte:</strong> Ufficio Comunale, Parrocchie.</li>
-            <li><strong>Santa Cristina Gela:</strong> Ufficio Comunale.</li>
-            <li><strong>Corleone:</strong> Ufficio Comunale, Parrocchie.</li>
-            <li><strong>Prizzi:</strong> Sportello Turistico (lun-ven 9:00-14:00) | Museo (sab 16:00-20:00; dom 9:00-13:00).</li>
-            <li><strong>Castronovo di Sicilia:</strong> Ufficio Turistico, Parrocchia.</li>
-            <li><strong>Cammarata:</strong> Comune, Ufficio Turistico.</li>
-            <li><strong>Sutera:</strong> Ufficio Comunale, Parrocchia, Museo del Pellegrino.</li>
-            <li><strong>Grotte:</strong> Centralino Comune (Piazza Umberto I), Parrocchia.</li>
-            <li><strong>Joppolo Giancaxio:</strong> Ufficio Comunale, Parrocchie, Ristoratori.</li>
-            <li><strong>Agrigento:</strong> Mudia (Via Duomo 96) per il Testimonium, Parrocchie.</li>
-        </ul>
-    </details>
+<label for="side-menu-switch" class="sidebar-close">✕</label>
+<h3 style="text-align: center; margin-bottom: 5px;">Menu del Viandante</h3>
+<p style="text-align: center; font-size: 0.85rem; font-style: italic; opacity: 0.9; margin-bottom: 20px;">Informazioni per il Cammino</p>
+<hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.3); margin-bottom: 20px;">
+<details>
+<summary>📜 Il Codice del Viandante</summary>
+<p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Il rispetto è il primo passo del pellegrino.</p>
+<ul>
+<li><strong>Rispetta la natura:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.</li>
+<li><strong>Rispetta il territorio:</strong> sei ospite di terreni agricoli: chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.</li>
+<li><strong>Rispetta il silenzio:</strong> il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e negli ospitali.</li>
+<li><strong>Sii essenziale:</strong> viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.</li>
+<li><strong>Sii solidale:</strong> aiuta chi è in difficoltà. Un sorriso o un consiglio possono fare la differenza per un altro viandante.</li>
+<li><strong>Sii grato e umile:</strong> ringrazia chi ti ospita. Accetta con curiosità i ritmi e la cultura che incontri.</li>
+</ul>
+</details>
+<details>
+<summary>📍 Le tue Credenziali</summary>
+<p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">La tua Credenziale è la memoria del tuo spirito, custodiscila con cura.</p>
+<ul>
+<li><strong>Palermo:</strong> Cattedrale (9:00-17:30) | Centro "Padre Nostro" (feriali 9:30-12:30; mar/gio 15:00-18:00).</li>
+<li><strong>Monreale:</strong> Duomo (8:30-12:45 / 14:30-17:00).</li>
+<li><strong>Altofonte:</strong> Ufficio Comunale, Parrocchie.</li>
+<li><strong>Santa Cristina Gela:</strong> Ufficio Comunale.</li>
+<li><strong>Corleone:</strong> Ufficio Comunale, Parrocchie.</li>
+<li><strong>Prizzi:</strong> Sportello Turistico (lun-ven 9:00-14:00) | Museo (sab 16:00-20:00; dom 9:00-13:00).</li>
+<li><strong>Castronovo di Sicilia:</strong> Ufficio Turistico, Parrocchia.</li>
+<li><strong>Cammarata:</strong> Comune, Ufficio Turistico.</li>
+<li><strong>Sutera:</strong> Ufficio Comunale, Parrocchia, Museo del Pellegrino.</li>
+<li><strong>Grotte:</strong> Centralino Comune (Piazza Umberto I), Parrocchia.</li>
+<li><strong>Joppolo Giancaxio:</strong> Ufficio Comunale, Parrocchie, Ristoratori.</li>
+<li><strong>Agrigento:</strong> Mudia (Via Duomo 96) per il Testimonium, Parrocchie.</li>
+</ul>
+</details>
 </div>
 """
 st.markdown(html_sidebar, unsafe_allow_html=True)
@@ -224,7 +218,7 @@ Contesto:\n{context}'''),
               | prompt | modello_llm | StrOutputParser())
 
 # -------------------------------------------------------------------
-# Chat
+# Sezione Chat
 # -------------------------------------------------------------------
 if "cronologia" not in st.session_state: st.session_state.cronologia = []
 
@@ -243,4 +237,3 @@ if catena and (input_utente := st.chat_input("Chiedi alla Via...")):
     
     st.session_state.cronologia.append({"role": "assistant", "content": risposta})
     st.rerun()
-    
