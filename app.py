@@ -21,7 +21,7 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
 # -------------------------------------------------------------------
-# Configurazione Stile CSS (Nuke Streamlit + Fix Grafici)
+# Configurazione Stile CSS (Nuke Streamlit + Fix Grafici + Input Bar)
 # -------------------------------------------------------------------
 st.markdown(
     """
@@ -90,6 +90,17 @@ st.markdown(
     .custom-sidebar ul { padding-left: 18px !important; margin: 10px 0 0 0 !important; }
     .custom-sidebar li { margin-bottom: 8px !important; font-size: 0.9rem !important; line-height: 1.4; }
 
+    /* CUSTOMIZZAZIONE CASSETTA DI INPUT IN BASSO */
+    [data-testid="stChatInput"] {
+        background-color: #F1F0E6 !important;
+    }
+    [data-testid="stChatInput"] textarea {
+        background-color: #F1F0E6 !important;
+        color: #231709 !important;
+        border: 1px solid #542E17 !important;
+        border-radius: 8px !important;
+    }
+
     @media (max-width: 480px) {
         .custom-sidebar { width: 85vw !important; left: -90vw !important; }
     }
@@ -106,8 +117,8 @@ html_sidebar = """
 <label for="side-menu-switch" class="sidebar-toggle-button">☰ Lo spazio del pellegrino</label>
 <div class="custom-sidebar">
 <label for="side-menu-switch" class="sidebar-close">✕</label>
-<h3 style="text-align: center; margin-bottom: 5px;">Ultreya, viandante!</h3>
-<p style="text-align: center; font-size: 0.85rem; font-style: italic; opacity: 0.9; margin-bottom: 20px;"> </p>
+<h3 style="text-align: center; margin-bottom: 5px;">Menu del Viandante</h3>
+<p style="text-align: center; font-size: 0.85rem; font-style: italic; opacity: 0.9; margin-bottom: 20px;">Informazioni per il Cammino</p>
 <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.3); margin-bottom: 20px;">
 <details>
 <summary>📜 Il Codice del Viandante</summary>
@@ -148,6 +159,7 @@ st.markdown(html_sidebar, unsafe_allow_html=True)
 # -------------------------------------------------------------------
 st.image("LOGO.png")
 st.markdown("<h1 style='text-align: center; color: #542E17;'>La Magna Via</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #542E17; font-weight: bold; font-size: 1.1rem; margin-bottom: 20px;'>Ultreya, viandante!</p>", unsafe_allow_html=True)
 
 # -------------------------------------------------------------------
 # Elaborazione Documento PDF e RAG
@@ -236,3 +248,4 @@ if catena and (input_utente := st.chat_input("Chiedi alla Via...")):
     
     st.session_state.cronologia.append({"role": "assistant", "content": risposta})
     st.rerun()
+    
