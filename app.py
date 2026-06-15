@@ -50,6 +50,15 @@ st.markdown(
         padding-left: 0px !important;
     }
 
+    /* FORZA IL TESTO DELLA CHAT A RIMANERE SCURO IN QUALSIASI TEMA (Risolve il bug del tema scuro) */
+    [data-testid="stChatMessage"] p,
+    [data-testid="stChatMessage"] li,
+    [data-testid="stChatMessage"] strong,
+    [data-testid="stChatMessage"] span,
+    [data-testid="stChatMessage"] div {
+        color: #3D2314 !important;
+    }
+
     /* Cambia il colore di sfondo della barra laterale */
     [data-testid="stSidebar"] {
         background-color: #7A8B74; 
@@ -314,3 +323,4 @@ if catena is not None:
         
         # 4. Aggiorna la pagina per allineare tutto lo stato interno
         st.rerun()
+
