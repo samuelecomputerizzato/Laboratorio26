@@ -34,6 +34,7 @@ from langchain_core.output_parsers import StrOutputParser
 st.markdown(
     """
     <style>
+
     
     /* 3. STILE GLOBALE APP E PAGINA CENTRALE */
     .stApp {
@@ -41,14 +42,10 @@ st.markdown(
         background-attachment: fixed;
         color: #231709;
     }
-
-    /* Nasconde solo il pulsante "Manage app" e il tasto Deploy */
-    [data-testid="stManageAppButton"], .stDeployButton {
-        visibility: hidden !important;
-        display: none !important;
+    
+    st.set_page_config(layout="wide")
     }
-    
-    
+
     /* Configurazione scritta "Chiedi al chatbot" */
     .stTextInput label div p {
         color: #542E17 !important;
