@@ -34,21 +34,52 @@ st.markdown(
     """
     <style>
     
-    /* 1. ELIMINAZIONE TOTALE DI OGNI ELEMENTO E LOGO STREAMLIT (PC E MOBILE) */
-    header, 
+       /* =================================================================
+       NUKE TOTALE LOGHI MOBILE E MANAGE APP (DEPLOIATO SU CLOUD)
+       ================================================================= */
+    
+    /* 1. ELIMINAZIONE LOGHI "MADE WITH STREAMLIT" E BADGE SU MOBILE */
     footer, 
+    [data-testid="stFooter"], 
+    div[class*="viewerBadge"], 
+    div[class*="StyledFooter"],
+    a[href*="streamlit.io"] {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0px !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+
+    /* 2. ELIMINAZIONE TASTO "MANAGE APP" IN BASSO A DESTRA (PC, TABLET, MOBILE) */
+    [data-testid="stManageAppButton"], 
+    .stManageAppButton, 
+    div[class*="stManageAppButton"],
+    button[title*="Manage"],
+    div[class*="StyledActionButton"],
+    [data-testid="stStatusWidget"] {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        width: 0px !important;
+        height: 0px !important;
+    }
+
+    /* 3. CANCELLAZIONE HEADER SUPERIORE DI SERVIZIO */
+    header, 
     [data-testid="stHeader"], 
     [data-testid="stAppHeader"], 
     [data-testid="stDecoration"], 
     #MainMenu, 
     [data-testid="stToolbar"], 
-    .stDeployButton, 
-    [data-testid="stManageAppButton"] {
+    .stDeployButton {
         display: none !important;
         visibility: hidden !important;
         height: 0px !important;
         opacity: 0 !important;
     }
+ 
     
     /* 2. STILE GLOBALE APP E PAGINA CENTRALE */
     .stApp {
