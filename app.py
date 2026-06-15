@@ -13,16 +13,23 @@ from langchain_core.output_parsers import StrOutputParser
 st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", initial_sidebar_state="expanded")
 
 # -------------------------------------------------------------------
-# Configurazione Stile CSS (Standardizzazione del tema - No Dark Mode)
+# Configurazione Stile CSS (Blocco Totale Tema Chiaro e Disattivazione Dark Mode)
 # -------------------------------------------------------------------
 st.markdown(
     """
     <style>
     
-    /* 1. BLOCCO DEI COLORI DI SFONDO E DEL TESTO DELL'INTERA APP */
-    html, body, [data-testid="stAppViewContainer"], .stApp {
+    /* 1. SOVRASCRITTURA DELLE VARIABILI DI SISTEMA DI STREAMLIT */
+    :root {
+        --primary-color: #793921 !important;
+        --background-color: #F1F0E6 !important;
+        --secondary-background-color: #7A8B74 !important;
+        --text-color: #231709 !important;
+    }
+
+    /* 2. FORZATURA SFONDO E TESTO SU TUTTI I CONTAINER PRINCIPALI */
+    html, body, [data-testid="stAppViewContainer"], .stApp, [data-testid="stHeader"] {
         background-color: #F1F0E6 !important;
-        background-attachment: fixed;
         color: #231709 !important;
     }
     
@@ -85,7 +92,7 @@ st.markdown(
 
     /* SISTEMAZIONE DELLA TENDINA (POPOVER BODY) */
     [data-testid="stPopoverBody"] {
-        background-color: #7A8B74 !important; /* Forza lo sfondo verde della sidebar anche per il popup */
+        background-color: #7A8B74 !important; /* Sfondo verde coordinato alla sidebar */
         border: 1px solid rgba(255, 255, 255, 0.2) !important;              
         border-radius: 12px !important;       
         box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.4) !important; 
@@ -136,6 +143,7 @@ st.markdown(
     /* Rimpicciolisce il titolo h1 sotto il logo */
     h1 {
         font-size: 2rem !important;
+        color: #231709 !important;
         margin-top: 10px !important;
     }
 
