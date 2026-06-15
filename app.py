@@ -106,7 +106,7 @@ html_sidebar = """
 <label for="side-menu-switch" class="sidebar-toggle-button">☰ Lo spazio del pellegrino</label>
 <div class="custom-sidebar">
 <label for="side-menu-switch" class="sidebar-close">✕</label>
-<h3 style="text-align: center; margin-bottom: 5px;">Altreju, viandante!</h3>
+<h3 style="text-align: center; margin-bottom: 5px;">Ultreya, viandante!</h3>
 <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.3); margin-bottom: 20px;">
 <details>
 <summary>📜 Il Codice del Viandante</summary>
