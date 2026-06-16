@@ -6,9 +6,14 @@ import re
 st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", layout="centered")
 
 # -------------------------------------------------------------------
-# Funzione di utilità per formattare i messaggi
+# Funzione di utilità per formattare i messaggi (Traduzione Emoji Fixata)
 # -------------------------------------------------------------------
 def formatta_messaggio(testo: str, colore: str, font_size: str = "15px") -> str:
+    # Traduciamo i codici in emoji reali prima che l'HTML blocchi il parser di Streamlit
+    testo = testo.replace(':cry:', '😢')
+    testo = testo.replace(':blush:', '😊')
+    testo = testo.replace(':herb:', '🌿')
+    
     testo_html = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', testo)
     testo_html = testo_html.replace('\n', '<br>')
     return f'<div style="color: {colore}; font-size: {font_size}; line-height: 1.5;">{testo_html}</div>'
@@ -153,7 +158,7 @@ html_sidebar = """
 <p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Il rispetto è il primo passo del pellegrino.</p>
 <ul>
 <li><strong>Rispetta la natura:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.</li>
-<li><strong>Rispetta il territorio:</strong> se sei ospite di terreni agricoli chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.</li>
+<li><strong>Rispetta il territorio:</strong> sei ospite di terreni agricoli: chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.</li>
 <li><strong>Rispetta il silenzio:</strong> il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e nei ospitali.</li>
 <li><strong>Sii essenziale:</strong> viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.</li>
 <li><strong>Sii solidale:</strong> aiuta chi è in difficoltà. Un sorriso o un consiglio possono fare la differenza per un altro viandante.</li>
