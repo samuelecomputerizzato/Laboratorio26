@@ -365,3 +365,4 @@ if input_utente:
         st.rerun()
     else:
         st.error("Caro pellegrino, la barra è attiva ma la conoscenza è bloccata! Verifica che il file 'Pdf finale (1).pdf' sia presente nella cartella del progetto e che le chiavi API siano corrette.")
+
