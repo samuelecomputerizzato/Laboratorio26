@@ -299,19 +299,28 @@ Contesto:\n{context}'''),
 if "cronologia" not in st.session_state: 
     st.session_state.cronologia = []
 
+# Mostra i messaggi precedenti
 for messaggio in st.session_state.cronologia:
     avatar_scelto = "LOGO.png" if messaggio["role"] == "assistant" else "Utente.png"
     with st.chat_message(messaggio["role"], avatar=avatar_scelto):
         st.markdown(messaggio["content"])
 
-if catena and (input_utente := st.chat_input("Chiedi alla Via...")):
-    st.session_state.cronologia.append({"role": "user", "content": input_utente})
-    with st.chat_message("user", avatar="Utente.png"):
-        st.markdown(input_utente)
-    
-    with st.chat_message("assistant", avatar="LOGO.png"):
-        risposta = catena.invoke(input_utente)
-        st.markdown(risposta)
-    
-    st.session_state.cronologia.append({"role": "assistant", "content": risposta})
-    st.rerun()
+# FIX: La barra viene invocata FUORI dall'if, così appare SEMPRE sullo schermo
+input_utente = st.chat_input("Chiedi alla Via...")
+
+if input_utente:
+    # Controlliamo se la catena RAG è stata configurata correttamente
+    if catena:
+        st.session_state.cronologia.append({"role": "user", "content": input_utente})
+        with st.chat_message("user", avatar="Utente.png"):
+            st.markdown(input_utente)
+        
+        with st.chat_message("assistant", avatar="LOGO.png"):
+            risposta = catena.invoke(input_utente)
+            st.markdown(risposta)
+        
+        st.session_state.cronologia.append({"role": "assistant", "content": risposta})
+        st.rerun()
+    else:
+        # Se la barra c'è ma il PDF non è stato caricato, avvisiamo il viandante
+        st.error("Caro pellegrino, la barra è attiva ma la conoscenza è bloccata! Verifica che il file 'pdf finale.pdf' sia presente nella cartella del progetto e che le chiavi API siano corrette.")
