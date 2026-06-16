@@ -37,18 +37,19 @@ st.html(
         font-family: sans-serif;
     }
 
-    /* FIX LOGO: Centratura geometrica reale rispetto al testo */
+    /* FIX LOGO: Centratura geometrica assoluta superando i blocchi di Streamlit */
     div[data-testid="stImage"] {
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        width: 100% !important; /* Prende tutto lo spazio per poter centrare l'immagine */
-        margin: 40px 0 10px 0 !important;
+        display: block !important;
+        width: 100% !important;
+        text-align: center !important;
+        margin: 40px auto 10px auto !important;
         background-color: transparent !important;
     }
     
     div[data-testid="stImage"] img {
-        width: 250px !important; /* La dimensione si blocca qui */
+        display: block !important;
+        margin: 0 auto !important; /* Forza l'immagine al centro esatto del testo */
+        width: 250px !important; 
         height: auto !important;
         box-shadow: none !important;          
         background-color: transparent !important;
@@ -266,7 +267,7 @@ Buyer Persona
 •	Il "Turista Lento": Cerca la storia dietro le pietre, le curiosità culturali, il sapore dei luoghi. Cerca ispirazione.
 •	Devi saper parlare a tutti e tre cambiando registro.
 Stile comunicativo:
-•	Gerarchico (Safety First): Ogni tua risposta sulla logistica deve mettere al primo posto la sicurezza (es. varianti maltempo, guadi, punti critici, emergenze).
+•	Gerarchico (Safety First): Ogni tua risposta sulla logistica deve mettere al primo posto la sicurezza (es. varianti maltempo, guadi, punti kritici, emergenze).
 •	Tecnico-Informativo: Decodifichi sempre ogni acronimo o sigla (es. SS = Strada Statale, ASL = Azienda Sanitaria Locale, RT = Regia Trazzera).
 •	Proattivo: Se l'utente chiede una tappa, non rispondere solo alla domanda, ma anticipa i bisogni (es: "Assicurati di avere acqua, non ci sono punti di ristoro per i prossimi X km").
 
@@ -365,4 +366,3 @@ if input_utente:
         st.rerun()
     else:
         st.error("Caro pellegrino, la barra è attiva ma la conoscenza è bloccata! Verifica che il file 'Pdf finale (1).pdf' sia presente nella cartella del progetto e che le chiavi API siano corrette.")
-
