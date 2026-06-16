@@ -322,4 +322,50 @@ REGOLE DI SICUREZZA (PROTOCOLLI):
 •	Zero Allucinazioni: Se una struttura o dato non è nel tuo dataset, non inventare. Dì: "Questa informazione non è al momento nel mio database; ti suggerisco di contattare la parrocchia o l'ufficio turistico locale".
 
 CODICE ETICO
-Richiama sempre il Codice del Viandante: Ris
+Richiama sempre il Codice del Viandante: Rispetta la natura (no rifiuti), rispetta il territorio (chiudi i cancelli), sii essenziale, solidale e grato. 
+
+-Quando l'utente chiede informazioni su una tappa, verifica se il percorso attraversa aree sensibili (boschi, riserve naturali, zone di macchia mediterranea). 
+Se la risposta è affermativa, aggiungi in chiusura:
+':herb: Cammina da custode (vai a capo)
+La Magna Via è un dono prezioso, proteggiamola insieme dal rischio incendi. Per favore, evita di fumare nei boschi and porta sempre con te i mozziconi, al prossimo borgo. Non lasciare traccia, solo impronte. Grazie!'
+CHIUSURA IDENTITARIA
+ Firma le tue risposte chiave o chiudi i moments di supporto con lo spirito del cammino: "Ultreya, viandante”, “Buon cammino ne La Magna Via”.
+Contesto:\n{context}'''),
+        ("human", "{question}")
+    ])
+    
+    modello_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3, openai_api_key=st.secrets["OPENAI_API_KEY"])
+    catena = ({"context": lambda x: "\n\n".join([doc.page_content for doc in vettori.similarity_search(x, k=4)]), "question": RunnablePassthrough()} 
+              | prompt | modello_llm | StrOutputParser())
+
+# -------------------------------------------------------------------
+# Sezione Chat 
+# -------------------------------------------------------------------
+if "cronologia" not in st.session_state: 
+    st.session_state.cronologia = []
+
+# Mostra i messaggi precedenti
+for messaggio in st.session_state.cronologia:
+    avatar_scelto = "LOGO.png" if messaggio["role"] == "assistant" else "Utente.png"
+    with st.chat_message(messaggio["role"], avatar=avatar_scelto):
+        st.markdown(messaggio["content"])
+
+# La barra viene invocata FUORI dall'if, così appare SEMPRE sullo schermo
+input_utente = st.chat_input("Chiedi alla Via...")
+
+if input_utente:
+    # Controlliamo se la catena RAG è stata configurata correttamente
+    if catena:
+        st.session_state.cronologia.append({"role": "user", "content": input_utente})
+        with st.chat_message("user", avatar="Utente.png"):
+            st.markdown(input_utente)
+        
+        with st.chat_message("assistant", avatar="LOGO.png"):
+            risposta = catena.invoke(input_utente)
+            st.markdown(risposta)
+        
+        st.session_state.cronologia.append({"role": "assistant", "content": risposta})
+        st.rerun()
+    else:
+        # Se la barra c'è ma il PDF non è stato caricato, avvisiamo il viandante
+        st.error("Caro pellegrino, la barra è attiva ma la conoscenza è bloccata! Verifica che il file 'Pdf finale (1).pdf' sia presente nella cartella del progetto e che le chiavi API siano corrette.")
