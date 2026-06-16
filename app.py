@@ -203,7 +203,7 @@ st.markdown("<p style='text-align: center; color: #542E17; font-weight: bold; fo
 # Elaborazione Documento PDF e RAG
 # -------------------------------------------------------------------
 cartella_corrente = os.path.dirname(__file__)
-documento = os.path.join(cartella_corrente, "pdf definitivo.pdf")
+documento = os.path.join(cartella_corrente, "pdf finale.pdf")
 catena = None
 
 if os.path.exists(documento):
