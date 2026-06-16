@@ -197,7 +197,10 @@ html_sidebar = """
 </details>
 </div>
 """
-st.markdown(html_sidebar, unsafe_allow_html=True)
+
+# TRUCCO ANTIGLITCH: Collassa l'HTML eliminando newlines e spazi di indentazione per ingannare il Markdown
+html_sidebar_compresso = "".join([line.strip() for line in html_sidebar.splitlines()])
+st.markdown(html_sidebar_compresso, unsafe_allow_html=True)
 
 # -------------------------------------------------------------------
 # Interfaccia centrale
@@ -260,7 +263,7 @@ Le risposte devono essere:
 - semplici da consultare anche in mobilità
 - coerenti con l’esperienza del pellegrinaggio
 - accoglienti e orientate all’accompagnamento del pellegrino.
-- Quando l'utente chiede informazioni su una tappa, verifica se il percorso attraversa aree sensibili (boschi, riserve naturali, zone di macchia mediterranea). 
+- When l'utente chiede informazioni su una tappa, verifica se il percorso attraversa aree sensibili (boschi, riserve naturali, zone di macchia mediterranea). 
 Se la risposta è affermativa, aggiungi in chiusura:
 ':herb: Cammina da custode (vai a capo)
 La Magna Via è un dono prezioso, proteggiamola insieme dal rischio incendi. Per favore, evita di fumare nei boschi and porta sempre con te i mozziconi fino al prossimo borgo. Non lasciare traccia, solo impronte. Grazie!'
@@ -274,23 +277,23 @@ Contesto:\n{context}'''),
               | prompt | modello_llm | StrOutputParser())
 
 # -------------------------------------------------------------------
-# Sezione Chat
+# Sezione Chat (FIXED: unsafe_allow_html=True aggiunto a tutti i markdown)
 # -------------------------------------------------------------------
 if "cronologia" not in st.session_state: st.session_state.cronologia = []
 
 for messaggio in st.session_state.cronologia:
     with st.chat_message(messaggio["role"], avatar="LOGO.png" if messaggio["role"] == "assistant" else "Utente.png"):
-        st.markdown(formatta_messaggio(messaggio["content"], "#231709"))
+        st.markdown(formatta_messaggio(messaggio["content"], "#231709"), unsafe_allow_html=True)
 
 if catena and (input_utente := st.chat_input("Chiedi alla Via...")):
     st.session_state.cronologia.append({"role": "user", "content": input_utente})
     with st.chat_message("user", avatar="Utente.png"):
-        st.markdown(formatta_messaggio(input_utente, "#4A2E1B"))
+        st.markdown(formatta_messaggio(input_utente, "#4A2E1B"), unsafe_allow_html=True)
     
     with st.chat_message("assistant", avatar="LOGO.png"):
         risposta = catena.invoke(input_utente)
-        st.markdown(formatta_messaggio(risposta, "#3D2314"))
+        st.markdown(formatta_messaggio(risposta, "#3D2314"), unsafe_allow_html=True)
     
     st.session_state.cronologia.append({"role": "assistant", "content": risposta})
     st.rerun()
-    
+
