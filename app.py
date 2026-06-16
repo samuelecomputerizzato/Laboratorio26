@@ -21,7 +21,7 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
 # -------------------------------------------------------------------
-# Configurazione Stile CSS (Nuke Streamlit + Fix Grafici + Input Bar)
+# Configurazione Stile CSS (Nuke Streamlit + Fix Grafici)
 # -------------------------------------------------------------------
 st.markdown(
     """
@@ -89,17 +89,6 @@ st.markdown(
 
     .custom-sidebar ul { padding-left: 18px !important; margin: 10px 0 0 0 !important; }
     .custom-sidebar li { margin-bottom: 8px !important; font-size: 0.9rem !important; line-height: 1.4; }
-
-    /* CUSTOMIZZAZIONE CASSETTA DI INPUT IN BASSO */
-    [data-testid="stChatInput"] {
-        background-color: #F1F0E6 !important;
-    }
-    [data-testid="stChatInput"] textarea {
-        background-color: #F1F0E6 !important;
-        color: #231709 !important;
-        border: 1px solid #542E17 !important;
-        border-radius: 8px !important;
-    }
 
     @media (max-width: 480px) {
         .custom-sidebar { width: 85vw !important; left: -90vw !important; }
