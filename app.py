@@ -27,7 +27,7 @@ st.html(
     
     /* SFONDO CON IMMAGINE LOCALE DA CARTELLA STATIC */
     .stApp { 
-        background-image: url("app/static/la magna via.png"); 
+        background-image: url("app/static/SFONDO.png"); 
         background-size: cover; 
         background-position: center; 
         background-repeat: no-repeat; 
