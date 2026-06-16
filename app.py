@@ -40,6 +40,12 @@ st.html(
     
     .stApp { background-color: #F1F0E6; color: #231709; }
 
+    /* Riduce lo spazio vuoto in cima alla pagina per alzare l'interfaccia */
+    .block-container {
+        padding-top: 2.5rem !important;
+        padding-bottom: 3rem !important;
+    }
+
     .sidebar-checkbox { display: none !important; }
 
     .sidebar-toggle-button {
@@ -50,20 +56,20 @@ st.html(
         font-family: sans-serif;
     }
 
-    /* NUOVO FIX LOGO: Centratura nativa HTML senza i contenitori st.image */
+    /* FIX LOGO: Rialzato e azzerato il margine inferiore */
     .contenitore-logo-custom {
         display: block !important;
         text-align: center !important;
         width: 100% !important;
-        margin: 40px auto 10px auto !important;
+        margin: 10px auto 0px auto !important; /* Margine inferiore azzerato */
     }
     
     .logo-custom-img {
         display: inline-block !important;
-        width: 250px !important; 
+        width: 240px !important; 
         height: auto !important;
         mix-blend-mode: multiply;             
-        pointer-events: none; /* Impedisce qualsiasi interazione, click o drag sul logo */
+        pointer-events: none; 
     }
 
     .custom-sidebar {
@@ -173,7 +179,7 @@ html_sidebar = """
 <summary>📜 Il Codice del Viandante</summary>
 <p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Il rispetto è il primo passo del pellegrino.</p>
 <ul>
-<li><strong>Rispetta la natura:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.</li>
+<li><strong>Rispetta la natura:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un enemy: non accenderlo mai.</li>
 <li><strong>Rispetta il territorio:</strong> se sei ospite di terreni agricoli chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.</li>
 <li><strong>Rispetta il silenzio:</strong> il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e nei ospitali.</li>
 <li><strong>Sii essenziale:</strong> viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.</li>
@@ -226,13 +232,12 @@ st.html(html_sidebar)
 # Interfaccia centrale (Rendering nativo del Logo)
 # -------------------------------------------------------------------
 if logo_b64:
-    # Iniettiamo l'immagine direttamente come codice HTML puro e crudo
     st.html(f'<div class="contenitore-logo-custom"><img src="data:image/png;base64,{logo_b64}" class="logo-custom-img"></div>')
 else:
-    # Fallback di sicurezza se il file non viene trovato
     st.warning("Logo non trovato nella cartella principale.")
 
-st.markdown("<h1 style='text-align: center; color: #542E17; margin-top: 10px;'>La Magna Via</h1>", unsafe_allow_html=True)
+# Ridotto a zero il margine superiore del titolo per attaccarlo al logo
+st.markdown("<h1 style='text-align: center; color: #542E17; margin-top: -5px; margin-bottom: 15px;'>La Magna Via</h1>", unsafe_allow_html=True)
 
 # -------------------------------------------------------------------
 # Elaborazione Documento PDF e RAG
