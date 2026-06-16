@@ -37,17 +37,18 @@ st.html(
         font-family: sans-serif;
     }
 
-    /* FIX LOGO: Centrale, ben allineato, senza ombre e integrato nel flusso della pagina */
+    /* FIX LOGO: Centratura geometrica reale rispetto al testo */
     div[data-testid="stImage"] {
         display: flex !important;
         justify-content: center !important;
-        margin: 40px auto 10px auto !important;
-        width: 250px !important;
+        align-items: center !important;
+        width: 100% !important; /* Prende tutto lo spazio per poter centrare l'immagine */
+        margin: 40px 0 10px 0 !important;
         background-color: transparent !important;
     }
     
     div[data-testid="stImage"] img {
-        width: 250px !important;
+        width: 250px !important; /* La dimensione si blocca qui */
         height: auto !important;
         box-shadow: none !important;          
         background-color: transparent !important;
@@ -213,7 +214,7 @@ st.html(html_sidebar)
 # -------------------------------------------------------------------
 # Interfaccia centrale
 # -------------------------------------------------------------------
-st.image("LOGO.png")  # Adesso si allinea centralmente grazie alle nuove regole CSS
+st.image("LOGO.png")  
 st.markdown("<h1 style='text-align: center; color: #542E17; margin-top: 10px;'>La Magna Via</h1>", unsafe_allow_html=True)
 
 # -------------------------------------------------------------------
