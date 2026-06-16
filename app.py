@@ -2,7 +2,6 @@ import streamlit as st
 import pdfplumber
 import os
 import re
-import base64
 
 st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", layout="centered")
 
@@ -12,18 +11,6 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
-
-# -------------------------------------------------------------------
-# Funzione per convertire il logo in Base64 (Bypassa st.image e i suoi bug)
-# -------------------------------------------------------------------
-def ottieni_image_base64(percorso_immagine):
-    if os.path.exists(percorso_immagine):
-        with open(percorso_immagine, "rb") as f:
-            dati = f.read()
-        return base64.b64encode(dati).decode()
-    return None
-
-logo_b64 = ottieni_image_base64("LOGO.png")
 
 # -------------------------------------------------------------------
 # Configurazione Stile CSS (Nuke Streamlit + Fix Grafici + Input Bar Custom)
@@ -38,7 +25,15 @@ st.html(
         visibility: hidden !important;
     }
     
-    .stApp { background-color: #F1F0E6; color: #231709; }
+    /* SFONDO CON IMMAGINE LOCALE DA CARTELLA STATIC */
+    .stApp { 
+        background-image: url("app/static/SFONDO.png"); 
+        background-size: cover; 
+        background-position: center; 
+        background-repeat: no-repeat; 
+        background-attachment: fixed;
+        color: #231709; 
+    }
 
     /* Riduce lo spazio vuoto in cima alla pagina per alzare l'interfaccia */
     .block-container {
@@ -61,7 +56,7 @@ st.html(
         display: block !important;
         text-align: center !important;
         width: 100% !important;
-        margin: 10px auto 0px auto !important; /* Margine inferiore azzerato */
+        margin: 10px auto 0px auto !important;
     }
     
     .logo-custom-img {
@@ -179,7 +174,7 @@ html_sidebar = """
 <summary>📜 Il Codice del Viandante</summary>
 <p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Il rispetto è il primo passo del pellegrino.</p>
 <ul>
-<li><strong>Rispetta la natura:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un enemy: non accenderlo mai.</li>
+<li><strong>Rispetta la natura:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.</li>
 <li><strong>Rispetta il territorio:</strong> se sei ospite di terreni agricoli chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.</li>
 <li><strong>Rispetta il silenzio:</strong> il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e nei ospitali.</li>
 <li><strong>Sii essenziale:</strong> viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.</li>
@@ -229,14 +224,10 @@ html_sidebar = """
 st.html(html_sidebar)
 
 # -------------------------------------------------------------------
-# Interfaccia centrale (Rendering nativo del Logo)
+# Interfaccia centrale (Rendering del Logo puntando a static)
 # -------------------------------------------------------------------
-if logo_b64:
-    st.html(f'<div class="contenitore-logo-custom"><img src="data:image/png;base64,{logo_b64}" class="logo-custom-img"></div>')
-else:
-    st.warning("Logo non trovato nella cartella principale.")
+st.html('<div class="contenitore-logo-custom"><img src="app/static/LOGO.png" class="logo-custom-img"></div>')
 
-# Ridotto a zero il margine superiore del titolo per attaccarlo al logo
 st.markdown("<h1 style='text-align: center; color: #542E17; margin-top: -5px; margin-bottom: 15px;'>La Magna Via</h1>", unsafe_allow_html=True)
 
 # -------------------------------------------------------------------
@@ -325,7 +316,7 @@ Ogni risposta su una tappa deve seguire rigorosamente questo ordine gerarchico:
 5. STORIA E CULTURA: Riferimenti al diploma del 1096 e all'eredità storica del borgo.
 
 LOGICA OPERATIVA TAPPE 1-9
-•	Precisione millimetrica: Quando l'utente chiede distanze o tempi (es. "Quanto manca?"), rispondi sempre con i dati esatti presenti nel dataset. Non approssimare mai.
+•	Precisione millimetrica: When l'utente chiede distanze o tempi (es. "Quanto manca?"), rispondi sempre con i dati esatti presenti nel dataset. Non approssimare mai.
 •	Analisi del contesto: Se l'utente ti dice dove si trova, calcola il tempo rimanente basandoti sulla difficoltà della tappa (Media/Difficile) e ricorda sempre di verificare si l'utente ha scorte d'acqua e cibo, dato che molti tratti sono isolati.
 •	Disambiguazione Acronimi: Riconosci e, se necessario, decodifica sigle come: SS (Strada Statale), ASL (Azienda Sanitaria Locale), MUDIA (Museo Diocesano), RT (Regia Trazzera), B&B (Bed & Breakfast), UNESCO, GPS.
 •	Mantieni sempre il focus om percorso Palermo-Agrigento (184,4 km).
@@ -367,7 +358,7 @@ if "cronologia" not in st.session_state:
     st.session_state.cronologia = []
 
 for messaggio in st.session_state.cronologia:
-    avatar_scelto = "LOGO.png" if messaggio["role"] == "assistant" else "Utente.png"
+    avatar_scelto = "app/static/LOGO.png" if messaggio["role"] == "assistant" else "Utente.png"
     with st.chat_message(messaggio["role"], avatar=avatar_scelto):
         st.markdown(messaggio["content"])
 
@@ -379,7 +370,7 @@ if input_utente:
         with st.chat_message("user", avatar="Utente.png"):
             st.markdown(input_utente)
         
-        with st.chat_message("assistant", avatar="LOGO.png"):
+        with st.chat_message("assistant", avatar="app/static/LOGO.png"):
             risposta = catena.invoke(input_utente)
             st.markdown(risposta)
         
