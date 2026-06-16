@@ -2,6 +2,7 @@ import streamlit as st
 import pdfplumber
 import os
 import re
+import base64
 
 st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", layout="centered")
 
@@ -11,6 +12,18 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
+
+# -------------------------------------------------------------------
+# Funzione per convertire il logo in Base64 (Bypassa st.image e i suoi bug)
+# -------------------------------------------------------------------
+def ottieni_image_base64(percorso_immagine):
+    if os.path.exists(percorso_immagine):
+        with open(percorso_immagine, "rb") as f:
+            dati = f.read()
+        return base64.b64encode(dati).decode()
+    return None
+
+logo_b64 = ottieni_image_base64("LOGO.png")
 
 # -------------------------------------------------------------------
 # Configurazione Stile CSS (Nuke Streamlit + Fix Grafici + Input Bar Custom)
@@ -37,23 +50,20 @@ st.html(
         font-family: sans-serif;
     }
 
-    /* FIX LOGO: Centratura geometrica assoluta superando i blocchi di Streamlit */
-    div[data-testid="stImage"] {
+    /* NUOVO FIX LOGO: Centratura nativa HTML senza i contenitori st.image */
+    .contenitore-logo-custom {
         display: block !important;
-        width: 100% !important;
         text-align: center !important;
+        width: 100% !important;
         margin: 40px auto 10px auto !important;
-        background-color: transparent !important;
     }
     
-    div[data-testid="stImage"] img {
-        display: block !important;
-        margin: 0 auto !important; /* Forza l'immagine al centro esatto del testo */
+    .logo-custom-img {
+        display: inline-block !important;
         width: 250px !important; 
         height: auto !important;
-        box-shadow: none !important;          
-        background-color: transparent !important;
         mix-blend-mode: multiply;             
+        pointer-events: none; /* Impedisce qualsiasi interazione, click o drag sul logo */
     }
 
     .custom-sidebar {
@@ -213,9 +223,15 @@ html_sidebar = """
 st.html(html_sidebar)
 
 # -------------------------------------------------------------------
-# Interfaccia centrale
+# Interfaccia centrale (Rendering nativo del Logo)
 # -------------------------------------------------------------------
-st.image("LOGO.png")  
+if logo_b64:
+    # Iniettiamo l'immagine direttamente come codice HTML puro e crudo
+    st.html(f'<div class="contenitore-logo-custom"><img src="data:image/png;base64,{logo_b64}" class="logo-custom-img"></div>')
+else:
+    # Fallback di sicurezza se il file non viene trovato
+    st.warning("Logo non trovato nella cartella principale.")
+
 st.markdown("<h1 style='text-align: center; color: #542E17; margin-top: 10px;'>La Magna Via</h1>", unsafe_allow_html=True)
 
 # -------------------------------------------------------------------
@@ -269,7 +285,7 @@ Buyer Persona
 Stile comunicativo:
 •	Gerarchico (Safety First): Ogni tua risposta sulla logistica deve mettere al primo posto la sicurezza (es. varianti maltempo, guadi, punti kritici, emergenze).
 •	Tecnico-Informativo: Decodifichi sempre ogni acronimo o sigla (es. SS = Strada Statale, ASL = Azienda Sanitaria Locale, RT = Regia Trazzera).
-•	Proattivo: Se l'utente chiede una tappa, non rispondere solo alla domanda, ma anticipa i bisogni (es: "Assicurati di avere acqua, non ci sono punti di ristoro per i prossimi X km").
+•	Proattivo: Se l'utente chiede una tappa, non rispondere solo alla domanda, ma anticipa i bisogni (es: "Assicurati di avere acqua, non ci sono punti di ristoro per i próximos X km").
 
 •	Zero Allucinazioni: Se una specifica informazione non è presente nel dataset, rispondi con eleganza: "Caro pellegrino, al momento non riesco a guidarti su questa informazione: cry:".
 Quando l'utente interroga la storia della Magna Via, non agire come un'enciclopedia, ma come un custode della memoria. Usa un tono evocativo, capace di far sentire al viandante il "peso dei secoli" sotto i propri scarponi.
@@ -307,7 +323,7 @@ LOGICA OPERATIVA TAPPE 1-9
 •	Precisione millimetrica: Quando l'utente chiede distanze o tempi (es. "Quanto manca?"), rispondi sempre con i dati esatti presenti nel dataset. Non approssimare mai.
 •	Analisi del contesto: Se l'utente ti dice dove si trova, calcola il tempo rimanente basandoti sulla difficoltà della tappa (Media/Difficile) e ricorda sempre di verificare si l'utente ha scorte d'acqua e cibo, dato che molti tratti sono isolati.
 •	Disambiguazione Acronimi: Riconosci e, se necessario, decodifica sigle come: SS (Strada Statale), ASL (Azienda Sanitaria Locale), MUDIA (Museo Diocesano), RT (Regia Trazzera), B&B (Bed & Breakfast), UNESCO, GPS.
-•	Mantieni sempre il focus sul percorso Palermo-Agrigento (184,4 km).
+•	Mantieni sempre il focus om percorso Palermo-Agrigento (184,4 km).
 
 
 GERARCHIA DELLE RISPOSTE (Chain of Thought): Per ogni domanda, segui quest'ordine logico:
