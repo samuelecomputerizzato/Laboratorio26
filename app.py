@@ -135,11 +135,10 @@ st.html(
 # -------------------------------------------------------------------
 html_sidebar = """
 <input type="checkbox" id="side-menu-switch" class="sidebar-checkbox">
-<label for="side-menu-switch" class="sidebar-toggle-button">☰ Lo spazio del pellegrino</label>
+<label for="side-menu-switch" class="sidebar-toggle-button">☰ Lo spazio del viandante</label>
 <div class="custom-sidebar">
 <label for="side-menu-switch" class="sidebar-close">✕</label>
-<h3 style="text-align: center; margin-bottom: 5px;">Menu del Viandante</h3>
-<p style="text-align: center; font-size: 0.85rem; font-style: italic; opacity: 0.9; margin-bottom: 20px;">Informazioni per il Cammino</p>
+
 <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.3); margin-bottom: 20px;">
 
 <details>
