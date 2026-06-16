@@ -137,7 +137,7 @@ st.html(
 )
 
 # -------------------------------------------------------------------
-# INIEZIONE STRUTTURA SIDEBAR (Uso st.html per evitare glitch del parser)
+# INIEZIONE STRUTTURA SIDEBAR
 # -------------------------------------------------------------------
 html_sidebar = """
 <input type="checkbox" id="side-menu-switch" class="sidebar-checkbox">
@@ -276,7 +276,7 @@ Contesto:\n{context}'''),
               | prompt | modello_llm | StrOutputParser())
 
 # -------------------------------------------------------------------
-# Sezione Chat (Riparata con unsafe_allow_html=True)
+# Sezione Chat 
 # -------------------------------------------------------------------
 if "cronologia" not in st.session_state: st.session_state.cronologia = []
 
