@@ -5,6 +5,14 @@ import re
 
 st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", layout="centered")
 
+# -------------------------------------------------------------------
+# Funzione di utilità per formattare i messaggi
+# -------------------------------------------------------------------
+def formatta_messaggio(testo: str, colore: str, font_size: str = "15px") -> str:
+    testo_html = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', testo)
+    testo_html = testo_html.replace('\n', '<br>')
+    return f'<div style="color: {colore}; font-size: {font_size}; line-height: 1.5;">{testo_html}</div>'
+
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_community.vectorstores import FAISS
@@ -13,9 +21,9 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
 # -------------------------------------------------------------------
-# Configurazione Stile CSS (Nuke Streamlit + Fix Grafici + Input Bar Custom)
+# Configurazione Stile CSS (Nuke Streamlit + Fix Grafici + Input Bar)
 # -------------------------------------------------------------------
-st.html(
+st.markdown(
     """
     <style>
     /* Nuke Streamlit */
@@ -66,7 +74,7 @@ st.html(
     }
 
     /* Protezione testi dagli stili ereditati */
-    .custom-sidebar h3, .custom-sidebar h4, .custom-sidebar p, .custom-sidebar li, 
+    .custom-sidebar h3, .custom-sidebar p, .custom-sidebar li, 
     .custom-sidebar strong, .custom-sidebar span {
         color: #ffffff !important;
         background-color: transparent !important;
@@ -82,54 +90,27 @@ st.html(
     .custom-sidebar ul { padding-left: 18px !important; margin: 10px 0 0 0 !important; }
     .custom-sidebar li { margin-bottom: 8px !important; font-size: 0.9rem !important; line-height: 1.4; }
 
-    /* CUSTOMIZZAZIONE AGGRESSIVA BARRA DI INPUT */
-    div[data-testid="stChatInput"] {
-        background-color: transparent !important;
-        box-shadow: none !important;
-        border: none !important;
-        padding-bottom: 20px !important;
+    /* CUSTOMIZZAZIONE CASSETTA DI INPUT IN BASSO */
+    [data-testid="stChatInput"] {
+        background-color: #F1F0E6 !important;
     }
-
-    div[data-testid="stChatInput"] > div {
-        background-color: #F1F0E6 !important; 
-        border: 2px solid #542E17 !important;   
-        border-radius: 28px !important;         
-        padding: 5px 10px !important;
-        box-shadow: 0px 4px 15px rgba(84, 46, 23, 0.1) !important; 
-    }
-
-    div[data-testid="stChatInput"] textarea {
-        background-color: transparent !important;
-        color: #231709 !important; 
-        font-family: sans-serif !important;
-        font-size: 1rem !important;
-    }
-
-    div[data-testid="stChatInput"] textarea::placeholder {
-        color: #542E17 !important;
-        opacity: 0.6;
-    }
-
-    div[data-testid="stChatInput"] button {
-        background-color: #7A8B74 !important; 
-        border-radius: 50% !important;         
-        color: #ffffff !important;             
-        transition: background-color 0.2s ease;
-    }
-
-    div[data-testid="stChatInput"] button:hover {
-        background-color: #677761 !important; 
+    [data-testid="stChatInput"] textarea {
+        background-color: #F1F0E6 !important;
+        color: #231709 !important;
+        border: 1px solid #542E17 !important;
+        border-radius: 8px !important;
     }
 
     @media (max-width: 480px) {
         .custom-sidebar { width: 85vw !important; left: -90vw !important; }
     }
     </style>
-    """
+    """,
+    unsafe_allow_html=True
 )
 
 # -------------------------------------------------------------------
-# INIEZIONE STRUTTURA SIDEBAR
+# INIEZIONE STRUTTURA SIDEBAR (Allineata a sinistra anti-glitch)
 # -------------------------------------------------------------------
 html_sidebar = """
 <input type="checkbox" id="side-menu-switch" class="sidebar-checkbox">
@@ -139,20 +120,18 @@ html_sidebar = """
 <h3 style="text-align: center; margin-bottom: 5px;">Menu del Viandante</h3>
 <p style="text-align: center; font-size: 0.85rem; font-style: italic; opacity: 0.9; margin-bottom: 20px;">Informazioni per il Cammino</p>
 <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.3); margin-bottom: 20px;">
-
 <details>
 <summary>📜 Il Codice del Viandante</summary>
 <p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Il rispetto è il primo passo del pellegrino.</p>
 <ul>
 <li><strong>Rispetta la natura:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.</li>
 <li><strong>Rispetta il territorio:</strong> sei ospite di terreni agricoli: chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.</li>
-<li><strong>Rispetta il silenzio:</strong> il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e nei ospitali.</li>
+<li><strong>Rispetta il silenzio:</strong> il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e negli ospitali.</li>
 <li><strong>Sii essenziale:</strong> viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.</li>
 <li><strong>Sii solidale:</strong> aiuta chi è in difficoltà. Un sorriso o un consiglio possono fare la differenza per un altro viandante.</li>
 <li><strong>Sii grato e umile:</strong> ringrazia chi ti ospita. Accetta con curiosità i ritmi e la cultura che incontri.</li>
 </ul>
 </details>
-
 <details>
 <summary>📍 Le tue Credenziali</summary>
 <p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">La tua Credenziale è la memoria del tuo spirito, custodiscila con cura.</p>
@@ -171,27 +150,9 @@ html_sidebar = """
 <li><strong>Agrigento:</strong> Mudia (Via Duomo 96) per il Testimonium, Parrocchie.</li>
 </ul>
 </details>
-
-<details>
-<summary>📖 Il Glossario del Territorio</summary>
-<p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Le parole per leggere il cuore della Sicilia e il territorio che stai attraversando.</p>
-<h4 style="margin-top: 15px; margin-bottom: 5px; font-size: 0.95rem; font-weight: bold;">🚜 Sulle tracce della storia – il paesaggio</h4>
-<ul>
-<li><strong>Trazzera:</strong> non è una semplice strada, è l’antica "autostrada" dei pastori e dei re. Camminare qui significa posare i piedi dove, per secoli, è passato il cuore pulsante della Sicilia.</li>
-<li><strong>Marna:</strong> è la roccia bianca che disegna le colline agrigentine. Bellissima e candida come la luna, ma attenzione: quando il cielo piange, diventa un terreno infido e scivoloso. Rispetta la sua natura.</li>
-<li><strong>Solfara:</strong> sono le ferite aperte della terra, le antiche miniere di zolfo. Oggi sono ruderi silenziosi che raccontano una storia di fatica, polvere e riscatto. Guardali con rispetto.</li>
-<li><strong>Kora:</strong> per gli antichi greci era la terra che nutriva la città. Oggi è lo spazio aperto, il silenzio della campagna che ti abbraccia tra un borgo e l'altro.</li>
-</ul>
-<h4 style="margin-top: 15px; margin-bottom: 5px; font-size: 0.95rem; font-weight: bold;">🏠 Dove riposa la memoria – i luoghi</h4>
-<ul>
-<li><strong>Robba (o Masseria):</strong> più che una fattoria, è un piccolo mondo autosufficiente. Dietro queste mura di pietra fortificata si è scritta la storia rurale dell'isola.</li>
-<li><strong>Rabato:</strong> è il cuore antico di origine araba. Perditi tra le sei case addossate e i vicoli stretti, pensati millenni fa per ingannare il sole e proteggere dal vento.</li>
-<li><strong>Hospitale:</strong> è la casa del pellegrino. Anche se oggi ha un aspetto diverso, il suo significato non è cambiato: qui la porta è aperta, il viandante è un ospite sacro e il riposo è un atto di cura.</li>
-</ul>
-</details>
 </div>
 """
-st.html(html_sidebar)
+st.markdown(html_sidebar, unsafe_allow_html=True)
 
 # -------------------------------------------------------------------
 # Interfaccia centrale
@@ -268,22 +229,22 @@ Contesto:\n{context}'''),
               | prompt | modello_llm | StrOutputParser())
 
 # -------------------------------------------------------------------
-# Sezione Chat 
+# Sezione Chat
 # -------------------------------------------------------------------
 if "cronologia" not in st.session_state: st.session_state.cronologia = []
 
 for messaggio in st.session_state.cronologia:
     with st.chat_message(messaggio["role"], avatar="LOGO.png" if messaggio["role"] == "assistant" else "Utente.png"):
-        st.markdown(formatta_messaggio(messaggio["content"], "#231709"), unsafe_allow_html=True)
+        st.markdown(formatta_messaggio(messaggio["content"], "#231709"))
 
 if catena and (input_utente := st.chat_input("Chiedi alla Via...")):
     st.session_state.cronologia.append({"role": "user", "content": input_utente})
     with st.chat_message("user", avatar="Utente.png"):
-        st.markdown(formatta_messaggio(input_utente, "#4A2E1B"), unsafe_allow_html=True)
+        st.markdown(formatta_messaggio(input_utente, "#4A2E1B"))
     
     with st.chat_message("assistant", avatar="LOGO.png"):
         risposta = catena.invoke(input_utente)
-        st.markdown(formatta_messaggio(risposta, "#3D2314"), unsafe_allow_html=True)
+        st.markdown(formatta_messaggio(risposta, "#3D2314"))
     
     st.session_state.cronologia.append({"role": "assistant", "content": risposta})
     st.rerun()
