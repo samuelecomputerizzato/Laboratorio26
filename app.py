@@ -21,7 +21,7 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
 # -------------------------------------------------------------------
-# Configurazione Stile CSS (Nuke Streamlit + Fix Grafici + Input Bar Custom)
+# Configurazione Stile CSS (Nuke Streamlit + Fix Grafici)
 # -------------------------------------------------------------------
 st.markdown(
     """
@@ -74,7 +74,7 @@ st.markdown(
     }
 
     /* Protezione testi dagli stili ereditati */
-    .custom-sidebar h3, .custom-sidebar h4, .custom-sidebar p, .custom-sidebar li, 
+    .custom-sidebar h3, .custom-sidebar p, .custom-sidebar li, 
     .custom-sidebar strong, .custom-sidebar span {
         color: #ffffff !important;
         background-color: transparent !important;
@@ -89,45 +89,6 @@ st.markdown(
 
     .custom-sidebar ul { padding-left: 18px !important; margin: 10px 0 0 0 !important; }
     .custom-sidebar li { margin-bottom: 8px !important; font-size: 0.9rem !important; line-height: 1.4; }
-
-    /* CUSTOMIZZAZIONE AGGRESSIVA BARRA DI INPUT */
-    div[data-testid="stChatInput"] {
-        background-color: transparent !important;
-        box-shadow: none !important;
-        border: none !important;
-        padding-bottom: 20px !important;
-    }
-
-    div[data-testid="stChatInput"] > div {
-        background-color: #F1F0E6 !important; 
-        border: 2px solid #542E17 !important;   
-        border-radius: 28px !important;         
-        padding: 5px 10px !important;
-        box-shadow: 0px 4px 15px rgba(84, 46, 23, 0.1) !important; 
-    }
-
-    div[data-testid="stChatInput"] textarea {
-        background-color: transparent !important;
-        color: #231709 !important; 
-        font-family: sans-serif !important;
-        font-size: 1rem !important;
-    }
-
-    div[data-testid="stChatInput"] textarea::placeholder {
-        color: #542E17 !important;
-        opacity: 0.6;
-    }
-
-    div[data-testid="stChatInput"] button {
-        background-color: #7A8B74 !important; 
-        border-radius: 50% !important;         
-        color: #ffffff !important;             
-        transition: background-color 0.2s ease;
-    }
-
-    div[data-testid="stChatInput"] button:hover {
-        background-color: #677761 !important; 
-    }
 
     @media (max-width: 480px) {
         .custom-sidebar { width: 85vw !important; left: -90vw !important; }
@@ -178,29 +139,9 @@ html_sidebar = """
 <li><strong>Agrigento:</strong> Mudia (Via Duomo 96) per il Testimonium, Parrocchie.</li>
 </ul>
 </details>
-<details>
-<summary>📖 Il Glossario del Territorio</summary>
-<p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Le parole per leggere il cuore della Sicilia e il territorio che stai attraversando.</p>
-<h4 style="margin-top: 15px; margin-bottom: 5px; font-size: 0.95rem; font-weight: bold;">🚜 Sulle tracce della storia – il paesaggio</h4>
-<ul>
-<li><strong>Trazzera:</strong> non è una semplice strada, è l’antica "autostrada" dei pastori e dei re. Camminare qui significa posare i piedi dove, per secoli, è passato il cuore pulsante della Sicilia.</li>
-<li><strong>Marna:</strong> è la roccia bianca che disegna le colline agrigentine. Bellissima e candida come la luna, ma attenzione: quando il cielo piange, diventa un terreno infido e scivoloso. Rispetta la sua natura.</li>
-<li><strong>Solfara:</strong> sono le ferite aperte della terra, le antiche miniere di zolfo. Oggi sono ruderi silenziosi che raccontano una storia di fatica, polvere e riscatto. Guardali con rispetto.</li>
-<li><strong>Kora:</strong> per gli antichi greci era la terra che nutriva la città. Oggi è lo spazio aperto, il silenzio della campagna che ti abbraccia tra un borgo e l'altro.</li>
-</ul>
-<h4 style="margin-top: 15px; margin-bottom: 5px; font-size: 0.95rem; font-weight: bold;">🏠 Dove riposa la memoria – i luoghi</h4>
-<ul>
-<li><strong>Robba (o Masseria):</strong> più che una fattoria, è un piccolo mondo autosufficiente. Dietro queste mura di pietra fortificata si è scritta la storia rurale dell'isola.</li>
-<li><strong>Rabato:</strong> è il cuore antico di origine araba. Perditi tra le sei case addossate e i vicoli stretti, pensati millenni fa per ingannare il sole e proteggere dal vento.</li>
-<li><strong>Hospitale:</strong> è la casa del pellegrino. Anche se oggi ha un aspetto diverso, il suo significato non è cambiato: qui la porta è aperta, il viandante è un ospite sacro e il riposo è un atto di cura.</li>
-</ul>
-</details>
 </div>
 """
-
-# TRUCCO ANTIGLITCH: Collassa l'HTML eliminando newlines e spazi di indentazione per ingannare il Markdown
-html_sidebar_compresso = "".join([line.strip() for line in html_sidebar.splitlines()])
-st.markdown(html_sidebar_compresso, unsafe_allow_html=True)
+st.markdown(html_sidebar, unsafe_allow_html=True)
 
 # -------------------------------------------------------------------
 # Interfaccia centrale
@@ -263,7 +204,7 @@ Le risposte devono essere:
 - semplici da consultare anche in mobilità
 - coerenti con l’esperienza del pellegrinaggio
 - accoglienti e orientate all’accompagnamento del pellegrino.
-- When l'utente chiede informazioni su una tappa, verifica se il percorso attraversa aree sensibili (boschi, riserve naturali, zone di macchia mediterranea). 
+- Quando l'utente chiede informazioni su una tappa, verifica se il percorso attraversa aree sensibili (boschi, riserve naturali, zone di macchia mediterranea). 
 Se la risposta è affermativa, aggiungi in chiusura:
 ':herb: Cammina da custode (vai a capo)
 La Magna Via è un dono prezioso, proteggiamola insieme dal rischio incendi. Per favore, evita di fumare nei boschi and porta sempre con te i mozziconi fino al prossimo borgo. Non lasciare traccia, solo impronte. Grazie!'
@@ -277,23 +218,22 @@ Contesto:\n{context}'''),
               | prompt | modello_llm | StrOutputParser())
 
 # -------------------------------------------------------------------
-# Sezione Chat (FIXED: unsafe_allow_html=True aggiunto a tutti i markdown)
+# Sezione Chat
 # -------------------------------------------------------------------
 if "cronologia" not in st.session_state: st.session_state.cronologia = []
 
 for messaggio in st.session_state.cronologia:
     with st.chat_message(messaggio["role"], avatar="LOGO.png" if messaggio["role"] == "assistant" else "Utente.png"):
-        st.markdown(formatta_messaggio(messaggio["content"], "#231709"), unsafe_allow_html=True)
+        st.markdown(formatta_messaggio(messaggio["content"], "#231709"))
 
 if catena and (input_utente := st.chat_input("Chiedi alla Via...")):
     st.session_state.cronologia.append({"role": "user", "content": input_utente})
     with st.chat_message("user", avatar="Utente.png"):
-        st.markdown(formatta_messaggio(input_utente, "#4A2E1B"), unsafe_allow_html=True)
+        st.markdown(formatta_messaggio(input_utente, "#4A2E1B"))
     
     with st.chat_message("assistant", avatar="LOGO.png"):
         risposta = catena.invoke(input_utente)
-        st.markdown(formatta_messaggio(risposta, "#3D2314"), unsafe_allow_html=True)
+        st.markdown(formatta_messaggio(risposta, "#3D2314"))
     
     st.session_state.cronologia.append({"role": "assistant", "content": risposta})
     st.rerun()
-
