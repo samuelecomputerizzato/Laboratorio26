@@ -5,19 +5,6 @@ import re
 
 st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", layout="centered")
 
-# -------------------------------------------------------------------
-# Funzione di utilità per formattare i messaggi (Traduzione Emoji Fixata)
-# -------------------------------------------------------------------
-def formatta_messaggio(testo: str, colore: str, font_size: str = "15px") -> str:
-    # Traduciamo i codici in emoji reali prima che l'HTML blocchi il parser di Streamlit
-    testo = testo.replace(':cry:', '😢')
-    testo = testo.replace(':blush:', '😊')
-    testo = testo.replace(':herb:', '🌿')
-    
-    testo_html = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', testo)
-    testo_html = testo_html.replace('\n', '<br>')
-    return f'<div style="color: {colore}; font-size: {font_size}; line-height: 1.5;">{testo_html}</div>'
-
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_community.vectorstores import FAISS
