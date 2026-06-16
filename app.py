@@ -37,13 +37,12 @@ st.html(
         font-family: sans-serif;
     }
 
-    /* FIX LOGO: Dimensione maxi (250px), completamente piatto e fuso con lo sfondo */
+    /* FIX LOGO: Centrale, ben allineato, senza ombre e integrato nel flusso della pagina */
     div[data-testid="stImage"] {
-        position: fixed;
-        top: 15px;
-        right: 15px;
+        display: flex !important;
+        justify-content: center !important;
+        margin: 40px auto 10px auto !important;
         width: 250px !important;
-        z-index: 99998;
         background-color: transparent !important;
     }
     
@@ -214,8 +213,8 @@ st.html(html_sidebar)
 # -------------------------------------------------------------------
 # Interfaccia centrale
 # -------------------------------------------------------------------
-st.image("LOGO.png")  
-st.markdown("<h1 style='text-align: center; color: #542E17; margin-top: 40px;'>La Magna Via</h1>", unsafe_allow_html=True)
+st.image("LOGO.png")  # Adesso si allinea centralmente grazie alle nuove regole CSS
+st.markdown("<h1 style='text-align: center; color: #542E17; margin-top: 10px;'>La Magna Via</h1>", unsafe_allow_html=True)
 
 # -------------------------------------------------------------------
 # Elaborazione Documento PDF e RAG
@@ -303,7 +302,7 @@ Ogni risposta su una tappa deve seguire rigorosamente questo ordine gerarchico:
 5. STORIA E CULTURA: Riferimenti al diploma del 1096 e all'eredità storica del borgo.
 
 LOGICA OPERATIVA TAPPE 1-9
-•	Precisione millimetrica: When l'utente chiede distanze o tempi (es. "Quanto manca?"), rispondi sempre con i dati esatti presenti nel dataset. Non approssimare mai.
+•	Precisione millimetrica: Quando l'utente chiede distanze o tempi (es. "Quanto manca?"), rispondi sempre con i dati esatti presenti nel dataset. Non approssimare mai.
 •	Analisi del contesto: Se l'utente ti dice dove si trova, calcola il tempo rimanente basandoti sulla difficoltà della tappa (Media/Difficile) e ricorda sempre di verificare si l'utente ha scorte d'acqua e cibo, dato che molti tratti sono isolati.
 •	Disambiguazione Acronimi: Riconosci e, se necessario, decodifica sigle come: SS (Strada Statale), ASL (Azienda Sanitaria Locale), MUDIA (Museo Diocesano), RT (Regia Trazzera), B&B (Bed & Breakfast), UNESCO, GPS.
 •	Mantieni sempre il focus sul percorso Palermo-Agrigento (184,4 km).
