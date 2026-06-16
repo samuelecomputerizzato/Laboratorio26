@@ -40,7 +40,7 @@ st.html(
     
     .stApp { background-color: #F1F0E6; color: #231709; }
 
-    /* Riduce lo spazio vuoto in cima alla pagina per alzare l'interfaccia */
+    /* Spazio vuoto standard per desktop */
     .block-container {
         padding-top: 2.5rem !important;
         padding-bottom: 3rem !important;
@@ -157,8 +157,14 @@ st.html(
         font-family: sans-serif !important;
     }
 
+    /* MODIFICHE SPECIFICHE PER DISPOSITIVI MOBILE */
     @media (max-width: 480px) {
         .custom-sidebar { width: 85vw !important; left: -90vw !important; }
+        
+        /* Sposta l'intero blocco centrale (Logo + Titolo) più in basso su mobile */
+        .block-container {
+            padding-top: 5.5rem !important; 
+        }
     }
     </style>
     """
@@ -214,7 +220,7 @@ html_sidebar = """
 <ul>
 <li><strong>Trazzera:</strong> non è una semplice strada, è l’antica "autostrada" dei pastori e dei re. Camminare qui significa posare i piedi dove, per secoli, è passato il cuore pulsante della Sicilia.</li>
 <li><strong>Marna:</strong> è la roccia bianca che disegna le colline agrigentine. Bellissima e candida come la luna, ma attenzione: quando il cielo piange, diventa un terreno infido e scivoloso. Rispetta la sua natura.</li>
-<li><strong>Solfara:</strong> sono le ferite aperte della terra, le antiche miniere di zolfo. Oggi sono ruderi silenziosi che raccontano una storia di fatica, polvere e riscatto. Guardali con rispetto.</li>
+<li><strong>Solfara:</strong> sono le ferite aperte della terra, le antiche miniere di zolfo. Oggi sono ruderi silenziosi che raccontano una storia di fatica, polvere e riscatto. Guardali con respeito.</li>
 <li><strong>Kora:</strong> per gli antichi greci era la terra che nutriva la città. Oggi è lo spazio aperto, il silenzio della campagna che ti abbraccia tra un borgo e l'altro.</li>
 </ul>
 <h4 style="margin-top: 15px; margin-bottom: 5px; font-size: 0.95rem; font-weight: bold;">🏠 Dove riposa la memoria – i luoghi</h4>
