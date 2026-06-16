@@ -37,22 +37,22 @@ st.html(
         font-family: sans-serif;
     }
 
-    /* FIX LOGO: Completamente piatto, senza ombre/rilievi e fuso con lo sfondo */
+    /* FIX LOGO: Più grande (100px), completamente piatto e fuso con lo sfondo */
     div[data-testid="stImage"] {
         position: fixed;
         top: 15px;
         right: 15px;
-        width: 65px !important;
+        width: 100px !important;
         z-index: 99998;
         background-color: transparent !important;
     }
     
     div[data-testid="stImage"] img {
-        width: 65px !important;
+        width: 100px !important;
         height: auto !important;
-        box-shadow: none !important;          /* Elimina il rilievo */
+        box-shadow: none !important;          
         background-color: transparent !important;
-        mix-blend-mode: multiply;             /* Integra l'immagine fondendo il bianco con lo sfondo */
+        mix-blend-mode: multiply;             
     }
 
     .custom-sidebar {
@@ -214,7 +214,7 @@ st.html(html_sidebar)
 # -------------------------------------------------------------------
 # Interfaccia centrale
 # -------------------------------------------------------------------
-st.image("LOGO.png")  # Posizionato in alto a destra tramite il CSS sopra
+st.image("LOGO.png")  
 st.markdown("<h1 style='text-align: center; color: #542E17; margin-top: 40px;'>La Magna Via</h1>", unsafe_allow_html=True)
 
 # -------------------------------------------------------------------
@@ -344,17 +344,14 @@ Contesto:\n{context}'''),
 if "cronologia" not in st.session_state: 
     st.session_state.cronologia = []
 
-# Mostra i messaggi precedenti
 for messaggio in st.session_state.cronologia:
     avatar_scelto = "LOGO.png" if messaggio["role"] == "assistant" else "Utente.png"
     with st.chat_message(messaggio["role"], avatar=avatar_scelto):
         st.markdown(messaggio["content"])
 
-# La barra viene invocata FUORI dall'if, così appare SEMPRE sullo schermo
 input_utente = st.chat_input("Chiedi alla Via...")
 
 if input_utente:
-    # Controlliamo se la catena RAG è stata configurata correttamente
     if catena:
         st.session_state.cronologia.append({"role": "user", "content": input_utente})
         with st.chat_message("user", avatar="Utente.png"):
@@ -367,5 +364,4 @@ if input_utente:
         st.session_state.cronologia.append({"role": "assistant", "content": risposta})
         st.rerun()
     else:
-        # Se la barra c'è ma il PDF non è stato caricato, avvisiamo il viandante
         st.error("Caro pellegrino, la barra è attiva ma la conoscenza è bloccata! Verifica che il file 'Pdf finale (1).pdf' sia presente nella cartella del progetto e che le chiavi API siano corrette.")
