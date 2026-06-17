@@ -229,7 +229,8 @@ html_sidebar = """
 """
 
 st.html(html_sidebar)
-st.image("Adobe Express - file.png")
+
+st.image("Adobe Express - file.png", width=240) # Regola larghezza se serve
 st.header("La Magna via")
 
 
@@ -360,7 +361,7 @@ Contesto:\n{context}'''),
 
 # GESTIONE DELLA CHAT E CRONOLOGIA A SCHERMO 
 
-if "cronologia" not in st.session_state: 
+i csf "cronologia" not in st.session_state: 
     st.session_state.cronologia = []
 
 # Mostra la cronologia memorizzata all'avvio o al refresh naturale
