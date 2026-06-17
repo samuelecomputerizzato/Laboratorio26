@@ -79,6 +79,11 @@ st.html(
         padding: 12px !important;
         display: block !important;
     }
+    .block-container h2 {
+    text-align: center !important;
+    width: 100% !important;
+}
+
     
     .custom-sidebar summary {
         font-weight: bold !important;
@@ -342,38 +347,43 @@ CHIUSURA IDENTITARIA
  Firma le tue risposte chiave o chiudi i moments di supporto con lo spirito del cammino: "Ultreya, viandante”, “Buon cammino ne La Magna Via”.
 Contesto:\n{context}'''),
         ("human", "{question}")
-    ])
+  # ... (mantenendo invariata la parte iniziale del tuo script e del CSS)
 
-    #MODELLO
-    
+    # MODELLO E CATENA
     modello_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3, openai_api_key=st.secrets["OPENAI_API_KEY"])
     catena = ({"context": lambda x: "\n\n".join([doc.page_content for doc in vettori.similarity_search(x, k=4)]), "question": RunnablePassthrough()} 
               | prompt | modello_llm | StrOutputParser())
 
 
-# GESTIONE DELLA CHAT E CRONOLOGIA S SCHERMO 
+# GESTIONE DELLA CHAT E CRONOLOGIA A SCHERMO 
 
 if "cronologia" not in st.session_state: 
     st.session_state.cronologia = []
 
+# Mostra la cronologia memorizzata all'avvio o al refresh naturale
 for messaggio in st.session_state.cronologia:
     avatar_scelto = "LOGO.png" if messaggio["role"] == "assistant" else "Utente.png"
     with st.chat_message(messaggio["role"], avatar=avatar_scelto):
         st.markdown(messaggio["content"])
 
+# Cattura l'input dell'utente
 input_utente = st.chat_input("Chiedi alla Via...")
 
 if input_utente:
     if catena:
-        st.session_state.cronologia.append({"role": "user", "content": input_utente})
+        # 1. Mostra e salva il messaggio dell'utente
         with st.chat_message("user", avatar="Utente.png"):
             st.markdown(input_utente)
+        st.session_state.cronologia.append({"role": "user", "content": input_utente})
         
+        # 2. Genera, mostra e salva la risposta dell'assistente
         with st.chat_message("assistant", avatar="LOGO.png"):
             risposta = catena.invoke(input_utente)
             st.markdown(risposta)
-        
         st.session_state.cronologia.append({"role": "assistant", "content": risposta})
-        st.rerun()
+        
+        # NOTA: st.rerun() rimosso per evitare rendering duplicati instabili
     else:
-        st.error("Caro pellegrino, la barra è attiva ma la conoscenza è bloccata! Verifica che il file 'Pdf finale (1).pdf' sia presente nella cartella del progetto e che le chiavi API siano corrette.")
+        st.error("Caro pellegrino, la barra è attiva ma la conoscenza è bloccata! Verifica che il file 'Pdf finale (1).pdf' sia presente e che le chiavi API siano corrette.")
+      
+
