@@ -25,9 +25,8 @@ def ottieni_image_base64(percorso_immagine):
 
 logo_b64 = ottieni_image_base64("LOGO.png")
 
-# -------------------------------------------------------------------
-# Configurazione Stile CSS (Nuke Streamlit + Fix Grafici + Input Bar Custom)
-# -------------------------------------------------------------------
+# Configurazione Stile CSS 
+
 st.html(
     """
     <style>
@@ -170,9 +169,9 @@ st.html(
     """
 )
 
-# -------------------------------------------------------------------
-# INIEZIONE STRUTTURA SIDEBAR
-# -------------------------------------------------------------------
+
+# STRUTTURA SIDEBAR
+
 html_sidebar = """
 <input type="checkbox" id="side-menu-switch" class="sidebar-checkbox">
 <label for="side-menu-switch" class="sidebar-toggle-button">☰ Lo spazio del viandante</label>
@@ -234,9 +233,9 @@ html_sidebar = """
 """
 st.html(html_sidebar)
 
-# -------------------------------------------------------------------
+
 # Interfaccia centrale (Rendering nativo del Logo)
-# -------------------------------------------------------------------
+
 if logo_b64:
     st.html(f'<div class="contenitore-logo-custom"><img src="data:image/png;base64,{logo_b64}" class="logo-custom-img"></div>')
 else:
@@ -245,9 +244,9 @@ else:
 # Ridotto a zero il margine superiore del titolo per attaccarlo al logo
 st.markdown("<h1 style='text-align: center; color: #542E17; margin-top: -5px; margin-bottom: 15px;'>La Magna Via</h1>", unsafe_allow_html=True)
 
-# -------------------------------------------------------------------
+
 # Elaborazione Documento PDF e RAG
-# -------------------------------------------------------------------
+
 cartella_corrente = os.path.dirname(__file__)
 documento = os.path.join(cartella_corrente, "Pdf finale (1).pdf")
 catena = None
@@ -362,14 +361,16 @@ CHIUSURA IDENTITARIA
 Contesto:\n{context}'''),
         ("human", "{question}")
     ])
+
+    #MODELLO
     
     modello_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3, openai_api_key=st.secrets["OPENAI_API_KEY"])
     catena = ({"context": lambda x: "\n\n".join([doc.page_content for doc in vettori.similarity_search(x, k=4)]), "question": RunnablePassthrough()} 
               | prompt | modello_llm | StrOutputParser())
 
-# -------------------------------------------------------------------
-# Sezione Chat 
-# -------------------------------------------------------------------
+
+# GESTIONE DELLA CHAT E CRONOLOGIA S SCHERMO 
+
 if "cronologia" not in st.session_state: 
     st.session_state.cronologia = []
 
