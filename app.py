@@ -223,6 +223,7 @@ html_sidebar = """
 </div>
 """
 st.html(html_sidebar)
+st.header("La Magna via")
 
 
 
