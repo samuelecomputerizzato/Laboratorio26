@@ -229,6 +229,7 @@ html_sidebar = """
 """
 st.html(html_sidebar)
 st.header("La Magna via")
+st.image("Adobe Express - file.png")
 
 
 
