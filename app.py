@@ -2,7 +2,6 @@ import streamlit as st
 import pdfplumber
 import os
 import re
-import base64
 
 st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", layout="centered")
 
@@ -15,15 +14,7 @@ from langchain_core.output_parsers import StrOutputParser
 
 # -------------------------------------------------------------------
 # Funzione per convertire il logo in Base64 (Bypassa st.image e i suoi bug)
-# -------------------------------------------------------------------
-def ottieni_image_base64(percorso_immagine):
-    if os.path.exists(percorso_immagine):
-        with open(percorso_immagine, "rb") as f:
-            dati = f.read()
-        return base64.b64encode(dati).decode()
-    return None
-
-logo_b64 = ottieni_image_base64("LOGO.png")
+# ------------------------------------------------------------------
 
 # Configurazione Stile CSS 
 
@@ -233,16 +224,6 @@ html_sidebar = """
 """
 st.html(html_sidebar)
 
-
-# Interfaccia centrale (Rendering nativo del Logo)
-
-if logo_b64:
-    st.html(f'<div class="contenitore-logo-custom"><img src="data:image/png;base64,{logo_b64}" class="logo-custom-img"></div>')
-else:
-    st.warning("Logo non trovato nella cartella principale.")
-
-# Ridotto a zero il margine superiore del titolo per attaccarlo al logo
-st.markdown("<h1 style='text-align: center; color: #542E17; margin-top: -5px; margin-bottom: 15px;'>La Magna Via</h1>", unsafe_allow_html=True)
 
 
 # Elaborazione Documento PDF e RAG
