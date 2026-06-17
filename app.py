@@ -3,8 +3,10 @@ import pdfplumber
 import os
 import re
 
+# Configurazione della pagina Streamlit
 st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", layout="centered")
 
+# Importazioni LangChain
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_community.vectorstores import FAISS
@@ -13,14 +15,36 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
 # -------------------------------------------------------------------
-# Funzione per convertire il logo in Base64 (Bypassa st.image e i suoi bug)
-# ------------------------------------------------------------------
-
-# Configurazione Stile CSS 
-
+# Configurazione Stile CSS (Con correzioni per la centratura dell'header/immagine)
+# -------------------------------------------------------------------
 st.html(
     """
     <style>
+    /* --- NUOVA PARTE PER LA CENTRATURA E ALLINEAMENTO --- */
+    /* Assicurati che l'header nativo st.header (h2) sia centrato */
+    .block-container h2 {
+        text-align: center !important;
+        width: 100% !important;
+        margin-top: 0px !important; /* Spazio opzionale sopra l'header */
+    }
+
+    /* Centrare l'immagine nativa st.image */
+    /* Targettizza il contenitore generico dell'immagine di Streamlit */
+    div[data-testid="stImage"] > img {
+        display: block !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        mix-blend-mode: multiply; /* Mantiene la trasparenza se necessario */
+    }
+
+    /* Regolare il padding superiore generale per abbassare l'header/immagine */
+    .block-container {
+        padding-top: 5rem !important; /* Regola questo valore per la posizione verticale */
+        padding-bottom: 3rem !important;
+    }
+    /* --- FINE NUOVA PARTE --- */
+
+    /* Nasconde gli elementi nativi di Streamlit per un'interfaccia pulita */
     header, footer, [data-testid="stHeader"], [data-testid="stAppHeader"], 
     [data-testid="stDecoration"], #MainMenu, [data-testid="stToolbar"], 
     .stDeployButton, [data-testid="stManageAppButton"] { 
@@ -28,16 +52,13 @@ st.html(
         visibility: hidden !important;
     }
     
+    /* Configurazione colore di sfondo e testo dell'app */
     .stApp { background-color: #F1F0E6; color: #231709; }
 
-    /* Spazio vuoto standard per desktop */
-    .block-container {
-        padding-top: 2.5rem !important;
-        padding-bottom: 3rem !important;
-    }
-
+    /* Nasconde il checkbox di default della sidebar */
     .sidebar-checkbox { display: none !important; }
 
+    /* Pulsante custom per aprire/chiudere la sidebar */
     .sidebar-toggle-button {
         position: fixed; top: 15px; left: 15px;
         background-color: #7A8B74; color: #ffffff !important;
@@ -46,22 +67,7 @@ st.html(
         font-family: sans-serif;
     }
 
-    /* FIX LOGO: Rialzato e azzerato il margine inferiore */
-    .contenitore-logo-custom {
-        display: block !important;
-        text-align: center !important;
-        width: 100% !important;
-        margin: 10px auto 0px auto !important; /* Margine inferiore azzerato */
-    }
-    
-    .logo-custom-img {
-        display: inline-block !important;
-        width: 240px !important; 
-        height: auto !important;
-        mix-blend-mode: multiply;             
-        pointer-events: none; 
-    }
-
+    /* Stile della sidebar personalizzata */
     .custom-sidebar {
         position: fixed; top: 0; left: -340px; width: 320px; height: 100vh;
         background-color: #7A8B74 !important;
@@ -71,6 +77,7 @@ st.html(
         font-family: sans-serif;
     }
 
+    /* Stile per i componenti details nella sidebar */
     .custom-sidebar details {
         background-color: #677761 !important;
         border: 1px solid rgba(255, 255, 255, 0.3) !important;
@@ -79,12 +86,8 @@ st.html(
         padding: 12px !important;
         display: block !important;
     }
-    .block-container h2 {
-    text-align: center !important;
-    width: 100% !important;
-}
-
     
+    /* Stile per il summary dei details */
     .custom-sidebar summary {
         font-weight: bold !important;
         font-size: 1.05rem !important;
@@ -92,23 +95,27 @@ st.html(
         color: #ffffff !important;
     }
 
+    /* Stile per i testi all'interno dei details */
     .custom-sidebar h3, .custom-sidebar h4, .custom-sidebar p, .custom-sidebar li, 
     .custom-sidebar strong, .custom-sidebar span {
         color: #ffffff !important;
         background-color: transparent !important;
     }
 
+    /* Effetto apertura/chiusura sidebar al check del checkbox */
     .sidebar-checkbox:checked ~ .custom-sidebar { left: 0 !important; }
     
+    /* Pulsante di chiusura interno alla sidebar */
     .sidebar-close {
         position: absolute; top: 15px; right: 20px;
         color: #ffffff !important; font-size: 1.5rem; cursor: pointer;
     }
 
+    /* Stile liste puntate nella sidebar */
     .custom-sidebar ul { padding-left: 18px !important; margin: 10px 0 0 0 !important; }
     .custom-sidebar li { margin-bottom: 8px !important; font-size: 0.9rem !important; line-height: 1.4; }
 
-    /* CONTENITORE GENERALE DELLA BARRA DI INPUT */
+    /* CONTENITORE GENERALE DELLA BARRA DI INPUT - Stile ChatInput */
     div[data-testid="stChatInput"] {
         background-color: transparent !important;
         box-shadow: none !important;
@@ -116,6 +123,7 @@ st.html(
         padding-bottom: 20px !important;
     }
 
+    /* Stile del form di input */
     div[data-testid="stChatInput"] form {
         background-color: #F1F0E6 !important; 
         border: 2px solid #542E17 !important;   
@@ -124,6 +132,7 @@ st.html(
         box-shadow: 0px 4px 15px rgba(84, 46, 23, 0.1) !important; 
     }
 
+    /* Stile della textarea di input */
     div[data-testid="stChatInput"] textarea {
         background-color: transparent !important;
         color: #231709 !important; 
@@ -131,11 +140,13 @@ st.html(
         font-size: 1rem !important;
     }
 
+    /* Stile del placeholder */
     div[data-testid="stChatInput"] textarea::placeholder {
         color: #542E17 !important;
         opacity: 0.6;
     }
 
+    /* Stile del pulsante di invio */
     div[data-testid="stChatInput"] button {
         background-color: #7A8B74 !important; 
         border-radius: 50% !important;         
@@ -143,10 +154,12 @@ st.html(
         transition: background-color 0.2s ease;
     }
 
+    /* Stile del pulsante di invio al passaggio del mouse */
     div[data-testid="stChatInput"] button:hover {
         background-color: #677761 !important; 
     }
 
+    /* Stile dei messaggi di chat */
     [data-testid="stChatMessage"] div p {
         color: #231709 !important;
         font-family: sans-serif !important;
@@ -154,9 +167,10 @@ st.html(
 
     /* MODIFICHE SPECIFICHE PER DISPOSITIVI MOBILE */
     @media (max-width: 480px) {
+        /* Larghezza della sidebar su mobile */
         .custom-sidebar { width: 85vw !important; left: -90vw !important; }
         
-        /* Sposta l'intero blocco centrale (Logo + Titolo) più in basso su mobile */
+        /* Sposta l'intero blocco centrale più in basso su mobile */
         .block-container {
             padding-top: 5.5rem !important; 
         }
@@ -165,9 +179,9 @@ st.html(
     """
 )
 
-
-# STRUTTURA SIDEBAR
-
+# -------------------------------------------------------------------
+# STRUTTURA SIDEBAR (HTML custom)
+# -------------------------------------------------------------------
 html_sidebar = """
 <input type="checkbox" id="side-menu-switch" class="sidebar-checkbox">
 <label for="side-menu-switch" class="sidebar-toggle-button">☰ Lo spazio del viandante</label>
@@ -180,9 +194,9 @@ html_sidebar = """
 <summary>📜 Il Codice del Viandante</summary>
 <p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Il rispetto è il primo passo del pellegrino.</p>
 <ul>
-<li><strong>Rispetta la natura:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un enemy: non accenderlo mai.</li>
+<li><strong>Rispetta la natura:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.</li>
 <li><strong>Rispetta il territorio:</strong> se sei ospite di terreni agricoli chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.</li>
-<li><strong>Rispetta il silenzio:</strong> il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e nei ospitali.</li>
+<li><strong>Rispetta il silenzio:</strong> il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e negli ospitali.</li>
 <li><strong>Sii essenziale:</strong> viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.</li>
 <li><strong>Sii solidale:</strong> aiuta chi è in difficoltà. Un sorriso o un consiglio possono fare la differenza per un altro viandante.</li>
 <li><strong>Sii grato e umile:</strong> ringrazia chi ti ospita. Accetta con curiosità i ritmi e la cultura che incontri.</li>
@@ -215,7 +229,7 @@ html_sidebar = """
 <ul>
 <li><strong>Trazzera:</strong> non è una semplice strada, è l’antica "autostrada" dei pastori e dei re. Camminare qui significa posare i piedi dove, per secoli, è passato il cuore pulsante della Sicilia.</li>
 <li><strong>Marna:</strong> è la roccia bianca che disegna le colline agrigentine. Bellissima e candida come la luna, ma attenzione: quando il cielo piange, diventa un terreno infido e scivoloso. Rispetta la sua natura.</li>
-<li><strong>Solfara:</strong> sono le ferite aperte della terra, le antiche miniere di zolfo. Oggi sono ruderi silenziosi che raccontano una storia di fatica, polvere e riscatto. Guardali con respeito.</li>
+<li><strong>Solfara:</strong> sono le ferite aperte della terra, le antiche miniere di zolfo. Oggi sono ruderi silenziosi che raccontano una storia di fatica, polvere e riscatto. Guardali con rispetto.</li>
 <li><strong>Kora:</strong> per gli antichi greci era la terra che nutriva la città. Oggi è lo spazio aperto, il silenzio della campagna che ti abbraccia tra un borgo e l'altro.</li>
 </ul>
 <h4 style="margin-top: 15px; margin-bottom: 5px; font-size: 0.95rem; font-weight: bold;">🏠 Dove riposa la memoria – i luoghi</h4>
@@ -227,21 +241,26 @@ html_sidebar = """
 </details>
 </div>
 """
-
+# Renderizza l'HTML custom della sidebar
 st.html(html_sidebar)
 
-st.image("Adobe Express - file.png", width=240) # Regola larghezza se serve
-st.header("La Magna via")
+# -------------------------------------------------------------------
+# Header principale e Immagine (Ora centrati con CSS)
+# -------------------------------------------------------------------
+# L'immagine deve essere posizionata PRIMA dell'header per stare sopra.
+st.image("Adobe Express - file.png", width=240) # Immagine nativa centrata tramite CSS
+st.header("La Magna via") # Header centrato tramite CSS
 
+# -------------------------------------------------------------------
+# Elaborazione Documento PDF e RAG (Retrieval-Augmented Generation)
+# -------------------------------------------------------------------
 
-
-
-# Elaborazione Documento PDF e RAG
-
+# Identifica il percorso del documento PDF
 cartella_corrente = os.path.dirname(__file__)
 documento = os.path.join(cartella_corrente, "Pdf finale (1).pdf")
 catena = None
 
+# Se il documento esiste, avvia l'elaborazione
 if os.path.exists(documento):
     @st.cache_data(show_spinner="Sto leggendo il PDF...")
     def estrai_testo_pdf(percorso_pdf):
@@ -251,18 +270,26 @@ if os.path.exists(documento):
                 testo += (pagina.extract_text() or "") + "\n"
         return testo.strip()
     
+    # Estrae il testo dal PDF
     testo = estrai_testo_pdf(documento)
     
     @st.cache_resource(show_spinner=False)
     def setup_rag(testo_estratto):
+        # Divide il testo in frammenti più piccoli
         taglierina = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
         frammenti = [f for f in taglierina.split_text(testo_estratto) if f.strip()]
+        
+        # Genera gli embeddings utilizzando il modello di OpenAI
         embeddings = OpenAIEmbeddings(model="text-embedding-3-small", openai_api_key=st.secrets["OPENAI_API_KEY"])
+        
+        # Crea il vectorstore utilizzando FAISS
         vettori = FAISS.from_texts(frammenti, embedding=embeddings)
         return vettori
 
+    # Imposta il database vettoriale
     vettori = setup_rag(testo)
     
+    # Definisce il prompt di sistema e utente per il modello
     prompt = ChatPromptTemplate.from_messages([
         ("system", '''Sei "La Magna Via", l'assistente digitale ufficiale e custode della conoscenza del cammino. Non sei un semplice generatore di testo, ma un'entità esperta, rassicurante e tecnicamente ineccepibile. Rappresenti l'unione tra la millenaria tradizione storica siciliana e l'innovazione tecnologica. 
 La tua identità è definita da tre pilastri: Precisione, Sicurezza, Empatia.
@@ -275,7 +302,7 @@ Tone of voice:
 •	Autorevole: Le tue informazioni sono verificate e definitive. Non esiti, non ipotizzi.
 •	Accogliente: Il tuo linguaggio riflette il calore dell'ospitalità siciliana. Sei un compagno di viaggio, non un manuale burocratico.
 •	Essenziale: Rispondi con la densità informativa necessaria. Il viandante è in movimento: apprezza la sintesi.
-•	Ispiratore: When il contesto lo richiede, il tuo tono si eleva per sottolineare l'importance storica e spirituale del cammino
+•	Ispiratore: Quando il contesto lo richiede, il tuo tono si eleva per sottolineare l'importanza storica e spirituale del cammino
 Buyer Persona
 •	Il Viandante Ansioso: Preoccupato per i cani randagi, i guadi, il meteo e la mancanza di acqua. Cerca rassicurazione.
 
@@ -284,9 +311,9 @@ Buyer Persona
 •	Il "Turista Lento": Cerca la storia dietro le pietre, le curiosità culturali, il sapore dei luoghi. Cerca ispirazione.
 •	Devi saper parlare a tutti e tre cambiando registro.
 Stile comunicativo:
-•	Gerarchico (Safety First): Ogni tua risposta sulla logistica deve mettere al primo posto la sicurezza (es. varianti maltempo, guadi, punti kritici, emergenze).
+•	Gerarchico (Safety First): Ogni tua risposta sulla logistica deve mettere al primo posto la sicurezza (es. varianti maltempo, guadi, punti critici, emergenze).
 •	Tecnico-Informativo: Decodifichi sempre ogni acronimo o sigla (es. SS = Strada Statale, ASL = Azienda Sanitaria Locale, RT = Regia Trazzera).
-•	Proattivo: Se l'utente chiede una tappa, non rispondere solo alla domanda, ma anticipa i bisogni (es: "Assicurati di avere acqua, non ci sono punti di ristoro per i próximos X km").
+•	Proattivo: Se l'utente chiede una tappa, non rispondere solo alla domanda, ma anticipa i bisogni (es: "Assicurati di avere acqua, non ci sono punti di ristoro per i prossimi X km").
 
 •	Zero Allucinazioni: Se una specifica informazione non è presente nel dataset, rispondi con eleganza: "Caro pellegrino, al momento non riesco a guidarti su questa informazione: cry:".
 Quando l'utente interroga la storia della Magna Via, non agire come un'enciclopedia, ma come un custode della memoria. Usa un tono evocativo, capace di far sentire al viandante il "peso dei secoli" sotto i propri scarponi.
@@ -322,9 +349,9 @@ Ogni risposta su una tappa deve seguire rigorosamente questo ordine gerarchico:
 
 LOGICA OPERATIVA TAPPE 1-9
 •	Precisione millimetrica: Quando l'utente chiede distanze o tempi (es. "Quanto manca?"), rispondi sempre con i dati esatti presenti nel dataset. Non approssimare mai.
-•	Analisi del contesto: Se l'utente ti dice dove si trova, calcola il tempo rimanente basandoti sulla difficoltà della tappa (Media/Difficile) e ricorda sempre di verificare si l'utente ha scorte d'acqua e cibo, dato che molti tratti sono isolati.
+•	Analisi del contesto: Se l'utente ti dice dove si trova, calcola il tempo rimanente basandoti sulla difficoltà della tappa (Media/Difficile) e ricorda sempre di verificare se l'utente ha scorte d'acqua e cibo, dato che molti tratti sono isolati.
 •	Disambiguazione Acronimi: Riconosci e, se necessario, decodifica sigle come: SS (Strada Statale), ASL (Azienda Sanitaria Locale), MUDIA (Museo Diocesano), RT (Regia Trazzera), B&B (Bed & Breakfast), UNESCO, GPS.
-•	Mantieni sempre il focus om percorso Palermo-Agrigento (184,4 km).
+•	Mantieni sempre il focus sul percorso Palermo-Agrigento (184,4 km).
 
 
 GERARCHIA DELLE RISPOSTE (Chain of Thought): Per ogni domanda, segui quest'ordine logico:
@@ -338,56 +365,63 @@ REGOLE DI SICUREZZA (PROTOCOLLI):
 •	Guadi: Se interpellato su guadi (es. Platani o Gallo d'Oro), cita sempre la nota sicurezza e l'obbligo di usare la "Variante Pioggia" in caso di maltempo.
 •	Equipaggiamento: Applica sempre la "Regola del 10%" (zaino < 10% del peso corporeo).
 •	Zero Allucinazioni: Se una struttura o dato non è nel tuo dataset, non inventare. Dì: "Questa informazione non è al momento nel mio database; ti suggerisco di contattare la parrocchia o l'ufficio turistico locale".
-•   Se l'utente sppare confuso o neofita, il Chatbot deve rassicurarlo utilizzando questa frase: "Non è necessario essere esperti: il cammino è un atto di ricerca per chiunque voglia scoprire l'essenziale".
+•   Se l'utente appare confuso o neofita, il Chatbot deve rassicurarlo utilizzando questa frase: "Non è necessario essere esperti: il cammino è un atto di ricerca per chiunque voglia scoprire l'essenziale".
 
 CODICE ETICO
 Richiama sempre il Codice del Viandante: Rispetta la natura (no rifiuti), rispetta il territorio (chiudi i cancelli), sii essenziale, solidale e grato. 
 
 -Quando l'utente chiede informazioni su una tappa, verifica se il percorso attraversa aree sensibili (boschi, riserve naturali, zone di macchia mediterranea). 
-Se la risposta è affermativa, aggiungi in chiusura:
+Se la risposta è affirmativa, aggiungi in chiusura:
 ':herb: Cammina da custode (vai a capo)
-La Magna Via è un dono prezioso, proteggiamola insieme dal rischio incendi. Per favore, evita di fumare nei boschi and porta sempre con te i mozziconi, al prossimo borgo. Non lasciare traccia, solo impronte. Grazie!'
+La Magna Via è un dono prezioso, proteggiamola insieme dal rischio incendi. Per favore, evita di fumare nei boschi e porta sempre con te i mozziconi, al prossimo borgo. Non lasciare traccia, solo impronte. Grazie!'
 CHIUSURA IDENTITARIA
- Firma le tue risposte chiave o chiudi i moments di supporto con lo spirito del cammino: "Ultreya, viandante”, “Buon cammino ne La Magna Via”.
+ Firma le tue risposte chiave o chiudi i momenti di supporto con lo spirito del cammino: "Ultreya, viandante”, “Buon cammino ne La Magna Via”.
 Contesto:\n{context}'''),
         ("human", "{question}")
     ])
 
-    # MODELLO E CATENA
+    # Configurazione del modello di Chat OpenAI
     modello_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3, openai_api_key=st.secrets["OPENAI_API_KEY"])
+    
+    # Crea la catena di esecuzione (Chain) per recuperare il contesto e generare la risposta
     catena = ({"context": lambda x: "\n\n".join([doc.page_content for doc in vettori.similarity_search(x, k=4)]), "question": RunnablePassthrough()} 
               | prompt | modello_llm | StrOutputParser())
 
 
+# -------------------------------------------------------------------
 # GESTIONE DELLA CHAT E CRONOLOGIA A SCHERMO 
+# -------------------------------------------------------------------
 
+# Inizializza la cronologia nella sessione se non esiste
 if "cronologia" not in st.session_state: 
     st.session_state.cronologia = []
 
-# Mostra la cronologia memorizzata all'avvio o al refresh naturale
+# Mostra i messaggi della cronologia memorizzata
 for messaggio in st.session_state.cronologia:
+    # Seleziona l'avatar corretto per l'utente e l'assistente
     avatar_scelto = "LOGO.png" if messaggio["role"] == "assistant" else "Utente.png"
     with st.chat_message(messaggio["role"], avatar=avatar_scelto):
         st.markdown(messaggio["content"])
 
-# Cattura l'input dell'utente
+# Cattura l'input dell'utente tramite la barra di chat
 input_utente = st.chat_input("Chiedi alla Via...")
 
+# Se l'utente inserisce un messaggio
 if input_utente:
+    # Se la catena è stata creata correttamente
     if catena:
-        # 1. Mostra e salva il messaggio dell'utente
+        # Mostra il messaggio dell'utente e aggiungilo alla cronologia
         with st.chat_message("user", avatar="Utente.png"):
             st.markdown(input_utente)
         st.session_state.cronologia.append({"role": "user", "content": input_utente})
         
-        # 2. Genera, mostra e salva la risposta dell'assistente
+        # Genera la risposta dell'assistente, mostrala e aggiungila alla cronologia
         with st.chat_message("assistant", avatar="LOGO.png"):
             risposta = catena.invoke(input_utente)
             st.markdown(risposta)
         st.session_state.cronologia.append({"role": "assistant", "content": risposta})
         
-        # NOTA: st.rerun() rimosso per evitare rendering duplicati instabili
+        # NOTA: st.rerun() rimosso per evitare un rendering duplicato instabile
     else:
-        st.error("Caro pellegrino, la barra è attiva ma la conoscenza è bloccata! Verifica che il file 'Pdf finale (1).pdf' sia presente e che le chiavi API siano corrette.")
-      
-
+        # Mostra un errore se la catena non è stata configurata
+        st.error("Caro pellegrino, la barra è attiva ma la conoscenza è bloccata! Verifica che il file 'Pdf finale (1).pdf' sia presente nella cartella del progetto e che le chiavi API siano corrette.")
