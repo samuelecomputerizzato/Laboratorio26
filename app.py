@@ -15,34 +15,39 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
 # -------------------------------------------------------------------
-# Configurazione Stile CSS (Con correzioni per la centratura dell'header/immagine)
+# Configurazione Stile CSS 
 # -------------------------------------------------------------------
 st.html(
     """
     <style>
-    /* --- NUOVA PARTE PER LA CENTRATURA E ALLINEAMENTO --- */
+    /* --- PARTE PER LA CENTRATURA E ALLINEAMENTO IMMAGINE + HEADER --- */
+    /* Forza il contenitore dell'immagine di Streamlit a centrare il suo contenuto */
+    div[data-testid="stImage"] {
+        display: flex !important;
+        justify-content: center !important;
+        width: 100% !important;
+        margin-bottom: 10px !important; /* Spazio tra immagine e testo sotto */
+    }
+
+    /* Gestisce le proprietà dell'immagine all'interno del contenitore */
+    div[data-testid="stImage"] img {
+        mix-blend-mode: multiply; /* Mantiene la trasparenza se necessario */
+        pointer-events: none;
+    }
+
     /* Assicurati che l'header nativo st.header (h2) sia centrato */
     .block-container h2 {
         text-align: center !important;
         width: 100% !important;
-        margin-top: 0px !important; /* Spazio opzionale sopra l'header */
+        margin-top: 0px !important; 
     }
 
-    /* Centrare l'immagine nativa st.image */
-    /* Targettizza il contenitore generico dell'immagine di Streamlit */
-    div[data-testid="stImage"] > img {
-        display: block !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-        mix-blend-mode: multiply; /* Mantiene la trasparenza se necessario */
-    }
-
-    /* Regolare il padding superiore generale per abbassare l'header/immagine */
+    /* Regola il padding superiore generale per abbassare l'intero blocco (Immagine + Header) */
     .block-container {
-        padding-top: 5rem !important; /* Regola questo valore per la posizione verticale */
+        padding-top: 6rem !important; /* Regola questo valore per la posizione verticale */
         padding-bottom: 3rem !important;
     }
-    /* --- FINE NUOVA PARTE --- */
+    /* --- FINE PARTE CENTRATURA --- */
 
     /* Nasconde gli elementi nativi di Streamlit per un'interfaccia pulita */
     header, footer, [data-testid="stHeader"], [data-testid="stAppHeader"], 
@@ -241,15 +246,14 @@ html_sidebar = """
 </details>
 </div>
 """
-# Renderizza l'HTML custom della sidebar
+# Renderizza l'HTML della sidebar custom
 st.html(html_sidebar)
 
 # -------------------------------------------------------------------
-# Header principale e Immagine (Ora centrati con CSS)
+# Header principale e Immagine (Centrati tramite CSS)
 # -------------------------------------------------------------------
-# L'immagine deve essere posizionata PRIMA dell'header per stare sopra.
-st.image("Adobe Express - file.png", width=240) # Immagine nativa centrata tramite CSS
-st.header("La Magna via") # Header centrato tramite CSS
+st.image("Adobe Express - file.png", width=240) 
+st.header("La Magna via")
 
 # -------------------------------------------------------------------
 # Elaborazione Documento PDF e RAG (Retrieval-Augmented Generation)
@@ -371,7 +375,7 @@ CODICE ETICO
 Richiama sempre il Codice del Viandante: Rispetta la natura (no rifiuti), rispetta il territorio (chiudi i cancelli), sii essenziale, solidale e grato. 
 
 -Quando l'utente chiede informazioni su una tappa, verifica se il percorso attraversa aree sensibili (boschi, riserve naturali, zone di macchia mediterranea). 
-Se la risposta è affirmativa, aggiungi in chiusura:
+Se la risposta è affermativa, aggiungi in chiusura:
 ':herb: Cammina da custode (vai a capo)
 La Magna Via è un dono prezioso, proteggiamola insieme dal rischio incendi. Per favore, evita di fumare nei boschi e porta sempre con te i mozziconi, al prossimo borgo. Non lasciare traccia, solo impronte. Grazie!'
 CHIUSURA IDENTITARIA
@@ -398,7 +402,6 @@ if "cronologia" not in st.session_state:
 
 # Mostra i messaggi della cronologia memorizzata
 for messaggio in st.session_state.cronologia:
-    # Seleziona l'avatar corretto per l'utente e l'assistente
     avatar_scelto = "LOGO.png" if messaggio["role"] == "assistant" else "Utente.png"
     with st.chat_message(messaggio["role"], avatar=avatar_scelto):
         st.markdown(messaggio["content"])
@@ -408,7 +411,6 @@ input_utente = st.chat_input("Chiedi alla Via...")
 
 # Se l'utente inserisce un messaggio
 if input_utente:
-    # Se la catena è stata creata correttamente
     if catena:
         # Mostra il messaggio dell'utente e aggiungilo alla cronologia
         with st.chat_message("user", avatar="Utente.png"):
@@ -420,8 +422,6 @@ if input_utente:
             risposta = catena.invoke(input_utente)
             st.markdown(risposta)
         st.session_state.cronologia.append({"role": "assistant", "content": risposta})
-        
-        # NOTA: st.rerun() rimosso per evitare un rendering duplicato instabile
     else:
         # Mostra un errore se la catena non è stata configurata
         st.error("Caro pellegrino, la barra è attiva ma la conoscenza è bloccata! Verifica che il file 'Pdf finale (1).pdf' sia presente nella cartella del progetto e che le chiavi API siano corrette.")
