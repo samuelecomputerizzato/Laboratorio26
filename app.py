@@ -227,9 +227,11 @@ html_sidebar = """
 </details>
 </div>
 """
+
 st.html(html_sidebar)
-st.header("La Magna via")
 st.image("Adobe Express - file.png")
+st.header("La Magna via")
+
 
 
 
