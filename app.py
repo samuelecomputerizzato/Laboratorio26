@@ -361,7 +361,7 @@ Contesto:\n{context}'''),
 
 # GESTIONE DELLA CHAT E CRONOLOGIA A SCHERMO 
 
-i csf "cronologia" not in st.session_state: 
+if "cronologia" not in st.session_state: 
     st.session_state.cronologia = []
 
 # Mostra la cronologia memorizzata all'avvio o al refresh naturale
