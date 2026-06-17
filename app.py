@@ -347,7 +347,7 @@ CHIUSURA IDENTITARIA
  Firma le tue risposte chiave o chiudi i moments di supporto con lo spirito del cammino: "Ultreya, viandante”, “Buon cammino ne La Magna Via”.
 Contesto:\n{context}'''),
         ("human", "{question}")
-  # ... (mantenendo invariata la parte iniziale del tuo script e del CSS)
+    ])
 
     # MODELLO E CATENA
     modello_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3, openai_api_key=st.secrets["OPENAI_API_KEY"])
