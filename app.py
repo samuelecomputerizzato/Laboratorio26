@@ -2,15 +2,6 @@ import streamlit as st
 import pdfplumber
 import re
 import os
-st.write("Cartella corrente:", os.getcwd())
-st.write("File presenti:", os.listdir())
-
-documento = "Pdf finale (1).pdf"
-if os.path.exists(documento):
-    testo = estrai_testo_pdf(documento)
-else:
-    st.error(f"Il file '{documento}' non è stato trovato nella directory.")
-    
 
 # Configurazione della pagina Streamlit
 st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", layout="centered")
@@ -268,22 +259,22 @@ st.header("La Magna via")
 # Elaborazione Documento PDF e RAG (Retrieval-Augmented Generation)
 # -------------------------------------------------------------------
 
-# Identifica il percorso del documento PDF
-documento = "Pdf_finale_(1).pdf"
 
 # Estrazione e spezzettamento del contenuto 
-if documento is not None:
-    @st.cache_data(show_spinner="Sto cercando nella via...")
-    def estrai_testo_pdf(documento: str) -> str:
-        with pdfplumber.open(documento) as pdf:
+# Identifica il percorso del documento PDF
+cartella_corrente = os.path.dirname(__file__)
+documento = os.path.join(cartella_corrente, "Pdf finale (1).pdf")
+catena = None
+
+# Se il documento esiste, avvia l'elaborazione
+if os.path.exists(documento):
+    @st.cache_data(show_spinner="Sto leggendo il PDF...")
+    def estrai_testo_pdf(percorso_pdf):
+        testo = ""
+        with pdfplumber.open(percorso_pdf) as pdf:
             for pagina in pdf.pages:
-                testo_pagina = pagina.extract.text() or ""
-                testo = testo + testo_pagina
                 testo += (pagina.extract_text() or "") + "\n"
         return testo.strip()
-    
-    # Estrae il testo dal PDF
-    testo = estrai_testo_pdf(documento)
     
     @st.cache_resource(show_spinner=False)
     def setup_rag(testo_estratto):
