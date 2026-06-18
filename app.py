@@ -421,8 +421,8 @@ if input_utente:
         with st.chat_message("user", avatar="Utente.png"):
             st.markdown(input_utente)
         st.session_state.cronologia.append({"role": "user", "content": input_utente})
-        
-if catena:
+if input_utente:       
+ if catena:
     with st.chat_message("user", avatar="Utente.png"):
          st.markdown(input_utente)
         st.session_state.cronologia.append({"role": "user", "content": input_utente})
