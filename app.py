@@ -1,6 +1,16 @@
 import streamlit as st
 import pdfplumber
 import re
+import os
+st.write("Cartella corrente:", os.getcwd())
+st.write("File presenti:", os.listdir())
+
+documento = "Pdf finale (1).pdf"
+if os.path.exists(documento):
+    testo = estrai_testo_pdf(documento)
+else:
+    st.error(f"Il file '{documento}' non è stato trovato nella directory.")
+    
 
 # Configurazione della pagina Streamlit
 st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", layout="centered")
