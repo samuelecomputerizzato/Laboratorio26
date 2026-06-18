@@ -269,7 +269,7 @@ catena = None
 
 # Se il documento esiste, avvia l'elaborazione
 if os.path.exists(documento):
-    @st.cache_data(show_spinner="Sto leggendo il PDF...")
+    @st.cache_data(show_spinner="Analizzando la via...")
     def estrai_testo_pdf(percorso_pdf):
         testo = ""
         with pdfplumber.open(percorso_pdf) as pdf:
