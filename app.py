@@ -421,15 +421,14 @@ if input_utente:
         with st.chat_message("user", avatar="Utente.png"):
             st.markdown(input_utente)
         st.session_state.cronologia.append({"role": "user", "content": input_utente})
-if input_utente:       
- if catena:
-    with st.chat_message("user", avatar="Utente.png"):
-         st.markdown(input_utente)
+if input_utente:
+    if catena:
+        with st.chat_message("user", avatar="Utente.png"):
+            st.markdown(input_utente)
         st.session_state.cronologia.append({"role": "user", "content": input_utente})
-        
+
         with st.chat_message("assistant", avatar="LOGO.png"):
             risposta = st.write_stream(catena.stream(input_utente))
         st.session_state.cronologia.append({"role": "assistant", "content": risposta})
     else:
         st.error("Caro pellegrino, la barra è attiva ma la conoscenza è bloccata! Verifica che il file 'Pdf finale (1).pdf' sia presente nella cartella del progetto e che le chiavi API siano corrette.")
-        
