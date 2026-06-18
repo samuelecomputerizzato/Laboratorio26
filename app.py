@@ -1,6 +1,5 @@
 import streamlit as st
 import pdfplumber
-import os
 import re
 
 # Configurazione della pagina Streamlit
@@ -260,17 +259,16 @@ st.header("La Magna via")
 # -------------------------------------------------------------------
 
 # Identifica il percorso del documento PDF
-cartella_corrente = os.path.dirname(__file__)
-documento = os.path.join(cartella_corrente, "Pdf finale (1).pdf")
-catena = None
+documento = "Pdf finale (1)"
 
-# Se il documento esiste, avvia l'elaborazione
-if os.path.exists(documento):
-    @st.cache_data(show_spinner="Sto leggendo il PDF...")
-    def estrai_testo_pdf(percorso_pdf):
-        testo = ""
-        with pdfplumber.open(percorso_pdf) as pdf:
+# Estrazione e spezzettamento del contenuto 
+if documento is not None;
+    @st.cache_data(show_spinner="Sto cercando nella via...")
+    def estrai_testo_pdf(documento: str) -> str:
+        with pdfplumber.open(documento) as pdf:
             for pagina in pdf.pages:
+                testo_pagina = pagina.extract.text() or ""
+                testo = testo + testo_pagina
                 testo += (pagina.extract_text() or "") + "\n"
         return testo.strip()
     
