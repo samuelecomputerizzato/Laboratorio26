@@ -259,7 +259,7 @@ st.header("La Magna via")
 # -------------------------------------------------------------------
 
 # Identifica il percorso del documento PDF
-documento = "Pdf finale (1)"
+documento = "Pdf finale (1).pdf"
 
 # Estrazione e spezzettamento del contenuto 
 if documento is not None:
