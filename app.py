@@ -261,6 +261,7 @@ st.header("La Magna via")
 
 
 # Estrazione e spezzettamento del contenuto 
+
 # Identifica il percorso del documento PDF
 cartella_corrente = os.path.dirname(__file__)
 documento = os.path.join(cartella_corrente, "Pdf finale (1).pdf")
@@ -275,6 +276,9 @@ if os.path.exists(documento):
             for pagina in pdf.pages:
                 testo += (pagina.extract_text() or "") + "\n"
         return testo.strip()
+    
+    # Estrae il testo dal PDF
+    testo = estrai_testo_pdf(documento)
     
     @st.cache_resource(show_spinner=False)
     def setup_rag(testo_estratto):
