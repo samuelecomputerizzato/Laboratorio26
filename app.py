@@ -1,6 +1,5 @@
 import streamlit as st
 import pdfplumber
-import re
 import os
 
 # Configurazione della pagina Streamlit
@@ -422,12 +421,15 @@ if input_utente:
         with st.chat_message("user", avatar="Utente.png"):
             st.markdown(input_utente)
         st.session_state.cronologia.append({"role": "user", "content": input_utente})
+        if input_utente:
+    if catena:
+        with st.chat_message("user", avatar="Utente.png"):
+            st.markdown(input_utente)
+        st.session_state.cronologia.append({"role": "user", "content": input_utente})
         
-        # Genera la risposta dell'assistente, mostrala e aggiungila alla cronologia
         with st.chat_message("assistant", avatar="LOGO.png"):
-            risposta = catena.invoke(input_utente)
-            st.markdown(risposta)
+            risposta = st.write_stream(catena.stream(input_utente))
         st.session_state.cronologia.append({"role": "assistant", "content": risposta})
     else:
-        # Mostra un errore se la catena non è stata configurata
         st.error("Caro pellegrino, la barra è attiva ma la conoscenza è bloccata! Verifica che il file 'Pdf finale (1).pdf' sia presente nella cartella del progetto e che le chiavi API siano corrette.")
+        
