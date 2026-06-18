@@ -262,7 +262,7 @@ st.header("La Magna via")
 documento = "Pdf finale (1)"
 
 # Estrazione e spezzettamento del contenuto 
-if documento is not None;
+if documento is not None:
     @st.cache_data(show_spinner="Sto cercando nella via...")
     def estrai_testo_pdf(documento: str) -> str:
         with pdfplumber.open(documento) as pdf:
