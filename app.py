@@ -1,4 +1,5 @@
-huimport streamlit as st
+
+import streamlit as st
 import pdfplumber
 import os
 
