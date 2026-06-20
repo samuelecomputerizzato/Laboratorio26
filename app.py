@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pdfplumber
 import os
@@ -20,18 +19,17 @@ from langchain_core.output_parsers import StrOutputParser
 st.html(
     """
     <style>
-    /* --- PARTE PER LA CENTRATURA E ALLINEAMENTO IMMAGINE + HEADER --- */
-    /* Forza il contenitore dell'immagine di Streamlit a centrare il suo contenuto */
+    /* --- POSIZIONAMENTO IMMAGINE IN ALTO A DESTRA --- */
     div[data-testid="stImage"] {
         display: flex !important;
-        justify-content: center !important;
+        justify-content: flex-end !important; /* Sposta a destra */
         width: 100% !important;
-        margin-bottom: 10px !important; /* Spazio tra immagine e testo sotto */
+        margin-bottom: 10px !important;
+        padding-right: 20px !important; /* Spazio dal bordo destro */
     }
 
-    /* Gestisce le proprietà dell'immagine all'interno del contenitore */
     div[data-testid="stImage"] img {
-        mix-blend-mode: multiply; /* Mantiene la trasparenza se necessario */
+        mix-blend-mode: multiply; 
         pointer-events: none;
     }
 
@@ -42,12 +40,10 @@ st.html(
         margin-top: 0px !important; 
     }
 
-    /* Regola il padding superiore generale per abbassare l'intero blocco (Immagine + Header) */
     .block-container {
-        padding-top: 6rem !important; /* Regola questo valore per la posizione verticale */
+        padding-top: 4rem !important; /* Ridotto leggermente per bilanciare il logo in alto */
         padding-bottom: 3rem !important;
     }
-    /* --- FINE PARTE CENTRATURA --- */
 
     /* Nasconde gli elementi nativi di Streamlit per un'interfaccia pulita */
     header, footer, [data-testid="stHeader"], [data-testid="stAppHeader"], 
@@ -120,7 +116,7 @@ st.html(
     .custom-sidebar ul { padding-left: 18px !important; margin: 10px 0 0 0 !important; }
     .custom-sidebar li { margin-bottom: 8px !important; font-size: 0.9rem !important; line-height: 1.4; }
 
-    /* CONTENITORE GENERALE DELLA BARRA DI INPUT - Stile ChatInput */
+    /* --- FIX TEMA SCURO / VISIBILITÀ INPUT --- */
     div[data-testid="stChatInput"] {
         background-color: transparent !important;
         box-shadow: none !important;
@@ -128,7 +124,7 @@ st.html(
         padding-bottom: 20px !important;
     }
 
-    /* Stile del form di input */
+    /* Forza lo sfondo chiaro e i bordi scuri per il form dell'input */
     div[data-testid="stChatInput"] form {
         background-color: #F1F0E6 !important; 
         border: 2px solid #542E17 !important;   
@@ -137,10 +133,11 @@ st.html(
         box-shadow: 0px 4px 15px rgba(84, 46, 23, 0.1) !important; 
     }
 
-    /* Stile della textarea di input */
+    /* FORZA IL TESTO SCURO NELL'INPUT (Risolve il bug del tema scuro) */
     div[data-testid="stChatInput"] textarea {
         background-color: transparent !important;
-        color: #231709 !important; 
+        color: #231709 !important; /* Forza colore scuro del testo digitato */
+        -webkit-text-fill-color: #231709 !important; /* Fix per alcuni browser mobile */
         font-family: sans-serif !important;
         font-size: 1rem !important;
     }
@@ -164,7 +161,7 @@ st.html(
         background-color: #677761 !important; 
     }
 
-    /* Stile dei messaggi di chat */
+    /* FORZA IL TESTO SCURO NEI MESSAGGI DI CHAT (Sia Utente che Assistente) */
     [data-testid="stChatMessage"] div p {
         color: #231709 !important;
         font-family: sans-serif !important;
@@ -177,7 +174,10 @@ st.html(
         
         /* Sposta l'intero blocco centrale più in basso su mobile */
         .block-container {
-            padding-top: 5.5rem !important; 
+            padding-top: 4.5rem !important; 
+        }
+        div[data-testid="stImage"] { 
+            padding-right: 10px !important; 
         }
     }
     </style>
@@ -199,7 +199,7 @@ html_sidebar = """
 <summary>📜 Il Codice del Viandante</summary>
 <p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Il rispetto è il primo passo del pellegrino.</p>
 <ul>
-<li><strong>Rispetta la natura:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.</li>
+<li><strong>Rispetta la nature:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.</li>
 <li><strong>Rispetta il territorio:</strong> se sei ospite di terreni agricoli chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.</li>
 <li><strong>Rispetta il silenzio:</strong> il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e negli ospitali.</li>
 <li><strong>Sii essenziale:</strong> viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.</li>
@@ -250,7 +250,7 @@ html_sidebar = """
 st.html(html_sidebar)
 
 # -------------------------------------------------------------------
-# Header principale e Immagine (Centrati tramite CSS)
+# Header principale e Immagine (Spostata a destra tramite CSS)
 # -------------------------------------------------------------------
 st.image("Adobe Express - file.png", width=240) 
 st.header("La Magna via")
@@ -258,9 +258,6 @@ st.header("La Magna via")
 # -------------------------------------------------------------------
 # Elaborazione Documento PDF e RAG (Retrieval-Augmented Generation)
 # -------------------------------------------------------------------
-
-
-# Estrazione e spezzettamento del contenuto 
 
 # Identifica il percorso del documento PDF
 cartella_corrente = os.path.dirname(__file__)
@@ -385,13 +382,13 @@ Se la risposta è affermativa, aggiungi in chiusura:
 ':herb: Cammina da custode (vai a capo)
 La Magna Via è un dono prezioso, proteggiamola insieme dal rischio incendi. Per favore, evita di fumare nei boschi e porta sempre con te i mozziconi, al prossimo borgo. Non lasciare traccia, solo impronte. Grazie!'
 CHIUSURA IDENTITARIA
- Firma le tue risposte chiave o chiudi i momenti di supporto con lo spirito del cammino: "Ultreya, viandante”, “Buon cammino ne La Magna Via”.
+ Firma le tue risposte chiave o chiudi i moments di supporto con lo spirito del cammino: "Ultreya, viandante”, “Buon cammino ne La Magna Via”.
 Contesto:\n{context}'''),
         ("human", "{question}")
     ])
 
     # Configurazione del modello di Chat OpenAI
-    modello_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.2, openai_api_key=st.secrets["OPENAI_API_KEY"])
+    modello_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3, openai_api_key=st.secrets["OPENAI_API_KEY"])
     
     # Crea la catena di esecuzione (Chain) per recuperare il contesto e generare la risposta
     catena = ({"context": lambda x: "\n\n".join([doc.page_content for doc in vettori.similarity_search(x, k=4)]), "question": RunnablePassthrough()} 
@@ -422,12 +419,8 @@ if input_utente:
         with st.chat_message("user", avatar="Utente.png"):
             st.markdown(input_utente)
         st.session_state.cronologia.append({"role": "user", "content": input_utente})
-if input_utente:
-    if catena:
-        with st.chat_message("user", avatar="Utente.png"):
-            st.markdown(input_utente)
-        st.session_state.cronologia.append({"role": "user", "content": input_utente})
 
+        # Genera la risposta dell'assistente in streaming e salvala
         with st.chat_message("assistant", avatar="LOGO.png"):
             risposta = st.write_stream(catena.stream(input_utente))
         st.session_state.cronologia.append({"role": "assistant", "content": risposta})
