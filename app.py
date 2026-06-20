@@ -240,7 +240,7 @@ st.html(html_sidebar)
 # -------------------------------------------------------------------
 # Header principale e Immagine (Spostata a destra tramite CSS)
 # -------------------------------------------------------------------
-st.image("Adobe Express - file.png", width=240) 
+
 st.header("La Magna via")
 
 # -------------------------------------------------------------------
