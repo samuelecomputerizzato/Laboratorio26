@@ -19,19 +19,7 @@ from langchain_core.output_parsers import StrOutputParser
 st.html(
     """
     <style>
-    /* --- POSIZIONAMENTO IMMAGINE IN ALTO A DESTRA --- */
-    div[data-testid="stImage"] {
-        display: flex !important;
-        justify-content: flex-end !important; /* Sposta a destra */
-        width: 100% !important;
-        margin-bottom: 10px !important;
-        padding-right: 20px !important; /* Spazio dal bordo destro */
-    }
-
-    div[data-testid="stImage"] img {
-        mix-blend-mode: multiply; 
-        pointer-events: none;
-    }
+    
 
     /* Assicurati che l'header nativo st.header (h2) sia centrato */
     .block-container h2 {
