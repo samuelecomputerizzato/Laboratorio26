@@ -167,6 +167,12 @@ st.html(
         div[data-testid="stImage"] { 
             padding-right: 10px !important; 
         }
+        /* Ripristina il posizionamento del logo su mobile eliminando i margini desktop */
+        .desktop-logo-container {
+            margin-top: 0px !important;
+            margin-right: 0px !important;
+            transform: scale(1.0) !important;
+        }
     }
     </style>
     """
@@ -220,7 +226,7 @@ html_sidebar = """
 <p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Le parole per leggere il cuore della Sicilia e il territorio che stai attraversando.</p>
 <h4 style="margin-top: 15px; margin-bottom: 5px; font-size: 0.95rem; font-weight: bold;">🚜 Sulle tracce della storia – il paesaggio</h4>
 <ul>
-<li><strong>Trazzera:</strong> non è una semplice strada, è l’antica "autostrada" dei pastori e dei re. Camminare qui significa posare i piedi dove, per secoli, è passato il cuore pulsante della Sicilia.</li>
+<li><strong>Trazzera:</strong> non è una simple strada, è l’antica "autostrada" dei pastori e dei re. Camminare qui significa posare i piedi dove, per secoli, è passato il cuore pulsante della Sicilia.</li>
 <li><strong>Marna:</strong> è la roccia bianca che disegna le colline agrigentine. Bellissima e candida come la luna, ma attenzione: quando il cielo piange, diventa un terreno infido e scivoloso. Rispetta la sua natura.</li>
 <li><strong>Solfara:</strong> sono le ferite aperte della terra, le antiche miniere di zolfo. Oggi sono ruderi silenziosi che raccontano una storia di fatica, polvere e riscatto. Guardali con rispetto.</li>
 <li><strong>Kora:</strong> per gli antichi greci era la terra che nutriva la città. Oggi è lo spazio aperto, il silenzio della campagna che ti abbraccia tra un borgo e l'altro.</li>
@@ -242,19 +248,18 @@ st.html(html_sidebar)
 # Header principale e Immagine (Layout Nativo con Colonne)
 # -------------------------------------------------------------------
 
-# Creiamo 3 colonne: una larga al centro per il titolo, una a destra per il logo
-col_sinistra, col_centro, col_destra = st.columns([1, 4, 1])
+# Allarghiamo la colonna di destra (da 1 a 1.3) per permettere al logo di mostreggiarsi più grande 
+col_sinistra, col_centro, col_destra = st.columns([1, 4, 1.3])
 
 with col_centro:
     # Centriamo il testo nella colonna centrale usando il tag markdown nativo
     st.markdown("<h2 style='text-align: center; margin: 0;'>La Magna via</h2>", unsafe_allow_html=True)
 
 with col_destra:
-    # Posizioniamo il logo direttamente nella colonna di destra
+    # Contenitore custom per distanziare dal top in maniera pari al lato destro e ingrandire via CSS (desktop)
+    st.markdown('<div class="desktop-logo-container" style="margin-top: 25px; margin-right: 25px; transform: scale(1.15); transform-origin: top right;">', unsafe_allow_html=True)
     st.image("LOGO.png", use_container_width=True)
-
-
-# Nota: Rimuovi o commenta la vecchia riga st.image("LOGO.png") e st.header("La Magna via")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # -------------------------------------------------------------------
@@ -322,7 +327,7 @@ Buyer Persona
 Stile comunicativo:
 •	Gerarchico (Safety First): Ogni tua risposta sulla logistica deve mettere al primo posto la sicurezza (es. varianti maltempo, guadi, punti critici, emergenze).
 •	Tecnico-Informativo: Decodifichi sempre ogni acronimo o sigla (es. SS = Strada Statale, ASL = Azienda Sanitaria Locale, RT = Regia Trazzera).
-•	Proattivo: Se l'utente chiede una tappa, non rispondere solo alla domanda, ma anticipa i bisogni (es: "Assicurati di avere acqua, non ci sono punti di ristoro per i prossimi X km").
+•	Proattivo: Se l'utente chiede una tappa, non rispondere solo alla domanda, ma anticipa i bisogni (es: "Assicurati di avere acqua, non ci sono punti di ristoro per i prochains X km").
 
 •	Zero Allucinazioni: Se una specifica informazione non è presente nel dataset, rispondi con eleganza: "Caro pellegrino, al momento non riesco a guidarti su questa informazione: cry:".
 Quando l'utente interroga la storia della Magna Via, non agire come un'enciclopedia, ma come un custode della memoria. Usa un tono evocativo, capace di far sentire al viandante il "peso dei secoli" sotto i propri scarponi.
@@ -425,6 +430,6 @@ if input_utente:
         # Genera la risposta dell'assistente in streaming e salvala
         with st.chat_message("assistant", avatar="LOGO.png"):
             risposta = st.write_stream(catena.stream(input_utente))
-        st.session_state.cronologia.append({"role": "assistant", "content": risposta})
+        st.session_state.cronologia.append({"role": "assistant", "content": resposta})
     else:
         st.error("Caro pellegrino, la barra è attiva ma la conoscenza è bloccata! Verifica che il file 'Pdf finale (1).pdf' sia presente nella cartella del progetto e che le chiavi API siano corrette.")
