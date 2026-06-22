@@ -257,7 +257,7 @@ with col_centro:
 
 with col_destra:
     # Contenitore custom per distanziare dal top in maniera pari al lato destro e ingrandire via CSS (desktop)
-    st.markdown('<div class="desktop-logo-container" style="margin-top: 25px; margin-right: 25px; transform: scale(1.15); transform-origin: top right;">', unsafe_allow_html=True)
+    st.markdown('<div class="desktop-logo-container" style="margin-top: 40px; margin-right: 40px; transform: scale(1.15); transform-origin: top right;">', unsafe_allow_html=True)
     st.image("LOGO.png", use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
