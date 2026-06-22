@@ -238,20 +238,21 @@ html_sidebar = """
 st.html(html_sidebar)
 
 
-
 # -------------------------------------------------------------------
-# Header principale e Immagine (Spostata a destra tramite CSS)
+# Header principale e Immagine (Layout Nativo con Colonne)
 # -------------------------------------------------------------------
 
-# Creiamo un contenitore HTML per inserire sia il titolo centrato che il logo a destra
-st.html(
-    """
-    <div class="header-container">
-        <h2 class="main-title">La Magna via</h2>
-        <img src="app/static/LOGO.png" class="top-right-logo" alt="Logo">
-    </div>
-    """
-)
+# Creiamo 3 colonne: una larga al centro per il titolo, una a destra per il logo
+col_sinistra, col_centro, col_destra = st.columns([1, 4, 1])
+
+with col_centro:
+    # Centriamo il testo nella colonna centrale usando il tag markdown nativo
+    st.markdown("<h2 style='text-align: center; margin: 0;'>La Magna via</h2>", unsafe_allow_html=True)
+
+with col_destra:
+    # Posizioniamo il logo direttamente nella colonna di destra
+    st.image("LOGO.png", use_container_width=True)
+
 
 # Nota: Rimuovi o commenta la vecchia riga st.image("LOGO.png") e st.header("La Magna via")
 
