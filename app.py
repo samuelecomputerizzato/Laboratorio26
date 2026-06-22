@@ -237,12 +237,24 @@ html_sidebar = """
 # Renderizza l'HTML della sidebar custom
 st.html(html_sidebar)
 
+
+
 # -------------------------------------------------------------------
 # Header principale e Immagine (Spostata a destra tramite CSS)
 # -------------------------------------------------------------------
 
-st.header("La Magna via")
-st.image("LOGO.png")
+# Creiamo un contenitore HTML per inserire sia il titolo centrato che il logo a destra
+st.html(
+    """
+    <div class="header-container">
+        <h2 class="main-title">La Magna via</h2>
+        <img src="app/static/LOGO.png" class="top-right-logo" alt="Logo">
+    </div>
+    """
+)
+
+# Nota: Rimuovi o commenta la vecchia riga st.image("LOGO.png") e st.header("La Magna via")
+
 
 # -------------------------------------------------------------------
 # Elaborazione Documento PDF e RAG (Retrieval-Augmented Generation)
