@@ -242,6 +242,7 @@ st.html(html_sidebar)
 # -------------------------------------------------------------------
 
 st.header("La Magna via")
+st.image("LOGO.png")
 
 # -------------------------------------------------------------------
 # Elaborazione Documento PDF e RAG (Retrieval-Augmented Generation)
