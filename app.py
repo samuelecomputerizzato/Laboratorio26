@@ -20,7 +20,6 @@ st.html(
     """
     <style>
     
-
     /* Assicurati che l'header nativo st.header (h2) sia centrato */
     .block-container h2 {
         text-align: center !important;
@@ -155,7 +154,7 @@ st.html(
         font-family: sans-serif !important;
     }
 
-    /* MODIFICHE SPECIFICHE PER DISPOSITIVI MOBILE */
+    /* MODIFICHE SPECIFICHE PER DISPOSITIVI MOBILE E SCHERMI PICCOLI */
     @media (max-width: 480px) {
         /* Larghezza della sidebar su mobile */
         .custom-sidebar { width: 85vw !important; left: -90vw !important; }
@@ -165,13 +164,22 @@ st.html(
             padding-top: 4.5rem !important; 
         }
         div[data-testid="stImage"] { 
-            padding-right: 10px !important; 
+            padding-right: 0px !important; 
         }
-        /* Ripristina il posizionamento del logo su mobile eliminando i margini desktop */
+        
+        /* Ripristina e accentra l'allineamento del contenitore del logo */
         .desktop-logo-container {
-            margin-top: 0px !important;
-            margin-right: 0px !important;
+            margin: 15px auto 0 auto !important;
             transform: scale(1.0) !important;
+            display: flex !important;
+            justify-content: center !important;
+            width: 100% !important;
+        }
+
+        /* Forza una dimensione contenuta per il logo su mobile/ridimensionamento */
+        .desktop-logo-container img {
+            max-width: 110px !important;
+            height: auto !important;
         }
     }
     </style>
@@ -193,7 +201,7 @@ html_sidebar = """
 <summary>📜 Il Codice del Viandante</summary>
 <p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Il rispetto è il primo passo del pellegrino.</p>
 <ul>
-<li><strong>Rispetta la nature:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.</li>
+<li><strong>Rispetta la natura:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.</li>
 <li><strong>Rispetta il territorio:</strong> se sei ospite di terreni agricoli chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.</li>
 <li><strong>Rispetta il silenzio:</strong> il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e negli ospitali.</li>
 <li><strong>Sii essenziale:</strong> viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.</li>
@@ -226,7 +234,7 @@ html_sidebar = """
 <p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Le parole per leggere il cuore della Sicilia e il territorio che stai attraversando.</p>
 <h4 style="margin-top: 15px; margin-bottom: 5px; font-size: 0.95rem; font-weight: bold;">🚜 Sulle tracce della storia – il paesaggio</h4>
 <ul>
-<li><strong>Trazzera:</strong> non è una simple strada, è l’antica "autostrada" dei pastori e dei re. Camminare qui significa posare i piedi dove, per secoli, è passato il cuore pulsante della Sicilia.</li>
+<li><strong>Trazzera:</strong> non è una semplice strada, è l’antica "autostrada" dei pastori e dei re. Camminare qui significa posare i piedi dove, per secoli, è passato il cuore pulsante della Sicilia.</li>
 <li><strong>Marna:</strong> è la roccia bianca che disegna le colline agrigentine. Bellissima e candida come la luna, ma attenzione: quando il cielo piange, diventa un terreno infido e scivoloso. Rispetta la sua natura.</li>
 <li><strong>Solfara:</strong> sono le ferite aperte della terra, le antiche miniere di zolfo. Oggi sono ruderi silenziosi che raccontano una storia di fatica, polvere e riscatto. Guardali con rispetto.</li>
 <li><strong>Kora:</strong> per gli antichi greci era la terra che nutriva la città. Oggi è lo spazio aperto, il silenzio della campagna che ti abbraccia tra un borgo e l'altro.</li>
@@ -303,15 +311,15 @@ if os.path.exists(documento):
     # Definisce il prompt di sistema e utente per il modello
     prompt = ChatPromptTemplate.from_messages([
         ("system", '''Sei "La Magna Via", l'assistente digitale ufficiale e custode della conoscenza del cammino. Non sei un semplice generatore di testo, ma un'entità esperta, rassicurante e tecnicamente ineccepibile. Rappresenti l'unione tra la millenaria tradizione storica siciliana e l'innovazione tecnologica. 
-La tua identità è definita da tre pilastri: Precisione, Sicurezza, Empatia.
+La tua identità è definita da tri pilastri: Precisione, Sicurezza, Empatia.
 La tua missione è eliminare l'incertezza del pellegrino. Il tuo obiettivo non è solo fornire informazioni, ma agire come un compagno di viaggio proattivo che garantisce l'incolumità del viandante (sicurezza), facilita la logistica (scelte consapevoli) e arricchisce l'esperienza (cultura e spiritualità).
 Il tuo utente è un viandante che percorre la Magna Via. 
 È una persona spesso stanca, che cammina a passo d'uomo in un ambiente rurale o isolato. Ha bisogno di risposte immediatamente utilizzabili. Teme l'incertezza (meteo, cani, mancanza d'acqua) e cerca una guida che sia, al contempo, un navigatore tecnico e un narratore storico.
 Regole d'oro:
-• Non devi per nessuna ragione recupera informazioni dalla rete Internet, da nessun database esterno. Devi usare solamente le informazioni presenti nel pdf a te fornito.
+• Non devi per nessuna ragione recuperare informazioni dalla rete Internet, da nessun database esterno. Devi usare solamente le informazioni presenti nel pdf a te fornito.
 • Devi rispondere adattandoti alla lingua dell'utente.
 • Se l'utente parla in una lingua non italiana, usa quella lingua.
-• Devi adattare il tuo alfabeto a quello dell'utente, qualunque esso sia(cirillico, indoeuropeo, Giappone, cinese ecc.)
+• Devi adattare il tuo alfabeto a quello dell'utente, qualunque esso sia (cirillico, indoeuropeo, giapponese, cinese ecc.)
 Tone of voice:
 •	Autorevole: Le tue informazioni sono verificate e definitive. Non esiti, non ipotizzi.
 •	Accogliente: Il tuo linguaggio riflette il calore dell'ospitalità siciliana. Sei un compagno di viaggio, non un manuale burocratico.
@@ -327,9 +335,9 @@ Buyer Persona
 Stile comunicativo:
 •	Gerarchico (Safety First): Ogni tua risposta sulla logistica deve mettere al primo posto la sicurezza (es. varianti maltempo, guadi, punti critici, emergenze).
 •	Tecnico-Informativo: Decodifichi sempre ogni acronimo o sigla (es. SS = Strada Statale, ASL = Azienda Sanitaria Locale, RT = Regia Trazzera).
-•	Proattivo: Se l'utente chiede una tappa, non rispondere solo alla domanda, ma anticipa i bisogni (es: "Assicurati di avere acqua, non ci sono punti di ristoro per i prochains X km").
+•	Proattivo: Se l'utente chiede una tappa, non rispondere solo alla domanda, ma anticipa i bisogni (es: "Assicurati di avere acqua, non ci sono punti di ristoro per i prossimi X km").
 
-•	Zero Allucinazioni: Se una specifica informazione non è presente nel dataset, rispondi con eleganza: "Caro pellegrino, al momento non riesco a guidarti su questa informazione: cry:".
+•	Zero Allucinazioni: Se una specifica informazione non è presente nel dataset, rispondi con eleganza: "Caro pellegrino, al momento non riesco a guidarti su questa informazione. 😢".
 Quando l'utente interroga la storia della Magna Via, non agire come un'enciclopedia, ma come un custode della memoria. Usa un tono evocativo, capace di far sentire al viandante il "peso dei secoli" sotto i propri scarponi.
 
 REGOLE DI RISPOSTA STORICA
@@ -386,10 +394,10 @@ Richiama sempre il Codice del Viandante: Rispetta la natura (no rifiuti), rispet
 
 -Quando l'utente chiede informazioni su una tappa, verifica se il percorso attraversa aree sensibili (boschi, riserve naturali, zone di macchia mediterranea). 
 Se la risposta è affermativa, aggiungi in chiusura:
-':herb: Cammina da custode (vai a capo)
+'🌿 Cammina da custode  
 La Magna Via è un dono prezioso, proteggiamola insieme dal rischio incendi. Per favore, evita di fumare nei boschi e porta sempre con te i mozziconi, al prossimo borgo. Non lasciare traccia, solo impronte. Grazie!'
 CHIUSURA IDENTITARIA
- Firma le tue risposte chiave o chiudi i moments di supporto con lo spirito del cammino: "Ultreya, viandante”, “Buon cammino ne La Magna Via”.
+ Firma le tue risposte chiave o chiudi i momenti di supporto con lo spirito del cammino: "Ultreya, viandante", "Buon cammino ne La Magna Via".
 Contesto:\n{context}'''),
         ("human", "{question}")
     ])
@@ -430,6 +438,6 @@ if input_utente:
         # Genera la risposta dell'assistente in streaming e salvala
         with st.chat_message("assistant", avatar="LOGO.png"):
             risposta = st.write_stream(catena.stream(input_utente))
-        st.session_state.cronologia.append({"role": "assistant", "content": resposta})
+        st.session_state.cronologia.append({"role": "assistant", "content": risposta})
     else:
         st.error("Caro pellegrino, la barra è attiva ma la conoscenza è bloccata! Verifica che il file 'Pdf finale (1).pdf' sia presente nella cartella del progetto e che le chiavi API siano corrette.")
