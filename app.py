@@ -20,7 +20,6 @@ st.html(
     """
     <style>
     
-
     /* Assicurati che l'header nativo st.header (h2) sia centrato */
     .block-container h2 {
         text-align: center !important;
@@ -29,7 +28,7 @@ st.html(
     }
 
     .block-container {
-        padding-top: 4rem !important; /* Ridotto leggermente per bilanciare il logo in alto */
+        padding-top: 4rem !important;
         padding-bottom: 3rem !important;
     }
 
@@ -124,8 +123,8 @@ st.html(
     /* FORZA IL TESTO SCURO NELL'INPUT (Risolve il bug del tema scuro) */
     div[data-testid="stChatInput"] textarea {
         background-color: transparent !important;
-        color: #231709 !important; /* Forza colore scuro del testo digitato */
-        -webkit-text-fill-color: #231709 !important; /* Fix per alcuni browser mobile */
+        color: #231709 !important; 
+        -webkit-text-fill-color: #231709 !important; 
         font-family: sans-serif !important;
         font-size: 1rem !important;
     }
@@ -167,11 +166,17 @@ st.html(
         div[data-testid="stImage"] { 
             padding-right: 10px !important; 
         }
-        /* Ripristina il posizionamento del logo su mobile eliminando i margini desktop */
+        
+        /* Ripristina e protegge il logo su mobile disattivando i parametri desktop */
         .desktop-logo-container {
-            margin-top: 0px !important;
-            margin-right: 0px !important;
-            transform: scale(1.0) !important;
+            position: relative !important;
+            top: auto !important;
+            right: auto !important;
+            float: right !important;
+            margin-top: -45px !important; 
+        }
+        .responsive-logo {
+            width: 65px !important; 
         }
     }
     </style>
@@ -226,7 +231,7 @@ html_sidebar = """
 <p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Le parole per leggere il cuore della Sicilia e il territorio che stai attraversando.</p>
 <h4 style="margin-top: 15px; margin-bottom: 5px; font-size: 0.95rem; font-weight: bold;">🚜 Sulle tracce della storia – il paesaggio</h4>
 <ul>
-<li><strong>Trazzera:</strong> non è una simple strada, è l’antica "autostrada" dei pastori e dei re. Camminare qui significa posare i piedi dove, per secoli, è passato il cuore pulsante della Sicilia.</li>
+<li><strong>Trazzera:</strong> non è una semplice strada, è l’antica "autostrada" dei pastori e dei re. Camminare qui significa posare i piedi dove, per secoli, è passato il cuore pulsante della Sicilia.</li>
 <li><strong>Marna:</strong> è la roccia bianca che disegna le colline agrigentine. Bellissima e candida come la luna, ma attenzione: quando il cielo piange, diventa un terreno infido e scivoloso. Rispetta la sua natura.</li>
 <li><strong>Solfara:</strong> sono le ferite aperte della terra, le antiche miniere di zolfo. Oggi sono ruderi silenziosi che raccontano una storia di fatica, polvere e riscatto. Guardali con rispetto.</li>
 <li><strong>Kora:</strong> per gli antichi greci era la terra che nutriva la città. Oggi è lo spazio aperto, il silenzio della campagna che ti abbraccia tra un borgo e l'altro.</li>
@@ -245,21 +250,31 @@ st.html(html_sidebar)
 
 
 # -------------------------------------------------------------------
-# Header principale e Immagine (Layout Nativo con Colonne)
+# Header principale e Logo ad Allineamento Assoluto (Desktop)
 # -------------------------------------------------------------------
 
-# Allarghiamo la colonna di destra (da 1 a 1.3) per permettere al logo di mostreggiarsi più grande 
-col_sinistra, col_centro, col_destra = st.columns([1, 4, 1.3])
+# Titolo centrato a tutta larghezza
+st.markdown("<h2 style='text-align: center; margin: 0;'>La Magna via</h2>", unsafe_allow_html=True)
 
-with col_centro:
-    # Centriamo il testo nella colonna centrale usando il tag markdown nativo
-    st.markdown("<h2 style='text-align: center; margin: 0;'>La Magna via</h2>", unsafe_allow_html=True)
-
-with col_destra:
-    # Contenitore custom per distanziare dal top in maniera pari al lato destro e ingrandire via CSS (desktop)
-    st.markdown('<div class="desktop-logo-container" style="margin-top: 40px; margin-right: 40px; transform: scale(1.15); transform-origin: top right;">', unsafe_allow_html=True)
-    st.image("LOGO.png", use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+# Logo iniettato in posizionamento assoluto con una dimensione maggiore (110px) e margini allineati al pixel
+st.markdown(
+    """
+    <div class="desktop-logo-container" style="
+        position: absolute; 
+        top: 0px; 
+        right: 0px; 
+        padding-top: 0px;
+        z-index: 99;
+    ">
+        <img src="app/static/LOGO.png" class="responsive-logo" style="
+            width: 110px; 
+            height: auto; 
+            display: block;
+        ">
+    </div>
+    """, 
+    unsafe_allow_html=True
+)
 
 
 # -------------------------------------------------------------------
@@ -316,7 +331,7 @@ Tone of voice:
 •	Autorevole: Le tue informazioni sono verificate e definitive. Non esiti, non ipotizzi.
 •	Accogliente: Il tuo linguaggio riflette il calore dell'ospitalità siciliana. Sei un compagno di viaggio, non un manuale burocratico.
 •	Essenziale: Rispondi con la densità informativa necessaria. Il viandante è in movimento: apprezza la sintesi.
-•	Ispiratore: Quando il contesto lo richiede, il tuo tono si eleva per sottolineare l'importanza storica e spirituale del cammino
+•	Ispiratore: Quando il contesto lo richiede, il tuo tono si eleva per sottolineare l'importance storica e spirituale del cammino
 Buyer Persona
 •	Il Viandante Ansioso: Preoccupato per i cani randagi, i guadi, il meteo e la mancanza di acqua. Cerca rassicurazione.
 
@@ -327,7 +342,7 @@ Buyer Persona
 Stile comunicativo:
 •	Gerarchico (Safety First): Ogni tua risposta sulla logistica deve mettere al primo posto la sicurezza (es. varianti maltempo, guadi, punti critici, emergenze).
 •	Tecnico-Informativo: Decodifichi sempre ogni acronimo o sigla (es. SS = Strada Statale, ASL = Azienda Sanitaria Locale, RT = Regia Trazzera).
-•	Proattivo: Se l'utente chiede una tappa, non rispondere solo alla domanda, ma anticipa i bisogni (es: "Assicurati di avere acqua, non ci sono punti di ristoro per i prochains X km").
+•	Proattivo: Se l'utente chiede una tappa, non rispondere solo alla domanda, ma anticipa i bisogni (es: "Assicurati di avere acqua, non ci sono punti di ristoro per i prossimi X km").
 
 •	Zero Allucinazioni: Se una specifica informazione non è presente nel dataset, rispondi con eleganza: "Caro pellegrino, al momento non riesco a guidarti su questa informazione: cry:".
 Quando l'utente interroga la storia della Magna Via, non agire come un'enciclopedia, ma come un custode della memoria. Usa un tono evocativo, capace di far sentire al viandante il "peso dei secoli" sotto i propri scarponi.
