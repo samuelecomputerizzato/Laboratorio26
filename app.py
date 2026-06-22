@@ -15,18 +15,20 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
 # -------------------------------------------------------------------
-# Funzione per convertire il Logo in Base64 (Previene immagini rotte)
+# Funzione per convertire il Logo in Base64 (Risolve l'immagine rotta)
 # -------------------------------------------------------------------
-def get_base64_image(image_path):
-    if os.path.exists(image_path):
-        with open(image_path, "rb") as img_file:
+def get_base64_image(image_name):
+    # Cerca il file nella cartella principale del progetto
+    cartella_progetto = os.path.dirname(__file__)
+    percorso_file = os.path.join(cartella_progetto, image_name)
+    
+    if os.path.exists(percorso_file):
+        with open(percorso_file, "rb") as img_file:
             return base64.b64encode(img_file.read()).decode()
     return ""
 
-# Recupera il percorso del logo e convertilo
-cartella_corrente = os.path.dirname(__file__)
-percorso_logo = os.path.join(cartella_corrente, "LOGO.png")
-logo_base64 = get_base64_image(percorso_logo)
+# Convertiamo sia il logo che l'avatar utente (se presente come file)
+logo_base64 = get_base64_image("LOGO.png")
 
 # -------------------------------------------------------------------
 # Configurazione Stile CSS 
@@ -135,7 +137,7 @@ st.html(
         box-shadow: 0px 4px 15px rgba(84, 46, 23, 0.1) !important; 
     }
 
-    /* FORZA IL TESTO SCURO NELL'INPUT (Risolve il bug del tema scuro) */
+    /* FORZA IL TESTO SCURO NELL'INPUT */
     div[data-testid="stChatInput"] textarea {
         background-color: transparent !important;
         color: #231709 !important; 
@@ -170,25 +172,21 @@ st.html(
     }
 
     /* MODIFICHE SPECIFICHE PER DISPOSITIVI MOBILE / TABLET */
-    @media (max-width: 480px) {
+    @media (max-width: 820px) {
         .custom-sidebar { width: 85vw !important; left: -90vw !important; }
         
         .block-container {
-            padding-top: 4.5rem !important; 
-        }
-        div[data-testid="stImage"] { 
-            padding-right: 10px !important; 
+            padding-top: 5rem !important; 
         }
         
+        /* Gestione adattiva del logo su schermi mobili/tablet per non sovrapporsi al testo */
         .desktop-logo-container {
-            position: relative !important;
-            top: auto !important;
-            right: auto !important;
-            float: right !important;
-            margin-top: -45px !important; 
+            position: absolute !important;
+            top: 10px !important;
+            right: 15px !important;
         }
         .responsive-logo {
-            width: 65px !important; 
+            width: 70px !important; /* Dimensione ideale e visibile sui dispositivi portatili */
         }
     }
     </style>
@@ -210,7 +208,7 @@ html_sidebar = """
 <summary>📜 Il Codice del Viandante</summary>
 <p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Il rispetto è il primo passo del pellegrino.</p>
 <ul>
-<li><strong>Rispetta la natura:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.</li>
+<li><strong>Rispetta la natura:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un enemy: non accenderlo mai.</li>
 <li><strong>Rispetta il territorio:</strong> se sei ospite di terreni agricoli chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.</li>
 <li><strong>Rispetta il silenzio:</strong> il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e negli ospitali.</li>
 <li><strong>Sii essenziale:</strong> viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.</li>
@@ -264,25 +262,25 @@ st.html(html_sidebar)
 # Header principale e Logo ad Allineamento Assoluto (Desktop)
 # -------------------------------------------------------------------
 
-# Titolo centrato
+# Titolo centrato a tutta larghezza
 st.markdown("<h2 style='text-align: center; margin: 0;'>La Magna via</h2>", unsafe_allow_html=True)
 
-# Genera il tag img inserendo direttamente la stringa Base64 (risolve l'immagine rotta)
+# Se il Base64 è stato generato con successo, creiamo l'URI dell'immagine incorporata
 if logo_base64:
-    src_string = f"data:image/png;base64,{logo_base64}"
+    logo_src = f"data:image/png;base64,{logo_base64}"
 else:
-    src_string = ""
+    logo_src = ""
 
+# Iniezione del logo ingrandito (110px su desktop) e immune ai blocchi dei percorsi relativi
 st.markdown(
     f"""
     <div class="desktop-logo-container" style="
         position: absolute; 
         top: 0px; 
         right: 0px; 
-        padding-top: 0px;
         z-index: 99;
     ">
-        <img src="{src_string}" class="responsive-logo" style="
+        <img src="{logo_src}" class="responsive-logo" style="
             width: 110px; 
             height: auto; 
             display: block;
@@ -297,6 +295,7 @@ st.markdown(
 # Elaborazione Documento PDF e RAG (Retrieval-Augmented Generation)
 # -------------------------------------------------------------------
 
+cartella_corrente = os.path.dirname(__file__)
 documento = os.path.join(cartella_corrente, "Pdf finale (1).pdf")
 catena = None
 
@@ -329,7 +328,7 @@ La tua missione è eliminare l'incertezza del pellegrino. Il tuo obiettivo non �
 Il tuo utente è un viandante che percorre la Magna Via. 
 È una persona spesso stanca, che cammina a passo d'uomo in un ambiente rurale o isolato. Ha bisogno di risposte immediatamente utilizzabili. Teme l'incertezza (meteo, cani, mancanza d'acqua) e cerca una guida che sia, al contempo, un navigatore tecnico e un narratore storico.
 Regole d'oro:
-• Non devi per nessuna ragione recupera informazioni dalla rete Internet, da nessun database esterno. Devi usare solamente le informazioni presenti nel pdf a te fornito.
+• Non devi per nessuna ragione recuperare informazioni dalla rete Internet, da nessun database esterno. Devi usare solamente le informazioni presenti nel pdf a te fornito.
 • Devi rispondere adattandoti alla lingua dell'utente.
 • Se l'utente parla in una lingua non italiana, usa quella lingua.
 • Devi adattare il tuo alfabeto a quello dell'utente, qualunque esso sia(cirillico, indoeuropeo, Giappone, cinese ecc.)
@@ -337,7 +336,7 @@ Tone of voice:
 •	Autorevole: Le tue informazioni sono verificate e definitive. Non esiti, non ipotizzi.
 •	Accogliente: Il tuo linguaggio riflette il calore dell'ospitalità siciliana. Sei un compagno di viaggio, non un manuale burocratico.
 •	Essenziale: Rispondi con la densità informativa necessaria. Il viandante è in movimento: apprezza la sintesi.
-•	Ispiratore: Quando il contesto lo richiede, il tuo tono si eleva per sottolineare l'importance storica e spirituale del cammino
+•	Ispiratore: Quando il contesto lo richiede, il tuo tono si eleva per sottolineare l'importanza storica e spirituale del cammino
 Buyer Persona
 •	Il Viandante Ansioso: Preoccupato per i cani randagi, i guadi, il meteo e la mancanza di acqua. Cerca rassicurazione.
 •	Il Pellegrino Esperto: Cerca dati tecnici precisi (KM, dislivelli, contatti per dormire). Cerca efficienza.
@@ -346,8 +345,8 @@ Buyer Persona
 Stile comunicativo:
 •	Gerarchico (Safety First): Ogni tua risposta sulla logistica deve mettere al primo posto la sicurezza (es. varianti maltempo, guadi, punti critici, emergenze).
 •	Tecnico-Informativo: Decodifichi sempre ogni acronimo o sigla (es. SS = Strada Statale, ASL = Azienda Sanitaria Locale, RT = Regia Trazzera).
-•	Proattivo: Se l'utente chiede una tappa, non responder solo alla domanda, ma anticipa i bisogni (es: "Assicurati di avere acqua, non ci sono punti di ristoro per i prossimi X km").
-•	Zero Allucinazioni: Se una specifica informazione non è presente nel dataset, rispondi con eleganza: "Caro pellegrino, al momento non riesco a guidarti su questa informazione: cry:".
+•	Proattivo: Se l'utente chiede una tappa, non rispondere solo alla domanda, ma anticipa i bisogni (es: "Assicurati di avere acqua, non ci sono punti di ristoro per i próximos X km").
+•	Zero Allucinazioni: Se una specifica informazione non è presente nel dataset, rispondi con eleganza: "Caro pellegrino, al momento non riesco a guidarti su questa informazione.".
 Quando l'utente interroga la storia della Magna Via, non agire come un'enciclopedia, ma come un custode della memoria. Usa un tono evocativo, capace di far sentire al viandante il "peso dei secoli" sotto i propri scarponi.
 
 REGOLE DI RISPOSTA STORICA
@@ -376,10 +375,10 @@ Ogni risposta su una tappa deve seguire rigorosamente questo ordine gerarchico:
 
 -Quando l'utente chiede informazioni su una tappa, verifica se il percorso attraversa aree sensibili (boschi, riserve naturali, zone di macchia mediterranea). 
 Se la risposta è affermativa, aggiungi in chiusura:
-':herb: Cammina da custode (vai a capo)
+':herb: Cammina da custode 
 La Magna Via è un dono prezioso, proteggiamola insieme dal rischio incendi. Per favore, evita di fumare nei boschi e porta sempre con te i mozziconi, al prossimo borgo. Non lasciare traccia, solo impronte. Grazie!'
 CHIUSURA IDENTITARIA
- Firma le tue risposte chiave o chiudi i moments di supporto con lo spirito del cammino: "Ultreya, viandante”, “Buon cammino ne La Magna Via”.
+ Firma le tue risposte chiave o chiudi i momenti di supporto con lo spirito del cammino: "Ultreya, viandante”, “Buon cammino ne La Magna Via”.
 Contesto:\n{context}'''),
         ("human", "{question}")
     ])
@@ -398,7 +397,8 @@ if "cronologia" not in st.session_state:
     st.session_state.cronologia = []
 
 for messaggio in st.session_state.cronologia:
-    avatar_scelto = percorso_logo if messaggio["role"] == "assistant" else "Utente.png"
+    # Usiamo l'icona nativa di Streamlit o l'immagine se disponibile
+    avatar_scelto = "🤖" if messaggio["role"] == "assistant" else "👤"
     with st.chat_message(messaggio["role"], avatar=avatar_scelto):
         st.markdown(messaggio["content"])
 
@@ -406,11 +406,11 @@ input_utente = st.chat_input("Chiedi alla Via...")
 
 if input_utente:
     if catena:
-        with st.chat_message("user", avatar="Utente.png"):
+        with st.chat_message("user", avatar="👤"):
             st.markdown(input_utente)
         st.session_state.cronologia.append({"role": "user", "content": input_utente})
 
-        with st.chat_message("assistant", avatar=percorso_logo):
+        with st.chat_message("assistant", avatar="🤖"):
             risposta = st.write_stream(catena.stream(input_utente))
         st.session_state.cronologia.append({"role": "assistant", "content": risposta})
     else:
