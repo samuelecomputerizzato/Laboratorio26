@@ -13,9 +13,9 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
-# -------------------------------------------------------------------
-# Configurazione Stile CSS 
-# -------------------------------------------------------------------
+# -------------------------------------
+# Configurazione  pagina 
+# -------------------------------------
 st.html(
     """
     <style>
@@ -32,7 +32,7 @@ st.html(
         padding-bottom: 3rem !important;
     }
 
-    /* Nasconde gli elementi nativi di Streamlit per un'interfaccia pulita */
+    /*  Elementi nativi di Streamlit eliminati */
     header, footer, [data-testid="stHeader"], [data-testid="stAppHeader"], 
     [data-testid="stDecoration"], #MainMenu, [data-testid="stToolbar"], 
     .stDeployButton, [data-testid="stManageAppButton"] { 
@@ -43,7 +43,6 @@ st.html(
     /* Configurazione colore di sfondo e testo dell'app */
     .stApp { background-color: #F1F0E6; color: #231709; }
 
-    /* Nasconde il checkbox di default della sidebar */
     .sidebar-checkbox { display: none !important; }
 
     /* Pulsante custom per aprire/chiudere la sidebar */
@@ -65,7 +64,7 @@ st.html(
         font-family: sans-serif;
     }
 
-    /* Stile per i componenti details nella sidebar */
+    /* Stile per i componenti details */
     .custom-sidebar details {
         background-color: #677761 !important;
         border: 1px solid rgba(255, 255, 255, 0.3) !important;
@@ -75,7 +74,7 @@ st.html(
         display: block !important;
     }
     
-    /* Stile per il summary dei details */
+    /* Stile per il summary */
     .custom-sidebar summary {
         font-weight: bold !important;
         font-size: 1.05rem !important;
@@ -99,7 +98,7 @@ st.html(
         color: #ffffff !important; font-size: 1.5rem; cursor: pointer;
     }
 
-    /* Stile liste puntate nella sidebar */
+    /*  liste puntate */
     .custom-sidebar ul { padding-left: 18px !important; margin: 10px 0 0 0 !important; }
     .custom-sidebar li { margin-bottom: 8px !important; font-size: 0.9rem !important; line-height: 1.4; }
 
@@ -177,7 +176,7 @@ st.html(
 
         /* Forza una dimensione contenuta per il logo su mobile/ridimensionamento */
         .desktop-logo-container img {
-            max-width: 110px !important;
+            max-width: 90px !important;
             height: auto !important;
         }
     }
