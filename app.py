@@ -2,6 +2,9 @@ import streamlit as st
 import pdfplumber
 import os
 
+# Configurazione della pagina Streamlit
+st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", layout="centered")
+
 # Importazioni LangChain
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
@@ -10,30 +13,26 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
-# -----------------------------------------------------------
+# -------------------------------------------------------------------
 # Configurazione Stile CSS 
-# -----------------------------------------------------------
+# -------------------------------------------------------------------
 st.html(
     """
     <style>
     
-        .block-container h2 {
+    /* Assicurati che l'header nativo st.header (h2) sia centrato */
+    .block-container h2 {
         text-align: center !important;
         width: 100% !important;
         margin-top: 0px !important; 
     }
 
-     .block-container {
-         padding-top: 4rem !important; /* Ridotto leggermente per bilanciare il logo in alto */
-         padding-bottom: 3rem !important;
+    .block-container {
+        padding-top: 4rem !important; /* Ridotto leggermente per bilanciare il logo in alto */
+        padding-bottom: 3rem !important;
     }
-     [data-testid="stChatMessage"] div[data-testid="stChatMessageContent"] {
-            background-color: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-    }
-        
-    /* OCCULTAMENTO MENÚ NATIVI*/
+
+    /* Nasconde gli elementi nativi di Streamlit per un'interfaccia pulita */
     header, footer, [data-testid="stHeader"], [data-testid="stAppHeader"], 
     [data-testid="stDecoration"], #MainMenu, [data-testid="stToolbar"], 
     .stDeployButton, [data-testid="stManageAppButton"] { 
@@ -44,9 +43,10 @@ st.html(
     /* Configurazione colore di sfondo e testo dell'app */
     .stApp { background-color: #F1F0E6; color: #231709; }
 
+    /* Nasconde il checkbox di default della sidebar */
     .sidebar-checkbox { display: none !important; }
 
-    /* Pulsante  per aprire e chiudere la sidebar */
+    /* Pulsante custom per aprire/chiudere la sidebar */
     .sidebar-toggle-button {
         position: fixed; top: 15px; left: 15px;
         background-color: #7A8B74; color: #ffffff !important;
@@ -55,7 +55,7 @@ st.html(
         font-family: sans-serif;
     }
 
-    /* Stile della sidebar */
+    /* Stile della sidebar personalizzata */
     .custom-sidebar {
         position: fixed; top: 0; left: -340px; width: 320px; height: 100vh;
         background-color: #7A8B74 !important;
@@ -75,7 +75,7 @@ st.html(
         display: block !important;
     }
     
-    /* Stile per  summary */
+    /* Stile per il summary dei details */
     .custom-sidebar summary {
         font-weight: bold !important;
         font-size: 1.05rem !important;
@@ -83,7 +83,7 @@ st.html(
         color: #ffffff !important;
     }
 
-    /* Stile per i testi in  details */
+    /* Stile per i testi all'interno dei details */
     .custom-sidebar h3, .custom-sidebar h4, .custom-sidebar p, .custom-sidebar li, 
     .custom-sidebar strong, .custom-sidebar span {
         color: #ffffff !important;
@@ -103,7 +103,30 @@ st.html(
     .custom-sidebar ul { padding-left: 18px !important; margin: 10px 0 0 0 !important; }
     .custom-sidebar li { margin-bottom: 8px !important; font-size: 0.9rem !important; line-height: 1.4; }
 
-    
+    /* --- FIX TEMA SCURO / VISIBILITÀ INPUT --- */
+    div[data-testid="stChatInput"] {
+        background-color: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+        padding-bottom: 20px !important;
+    }
+
+    /* Forza lo sfondo chiaro e i bordi scuri per il form dell'input */
+    div[data-testid="stChatInput"] form {
+        background-color: #F1F0E6 !important; 
+        border: 2px solid #542E17 !important;   
+        border-radius: 28px !important;         
+        padding: 5px 10px !important;
+        box-shadow: 0px 4px 15px rgba(84, 46, 23, 0.1) !important; 
+    }
+
+    /* FORZA IL TESTO SCURO NELL'INPUT (Risolve il bug del tema scuro) */
+    div[data-testid="stChatInput"] textarea {
+        background-color: transparent !important;
+        color: #231709 !important; /* Forza colore scuro del testo digitato */
+        -webkit-text-fill-color: #231709 !important; /* Fix per alcuni browser mobile */
+        font-family: sans-serif !important;
+        font-size: 1rem !important;
     }
 
     /* Stile del placeholder */
@@ -125,7 +148,7 @@ st.html(
         background-color: #677761 !important; 
     }
 
-    /* TESTO SCURO NEI MESSAGGI DI CHAT */
+    /* FORZA IL TESTO SCURO NEI MESSAGGI DI CHAT (Sia Utente che Assistente) */
     [data-testid="stChatMessage"] div p {
         color: #231709 !important;
         font-family: sans-serif !important;
@@ -163,9 +186,9 @@ st.html(
     """
 )
 
-# --------------------------------------------------
-# SIDEBAR 
-# --------------------------------------------------
+# -------------------------------------------------------------------
+# STRUTTURA SIDEBAR (HTML custom)
+# -------------------------------------------------------------------
 html_sidebar = """
 <input type="checkbox" id="side-menu-switch" class="sidebar-checkbox">
 <label for="side-menu-switch" class="sidebar-toggle-button">☰ Lo spazio del viandante</label>
@@ -229,7 +252,9 @@ html_sidebar = """
 st.html(html_sidebar)
 
 
-st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", layout="centered")
+# -------------------------------------------------------------------
+# Header principale e Immagine (Layout Nativo con Colonne)
+# -------------------------------------------------------------------
 
 # Allarghiamo la colonna di destra (da 1 a 1.3) per permettere al logo di mostreggiarsi più grande 
 col_sinistra, col_centro, col_destra = st.columns([1, 4, 1.3])
@@ -378,16 +403,16 @@ Contesto:\n{context}'''),
     ])
 
     # Configurazione del modello di Chat OpenAI
-    modello_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.1, openai_api_key=st.secrets["OPENAI_API_KEY"])
+    modello_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3, openai_api_key=st.secrets["OPENAI_API_KEY"])
     
     # Crea la catena di esecuzione (Chain) per recuperare il contesto e generare la risposta
     catena = ({"context": lambda x: "\n\n".join([doc.page_content for doc in vettori.similarity_search(x, k=4)]), "question": RunnablePassthrough()} 
               | prompt | modello_llm | StrOutputParser())
 
 
-# -------------------------------
-# GESTIONE DELLA CHAT  
-# ------------------------------
+# -------------------------------------------------------------------
+# GESTIONE DELLA CHAT E CRONOLOGIA A SCHERMO 
+# -------------------------------------------------------------------
 
 # Inizializza la cronologia nella sessione se non esiste
 if "cronologia" not in st.session_state: 
