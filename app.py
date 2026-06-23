@@ -395,7 +395,7 @@ Contesto:\n{context}'''),
     ])
 
     # Configurazione del modello di Chat OpenAI
-    modello_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3, openai_api_key=st.secrets["OPENAI_API_KEY"])
+    modello_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.4, openai_api_key=st.secrets["OPENAI_API_KEY"])
     
     # Crea la catena di esecuzione (Chain) per recuperare il contesto e generare la risposta
     catena = ({"context": lambda x: "\n\n".join([doc.page_content for doc in vettori.similarity_search(x, k=4)]), "question": RunnablePassthrough()} 
