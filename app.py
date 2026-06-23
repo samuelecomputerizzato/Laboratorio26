@@ -112,14 +112,13 @@ st.html(
     }
 
     
-
-    /* FORZA IL TESTO SCURO NELL'INPUT (Risolve il bug del tema scuro) */
-    div[data-testid="stChatInput"] textarea {
-        background-color: transparent !important;
-        color: #231709 !important; /* Forza colore scuro del testo digitato */
-        -webkit-text-fill-color: #231709 !important; /* Fix per alcuni browser mobile */
-        font-family: sans-serif !important;
-        font-size: 1rem !important;
+    /* Forza lo sfondo chiaro e i bordi scuri per il form dell'input */
+    div[data-testid="stChatInput"] form {
+        background-color: #F1F0E6 !important; 
+        border: 2px solid #542E17 !important;   
+        border-radius: 28px !important;         
+        padding: 5px 10px !important;
+        box-shadow: 0px 4px 15px rgba(84, 46, 23, 0.1) !important; 
     }
 
     /* Stile del placeholder */
