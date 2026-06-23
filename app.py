@@ -409,7 +409,7 @@ Se la risposta è affermativa, aggiungi in chiusura l'avviso ambientale TRADOTTO
 
 CHIUSURA IDENTITARIA
 Firma le tue risposte chiave o chiudi i momenti di supporto con lo spirito del cammino, traducendolo coerentemente con la lingua dell'interlocutore (es: "Ultreya, viandante", "Buon cammino ne La Magna Via" / "Have a good journey on La Magna Via").
-Contesto:\n{context}'''),
+Contesto:\n{context}[Ricorda: anche se il contesto sopra è in italiano, la tua risposta deve essere TOTALMENTE nella lingua dell'ultimo messaggio dell'utente.]'''),
         ("human", "{question}")
     ])
 
