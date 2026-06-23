@@ -171,12 +171,12 @@ st.html(
             transform: scale(1.0) !important;
             display: flex !important;
             justify-content: center !important;
-            width: 80% !important;
+            width: 100% !important;
         }
 
         /* Forza una dimensione contenuta per il logo su mobile/ridimensionamento */
         .desktop-logo-container img {
-            max-width: 80px !important;
+            max-width: 110px !important;
             height: auto !important;
         }
     }
