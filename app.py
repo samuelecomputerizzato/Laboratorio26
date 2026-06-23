@@ -2,9 +2,6 @@ import streamlit as st
 import pdfplumber
 import os
 
-# Configurazione della pagina Streamlit
-st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", layout="centered")
-
 # Importazioni LangChain
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
@@ -13,9 +10,9 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
-# -------------------------------------------------------------------
+# -----------------------------------------------------------
 # Configurazione Stile CSS 
-# -------------------------------------------------------------------
+# -----------------------------------------------------------
 st.html(
     """
     <style>
@@ -186,9 +183,9 @@ st.html(
     """
 )
 
-# -------------------------------------------------------------------
-# STRUTTURA SIDEBAR (HTML custom)
-# -------------------------------------------------------------------
+# --------------------------------------------------
+# SIDEBAR 
+# --------------------------------------------------
 html_sidebar = """
 <input type="checkbox" id="side-menu-switch" class="sidebar-checkbox">
 <label for="side-menu-switch" class="sidebar-toggle-button">☰ Lo spazio del viandante</label>
@@ -252,9 +249,7 @@ html_sidebar = """
 st.html(html_sidebar)
 
 
-# -------------------------------------------------------------------
-# Header principale e Immagine (Layout Nativo con Colonne)
-# -------------------------------------------------------------------
+st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", layout="centered")
 
 # Allarghiamo la colonna di destra (da 1 a 1.3) per permettere al logo di mostreggiarsi più grande 
 col_sinistra, col_centro, col_destra = st.columns([1, 4, 1.3])
