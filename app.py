@@ -2,9 +2,6 @@ import streamlit as st
 import pdfplumber
 import os
 
-# Configurazione della pagina Streamlit
-st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", layout="centered")
-
 # Importazioni LangChain
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
@@ -14,7 +11,7 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
 # -------------------------------------
-# Configurazione  pagina 
+# Configurazione estetica della pagina 
 # -------------------------------------
 st.html(
     """
@@ -184,9 +181,9 @@ st.html(
     """
 )
 
-# -------------------------------------------------------------------
-# STRUTTURA SIDEBAR (HTML custom)
-# -------------------------------------------------------------------
+# ---------------------
+# STRUTTURA SIDEBAR 
+# ---------------------
 html_sidebar = """
 <input type="checkbox" id="side-menu-switch" class="sidebar-checkbox">
 <label for="side-menu-switch" class="sidebar-toggle-button">☰ Lo spazio del viandante</label>
@@ -250,27 +247,26 @@ html_sidebar = """
 st.html(html_sidebar)
 
 
-# -------------------------------------------------------------------
-# Header principale e Immagine (Layout Nativo con Colonne)
-# -------------------------------------------------------------------
+# ---------------------------------------------------------
+# Configurazione pagina, Header principale e immagine 
+# ------------------------------------------------------------
 
-# Allarghiamo la colonna di destra (da 1 a 1.3) per permettere al logo di mostreggiarsi più grande 
+st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", layout="centered")
+
 col_sinistra, col_centro, col_destra = st.columns([1, 4, 1.3])
 
 with col_centro:
-    # Centriamo il testo nella colonna centrale usando il tag markdown nativo
     st.markdown("<h2 style='text-align: center; margin: 0;'>La Magna via</h2>", unsafe_allow_html=True)
 
 with col_destra:
-    # Contenitore custom per distanziare dal top in maniera pari al lato destro e ingrandire via CSS (desktop)
     st.markdown('<div class="desktop-logo-container" style="margin-top: 25px; margin-right: 25px; transform: scale(1.15); transform-origin: top right;">', unsafe_allow_html=True)
     st.image("LOGO.png", use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
 
-# -------------------------------------------------------------------
-# Elaborazione Documento PDF e RAG (Retrieval-Augmented Generation)
-# -------------------------------------------------------------------
+# ----------------------------------
+# Elaborazione Documento PDF e RAG 
+# ----------------------------------
 
 # Identifica il percorso del documento PDF
 cartella_corrente = os.path.dirname(__file__)
@@ -306,7 +302,7 @@ if os.path.exists(documento):
     # Imposta il database vettoriale
     vettori = setup_rag(testo)
     
-    # Definisce il prompt di sistema e utente per il modello
+    # Definizione del prompt di sistema e utente per il modello
     prompt = ChatPromptTemplate.from_messages([
         ("system", '''Sei "La Magna Via", l'assistente digitale ufficiale e custode della conoscenza del cammino. Non sei un semplice generatore di testo, ma un'entità esperta, rassicurante e tecnicamente ineccepibile. Rappresenti l'unione tra la millenaria tradizione storica siciliana e l'innovazione tecnologica. 
 La tua identità è definita da tri pilastri: Precisione, Sicurezza, Empatia.
@@ -412,7 +408,6 @@ Contesto:\n{context}'''),
         ("human", "{question}")
     ])
 
-    # Configurazione del modello di Chat OpenAI (aumentata leggermente la flessibilità per il cambio lingua)
     modello_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3, openai_api_key=st.secrets["OPENAI_API_KEY"])
     
     # Crea la catena di esecuzione (Chain) per recuperare il contesto e generare la risposta
@@ -420,9 +415,9 @@ Contesto:\n{context}'''),
               | prompt | modello_llm | StrOutputParser())
 
 
-# -------------------------------------------------------------------
-# GESTIONE DELLA CHAT E CRONOLOGIA A SCHERMO 
-# -------------------------------------------------------------------
+# ------------------------
+# GESTIONE DELLA CHAT 
+# ------------------------
 
 # Inizializza la cronologia nella sessione se non esiste
 if "cronologia" not in st.session_state: 
