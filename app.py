@@ -17,8 +17,7 @@ st.html(
     """
     <style>
     
-    /* Assicurati che l'header nativo st.header (h2) sia centrato */
-    .block-container h2 {
+        .block-container h2 {
         text-align: center !important;
         width: 100% !important;
         margin-top: 0px !important; 
@@ -29,7 +28,7 @@ st.html(
         padding-bottom: 3rem !important;
     }
 
-    /* Nasconde gli elementi nativi di Streamlit per un'interfaccia pulita */
+    /* OCCULTAMENTO MENÚ NATIVI*/
     header, footer, [data-testid="stHeader"], [data-testid="stAppHeader"], 
     [data-testid="stDecoration"], #MainMenu, [data-testid="stToolbar"], 
     .stDeployButton, [data-testid="stManageAppButton"] { 
@@ -40,10 +39,9 @@ st.html(
     /* Configurazione colore di sfondo e testo dell'app */
     .stApp { background-color: #F1F0E6; color: #231709; }
 
-    /* Nasconde il checkbox di default della sidebar */
     .sidebar-checkbox { display: none !important; }
 
-    /* Pulsante custom per aprire/chiudere la sidebar */
+    /* Pulsante  per aprire e chiudere la sidebar */
     .sidebar-toggle-button {
         position: fixed; top: 15px; left: 15px;
         background-color: #7A8B74; color: #ffffff !important;
@@ -52,7 +50,7 @@ st.html(
         font-family: sans-serif;
     }
 
-    /* Stile della sidebar personalizzata */
+    /* Stile della sidebar */
     .custom-sidebar {
         position: fixed; top: 0; left: -340px; width: 320px; height: 100vh;
         background-color: #7A8B74 !important;
@@ -72,7 +70,7 @@ st.html(
         display: block !important;
     }
     
-    /* Stile per il summary dei details */
+    /* Stile per  summary */
     .custom-sidebar summary {
         font-weight: bold !important;
         font-size: 1.05rem !important;
@@ -80,7 +78,7 @@ st.html(
         color: #ffffff !important;
     }
 
-    /* Stile per i testi all'interno dei details */
+    /* Stile per i testi in  details */
     .custom-sidebar h3, .custom-sidebar h4, .custom-sidebar p, .custom-sidebar li, 
     .custom-sidebar strong, .custom-sidebar span {
         color: #ffffff !important;
@@ -100,30 +98,7 @@ st.html(
     .custom-sidebar ul { padding-left: 18px !important; margin: 10px 0 0 0 !important; }
     .custom-sidebar li { margin-bottom: 8px !important; font-size: 0.9rem !important; line-height: 1.4; }
 
-    /* --- FIX TEMA SCURO / VISIBILITÀ INPUT --- */
-    div[data-testid="stChatInput"] {
-        background-color: transparent !important;
-        box-shadow: none !important;
-        border: none !important;
-        padding-bottom: 20px !important;
-    }
-
-    /* Forza lo sfondo chiaro e i bordi scuri per il form dell'input */
-    div[data-testid="stChatInput"] form {
-        background-color: #F1F0E6 !important; 
-        border: 2px solid #542E17 !important;   
-        border-radius: 28px !important;         
-        padding: 5px 10px !important;
-        box-shadow: 0px 4px 15px rgba(84, 46, 23, 0.1) !important; 
-    }
-
-    /* FORZA IL TESTO SCURO NELL'INPUT (Risolve il bug del tema scuro) */
-    div[data-testid="stChatInput"] textarea {
-        background-color: transparent !important;
-        color: #231709 !important; /* Forza colore scuro del testo digitato */
-        -webkit-text-fill-color: #231709 !important; /* Fix per alcuni browser mobile */
-        font-family: sans-serif !important;
-        font-size: 1rem !important;
+    
     }
 
     /* Stile del placeholder */
@@ -145,7 +120,7 @@ st.html(
         background-color: #677761 !important; 
     }
 
-    /* FORZA IL TESTO SCURO NEI MESSAGGI DI CHAT (Sia Utente che Assistente) */
+    /* TESTO SCURO NEI MESSAGGI DI CHAT */
     [data-testid="stChatMessage"] div p {
         color: #231709 !important;
         font-family: sans-serif !important;
@@ -405,9 +380,9 @@ Contesto:\n{context}'''),
               | prompt | modello_llm | StrOutputParser())
 
 
-# -------------------------------------------------------------------
-# GESTIONE DELLA CHAT E CRONOLOGIA A SCHERMO 
-# -------------------------------------------------------------------
+# -------------------------------
+# GESTIONE DELLA CHAT  
+# ------------------------------
 
 # Inizializza la cronologia nella sessione se non esiste
 if "cronologia" not in st.session_state: 
