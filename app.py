@@ -176,7 +176,7 @@ st.html(
 
         /* Forza una dimensione contenuta per il logo su mobile/ridimensionamento */
         .desktop-logo-container img {
-            max-width: 90px !important;
+            max-width: 80px !important;
             height: auto !important;
         }
     }
