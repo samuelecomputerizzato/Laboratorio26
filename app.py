@@ -27,7 +27,12 @@ st.html(
         padding-top: 4rem !important; /* Ridotto leggermente per bilanciare il logo in alto */
         padding-bottom: 3rem !important;
     }
-
+     [data-testid="stChatMessage"] div[data-testid="stChatMessageContent"] {
+            background-color: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+    }
+        
     /* OCCULTAMENTO MENÚ NATIVI*/
     header, footer, [data-testid="stHeader"], [data-testid="stAppHeader"], 
     [data-testid="stDecoration"], #MainMenu, [data-testid="stToolbar"], 
