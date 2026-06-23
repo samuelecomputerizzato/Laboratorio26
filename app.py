@@ -23,9 +23,9 @@ st.html(
         margin-top: 0px !important; 
     }
 
-    .block-container {
-        padding-top: 4rem !important; /* Ridotto leggermente per bilanciare il logo in alto */
-        padding-bottom: 3rem !important;
+     .block-container {
+         padding-top: 4rem !important; /* Ridotto leggermente per bilanciare il logo in alto */
+         padding-bottom: 3rem !important;
     }
      [data-testid="stChatMessage"] div[data-testid="stChatMessageContent"] {
             background-color: transparent !important;
