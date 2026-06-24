@@ -7,8 +7,10 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
+
+# Rilevamento lingua
+from langdetect import detect, LangDetectException
 
 # -------------------------------------
 # Configurazione estetica della pagina 
@@ -229,7 +231,7 @@ html_sidebar = """
 <p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Le parole per leggere il cuore della Sicilia e il territorio che stai attraversando.</p>
 <h4 style="margin-top: 15px; margin-bottom: 5px; font-size: 0.95rem; font-weight: bold;">🚜 Sulle tracce della storia – il paesaggio</h4>
 <ul>
-<li><strong>Trazzera:</strong> non è una semplice strada, è l’antica "autostrada" dei pastori e dei re. Camminare qui significa posare i piedi dove, per secoli, è passato il cuore pulsante della Sicilia.</li>
+<li><strong>Trazzera:</strong> non è una semplice strada, è l'antica "autostrada" dei pastori e dei re. Camminare qui significa posare i piedi dove, per secoli, è passato il cuore pulsante della Sicilia.</li>
 <li><strong>Marna:</strong> è la roccia bianca che disegna le colline agrigentine. Bellissima e candida come la luna, ma attenzione: quando il cielo piange, diventa un terreno infido e scivoloso. Rispetta la sua natura.</li>
 <li><strong>Solfara:</strong> sono le ferite aperte della terra, le antiche miniere di zolfo. Oggi sono ruderi silenziosi che raccontano una storia di fatica, polvere e riscatto. Guardali con rispetto.</li>
 <li><strong>Kora:</strong> per gli antichi greci era la terra che nutriva la città. Oggi è lo spazio aperto, il silenzio della campagna che ti abbraccia tra un borgo e l'altro.</li>
@@ -282,7 +284,15 @@ if os.path.exists(documento):
             for pagina in pdf.pages:
                 testo += (pagina.extract_text() or "") + "\n"
         return testo.strip()
-    
+
+    # Rileva la lingua del messaggio dell'utente (PASSO 2)
+    # Va richiamata ad ogni messaggio, non solo all'avvio: la lingua può cambiare durante la conversazione.
+    def rileva_lingua(testo_utente: str) -> str:
+        try:
+            return detect(testo_utente)
+        except LangDetectException:
+            return "it"
+
     # Estrae il testo dal PDF
     testo = estrai_testo_pdf(documento)
     
@@ -303,6 +313,9 @@ if os.path.exists(documento):
     vettori = setup_rag(testo)
     
     # Definizione del prompt di sistema e utente per il modello
+    # NOTA: il testo del system prompt qui sotto è IDENTICO all'originale, non è stato toccato.
+    # Il rilevamento lingua (passo 2) viene iniettato come messaggio di sistema separato,
+    # subito dopo, invece di modificare questo blocco.
     prompt = ChatPromptTemplate.from_messages([
         ("system", '''Sei "La Magna Via", l'assistente digitale ufficiale e custode della conoscenza del cammino. Non sei un semplice generatore di testo, ma un'entità esperta, rassicurante e tecnicamente ineccepibile. Rappresenti l'unione tra la millenaria tradizione storica siciliana e l'innovazione tecnologica. 
 La tua identità è definita da tri pilastri: Precisione, Sicurezza, Empatia.
@@ -411,14 +424,21 @@ Se la risposta è affermativa, aggiungi in chiusura l'avviso ambientale TRADOTTO
 CHIUSURA IDENTITARIA
 Firma le tue risposte chiave o chiudi i momenti di supporto con lo spirito del cammino, traducendolo coerentemente con la lingua dell'interlocutore (es: "Ultreya, viandante","Buon cammino ne La Magna Via" / "Have a good journey on La Magna Via").
 Contesto:\n{context}[Ricorda: anche se il contesto sopra è in italiano, la tua risposta deve essere TOTALMENTE nella lingua dell'ultimo messaggio dell'utente.]'''),
+        ("system", "Promemoria automatico: la lingua rilevata per l'ultimo messaggio dell'utente è \"{lingua}\" (codice ISO). Rispondi interamente in questa lingua."),
         ("human", "{question}")
     ])
 
     modello_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.2, openai_api_key=st.secrets["OPENAI_API_KEY"])
-    
-    # Crea la catena di esecuzione (Chain) per recuperare il contesto e generare la risposta
-    catena = ({"context": lambda x: "\n\n".join([doc.page_content for doc in vettori.similarity_search(x, k=4)]), "question": RunnablePassthrough()} 
-              | prompt | modello_llm | StrOutputParser())
+
+    # Crea la catena di esecuzione (Chain) per recuperare il contesto e generare la risposta.
+    # La chain ora si aspetta in input un dizionario {"question": ..., "lingua": ...}
+    # invece di una semplice stringa, perché deve propagare anche la lingua rilevata
+    # fino al placeholder {lingua} nel system prompt.
+    catena = ({
+        "context": lambda x: "\n\n".join([doc.page_content for doc in vettori.similarity_search(x["question"], k=4)]),
+        "question": lambda x: x["question"],
+        "lingua": lambda x: x["lingua"],
+    } | prompt | modello_llm | StrOutputParser())
 
 
 # ------------------------
@@ -446,9 +466,15 @@ if input_utente:
             st.markdown(input_utente)
         st.session_state.cronologia.append({"role": "user", "content": input_utente})
 
+        # PASSO 2: rileva la lingua del messaggio appena arrivato, prima di interrogare la chain.
+        # Va fatto ad ogni messaggio (non solo all'avvio) perché l'utente può cambiare lingua durante la chat.
+        lingua_rilevata = rileva_lingua(input_utente)
+
         # Genera la risposta dell'assistente in streaming e salvala
         with st.chat_message("assistant", avatar="LOGO.png"):
-            risposta = st.write_stream(catena.stream(input_utente))
+            risposta = st.write_stream(
+                catena.stream({"question": input_utente, "lingua": lingua_rilevata})
+            )
         st.session_state.cronologia.append({"role": "assistant", "content": risposta})
     else:
         st.error("Caro pellegrino, la barra è attiva ma la conoscenza è bloccata! Verifica che il file 'Pdf finale (1).pdf' sia presente nella cartella del progetto e che le chiavi API siano corrette.")
