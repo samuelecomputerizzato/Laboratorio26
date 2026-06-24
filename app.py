@@ -21,7 +21,7 @@ st.html(
     """
     <style>
     
-    /* Configurazione blocco principale */
+    /* Configurazione e compressione degli spazi del blocco principale */
     .block-container {
         padding-top: 1rem !important; 
         padding-bottom: 2rem !important;
@@ -143,59 +143,57 @@ st.html(
         font-family: sans-serif !important;
     }
 
-    /* STILIZZAZIONE DEL HEADER (Spinto verso il basso per non toccare i pulsanti della barra) */
-    .header-wrapper {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: center !important;
-        text-align: center !important;
-        width: 100% !important;
-        margin-top: 70px !important; 
-        margin-bottom: 15px !important;
+    /* BRAND WRAPPER (LOGO + TITOLO): Forza il blocco intero a non espandersi e centra tutto */
+    .brand-header-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 15px;
     }
 
-    /* Forziamo la centratura totale sull'immagine generata nativamente */
-    .header-wrapper [data-testid="stImage"] {
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        margin-bottom: 0px !important;
-    }
-
-    .header-wrapper [data-testid="stImage"] img {
-        width: 150px !important;
-        max-width: 150px !important;
+    /* Intercetta il contenitore nativo generato da st.image e lo limita rigidamente */
+    .brand-header-container [data-testid="stImage"], 
+    .brand-header-container [data-testid="stImage"] > div, 
+    .brand-header-container img {
+        width: 160px !important;
+        max-width: 160px !important;
         height: auto !important;
+        margin: 0 auto !important;
     }
 
-    /* Titolo h2 perfettamente centrato sotto il logo */
-    .brand-title-custom {
+    /* Stile per il titolo h2 interno al wrapper */
+    .brand-header-container h2 {
         color: #231709 !important;
         font-family: sans-serif !important;
         font-size: 1.8rem !important;
         font-weight: bold !important;
-        margin: 10px 0 0 0 !important;
-        padding: 0 !important;
-        text-align: center !important;
-        width: 100% !important;
+        margin-top: 10px !important;
+        margin-bottom: 0px !important;
     }
 
     /* MODIFICHE SPECIFICHE PER DISPOSITIVI MOBILE E TABLET */
     @media (max-width: 768px) {
         .custom-sidebar { width: 85vw !important; left: -90vw !important; }
         
-        .header-wrapper {
-            margin-top: 60px !important; 
+        .block-container {
+            padding-top: 0.5rem !important; 
         }
 
-        .header-wrapper [data-testid="stImage"] img {
+        /* Riduce il logo e lo adatta per la vista mobile compatta */
+        .brand-header-container [data-testid="stImage"], 
+        .brand-header-container [data-testid="stImage"] > div, 
+        .brand-header-container img {
             width: 120px !important;
             max-width: 120px !important;
         }
-        
-        .brand-title-custom {
-            font-size: 1.6rem !important;
+
+        .brand-header-container h2 {
+            font-size: 1.5rem !important;
+            margin-top: 6px !important;
         }
     }
     </style>
@@ -268,20 +266,14 @@ st.html(html_sidebar)
 
 
 # ---------------------------------------------------------
-# Header principale (Soluzione super corta con cartella static)
+# Header principale e immagine (Incapsulamento rigido)
 # ---------------------------------------------------------
-st.markdown(
-    """
-    <div style="text-align: center; margin: 10px 0;">
-        <img src="/static/LOGO.png" style="width: 150px; height: auto; margin-bottom: 5px;">
-        <h2 style="color: #231709; font-family: sans-serif; font-size: 1.8rem; font-weight: bold; margin: 0;">La Magna via</h2>
-    </div>
-    """, 
-    unsafe_allow_html=True
-)
+# Inseriamo tutto dentro il div brand-header-container, così blocchiamo le dimensioni
+# ed evitiamo che Streamlit adatti l'immagine a tutta larghezza riempiendo lo schermo mobile.
+st.markdown('<div class="brand-header-container">', unsafe_allow_html=True)
+st.image("LOGO.png")
+st.markdown('<h2>La Magna via</h2></div>', unsafe_allow_html=True)
 
-
-    
 
 # ----------------------------------
 # Elaborazione Documento PDF e RAG 
@@ -309,7 +301,7 @@ if os.path.exists(documento):
         
         embeddings = OpenAIEmbeddings(model="text-embedding-3-small", openai_api_key=st.secrets["OPENAI_API_KEY"])
         vettori = FAISS.from_texts(frammenti, embedding=embeddings)
-        return vettori  # <--- Corretto il bug NameError (vettori invece di vectors)
+        return vettori
 
     vettori = setup_rag(testo)
     
@@ -337,7 +329,9 @@ Tone of voice:
 
 Buyer Persona
 •	Il Viandante Ansioso: Preoccupato per i cani randagi, i guadi, il meteo e la mancanza di acqua. Cerca rassicurazione.
+
 •	Il Pellegrino Esperto: Cerca dati tecnici precisi (KM, dislivelli, contatti per dormire). Cerca efficienza.
+
 •	Il "Turista Lento": Cerca la storia dietro le pietre, die curiosità culturali, il sapore dei luoghi. Cerca ispirazione.
 •	Devi saper parlare a tutti e tre cambiando registro.
 
@@ -345,6 +339,7 @@ Stile comunicativo:
 •	Gerarchico (Safety First): Ogni tua risposta sulla logistica deve mettere al primo posto la sicurezza (es. varianti maltempo, guadi, punti critici, emergenze).
 •	Tecnico-Informativo: Decodifichi sempre ogni acronimo o sigla (es. SS = Strada Statale, ASL = Azienda Sanitaria Locale, RT = Regia Trazzera).
 •	Proattivo: Se l'utente chiede una tappa, non rispondere solo alla domanda, ma anticipa i bisogni (es: "Assicurati di avere acqua, non ci sono punti di ristoro per i primi X km").
+
 •	Zero Allucinazioni: Se una specifica informazione non è presente nel dataset, rispondi con eleganza: "Caro pellegrino, al momento non riesco a guidarti su questa informazione. 😢".
 Quando l'utente interroga la storia della Magna Via, non agire come un'enciclopedia, ma come un custode della memoria. Usa un tono evocativo, capace di far sentire al viandante il "peso dei secoli" sotto i propri scarponi.
 
@@ -363,7 +358,6 @@ Quando ti viene chiesta la storia della Via, pensa così:
 •	"L'utente cerca motivazione?" -> Rispondi citando il 'Senso del cammino' e la connessione con i viandanti del passato.
 •	"L'utente ha menzionato un luogo specifico (es. Castronovo o Corleone)?" -> Includi immediatamente il riferimento storico specifico di quel luogo presente nel dataset.
 •   Se l'utente ha scritto in una lingua diversa dall'italiano, non riportare mai questa frasi in italiano: traducile interamente nella lingua dell'utente mantenendo lo stesso tono ed eleganza.
-
 CONOSCENZA E NARRATIVA DEL "SENSO DEL CAMMINO":
 - DEFINIZIONE: La Magna Via è un percorso di circa 184,4 km in 9 tappe che unisce Palermo ad Agrigento, valorizzato dal 2013.
 - FILOSOFIA: Rispondi sempre sottolineando che il cammino non è una performance fisica, ma un viaggio interiore. Usa le parole chiave: "Introspezione", "Silenzio", "Connessione con il territorio", "Dimensione spirituale".
@@ -386,7 +380,7 @@ Ogni risposta su una tappa deve seguire rigorosamente questo ordine gerarchico:
 1. ALERT SICUREZZA: (Varianti pioggia, guadi critici, punti GPS isolati, traffico). 
 2. DATI TECNICI: Distanza (km), Dislivello, Difficoltà, Tempo stimato. 
 3. LOGISTICA PROATTIVA: Punti acqua, approvvigionamento cibo, contatti d'emergenza. 
-4. CONSIGLIO TATTICO: (es. "Prendi il bus 389 per uscire da Palermo", "Non tentare il guado si piove"). 
+4. CONSIGLIO TATTICO: (es. "Prendi il bus 389 per uscire da Palermo", "Non tentare il guado se piove"). 
 5. STORIA E CULTURA: Riferimenti al diploma del 1096 e all'eredità storica del borgo.
 
 LOGICA OPERATIVA TAPPE 1-9
@@ -476,6 +470,6 @@ if input_utente:
             risposta = st.write_stream(
                 catena.stream({"question": input_utente, "lingua": lingua_rilevata})
             )
-        st.session_state.cronologia.append({"role": "assistant", "content": risposta})
+        st.session_state.cronologia.append({"role": "assistant", "content": resposta})
     else:
         st.error("Caro pellegrino, la barra è attiva ma la conoscenza è bloccata! Verifica che il file 'Pdf finale (1).pdf' sia presente nella cartella del progetto e che le chiavi API siano corrette.")
