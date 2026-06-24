@@ -143,36 +143,34 @@ st.html(
         font-family: sans-serif !important;
     }
 
-    /* BRAND WRAPPER (LOGO + TITOLO): Forza il blocco intero a non espandersi e centra tutto */
+    /* CONTAINER UNICO PER LOGO E TITOLO */
     .brand-header-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        width: 100%;
-        margin-top: 10px;
-        margin-bottom: 15px;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        width: 100% !important;
+        margin: 20px auto 10px auto !important;
     }
 
-    /* Intercetta il contenitore nativo generato da st.image e lo limita rigidamente */
-    .brand-header-container [data-testid="stImage"], 
-    .brand-header-container [data-testid="stImage"] > div, 
-    .brand-header-container img {
-        width: 160px !important;
-        max-width: 160px !important;
+    /* LOGO INIETTATO IN HTML: Dimensioni perfette e bloccate */
+    .brand-logo-custom {
+        width: 150px !important;
+        max-width: 150px !important;
         height: auto !important;
-        margin: 0 auto !important;
+        object-fit: contain !important;
+        margin-bottom: 12px !important;
     }
 
-    /* Stile per il titolo h2 interno al wrapper */
-    .brand-header-container h2 {
+    /* TITOLO PERFETTAMENTE CENTRATO */
+    .brand-title-custom {
         color: #231709 !important;
         font-family: sans-serif !important;
         font-size: 1.8rem !important;
         font-weight: bold !important;
-        margin-top: 10px !important;
-        margin-bottom: 0px !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     /* MODIFICHE SPECIFICHE PER DISPOSITIVI MOBILE E TABLET */
@@ -183,17 +181,13 @@ st.html(
             padding-top: 0.5rem !important; 
         }
 
-        /* Riduce il logo e lo adatta per la vista mobile compatta */
-        .brand-header-container [data-testid="stImage"], 
-        .brand-header-container [data-testid="stImage"] > div, 
-        .brand-header-container img {
-            width: 120px !important;
-            max-width: 120px !important;
+        .brand-logo-custom {
+            width: 110px !important;
+            max-width: 110px !important;
         }
-
-        .brand-header-container h2 {
+        
+        .brand-title-custom {
             font-size: 1.5rem !important;
-            margin-top: 6px !important;
         }
     }
     </style>
@@ -266,13 +260,18 @@ st.html(html_sidebar)
 
 
 # ---------------------------------------------------------
-# Header principale e immagine (Incapsulamento rigido)
+# Header principale e immagine (Soluzione HTML nativa)
 # ---------------------------------------------------------
-# Inseriamo tutto dentro il div brand-header-container, così blocchiamo le dimensioni
-# ed evitiamo che Streamlit adatti l'immagine a tutta larghezza riempiendo lo schermo mobile.
-st.markdown('<div class="brand-header-container">', unsafe_allow_html=True)
-st.image("LOGO.png")
-st.markdown('<h2>La Magna via</h2></div>', unsafe_allow_html=True)
+# Sostituiamo st.image con un tag <img> per evitare i div automatici di Streamlit
+st.markdown(
+    """
+    <div class="brand-header-container">
+        <img src="app/static/LOGO.png" class="brand-logo-custom" alt="Logo">
+        <h2 class="brand-title-custom">La Magna via</h2>
+    </div>
+    """, 
+    unsafe_allow_html=True
+)
 
 
 # ----------------------------------
@@ -470,6 +469,6 @@ if input_utente:
             risposta = st.write_stream(
                 catena.stream({"question": input_utente, "lingua": lingua_rilevata})
             )
-        st.session_state.cronologia.append({"role": "assistant", "content": resposta})
+        st.session_state.cronologia.append({"role": "assistant", "content": risposta})
     else:
         st.error("Caro pellegrino, la barra è attiva ma la conoscenza è bloccata! Verifica che il file 'Pdf finale (1).pdf' sia presente nella cartella del progetto e che le chiavi API siano corrette.")
