@@ -21,16 +21,10 @@ st.html(
     """
     <style>
     
-    /* Assicurati che l'header nativo st.header (h2) sia centrato */
-    .block-container h2 {
-        text-align: center !important;
-        width: 100% !important;
-        margin-top: 0px !important; 
-    }
-
+    /* Configurazione e compressione degli spazi del blocco principale */
     .block-container {
-        padding-top: 1.5rem !important; /* Ridotto drasticamente per alzare header e logo */
-        padding-bottom: 3rem !important;
+        padding-top: 1rem !important; 
+        padding-bottom: 2rem !important;
     }
 
     /* Elementi nativi di Streamlit eliminati */
@@ -111,7 +105,6 @@ st.html(
         padding-bottom: 20px !important;
     }
 
-    /* Forza lo sfondo chiaro e i bordi scuri per il form dell'input */
     div[data-testid="stChatInput"] form {
         background-color: #F1F0E6 !important; 
         border: 2px solid #542E17 !important;   
@@ -120,13 +113,11 @@ st.html(
         box-shadow: 0px 4px 15px rgba(84, 46, 23, 0.1) !important; 
     }
 
-    /* Stile del placeholder */
     div[data-testid="stChatInput"] textarea::placeholder {
         color: #542E17 !important;
         opacity: 0.6;
     }
 
-    /* Stile del pulsante di invio */
     div[data-testid="stChatInput"] button {
         background-color: #7A8B74 !important; 
         border-radius: 50% !important;         
@@ -134,7 +125,6 @@ st.html(
         transition: background-color 0.2s ease;
     }
 
-    /* Stile del pulsante di invio al passaggio del mouse */
     div[data-testid="stChatInput"] button:hover {
         background-color: #677761 !important; 
     }
@@ -153,44 +143,57 @@ st.html(
         font-family: sans-serif !important;
     }
 
-    /* Contenitore logo ottimizzato per desktop */
-    .desktop-logo-container {
-        margin-top: 10px;
-        margin-bottom: 10px;
+    /* BRAND WRAPPER (LOGO + TITOLO): Forza il blocco intero a non espandersi e centra tutto */
+    .brand-header-container {
         display: flex;
+        flex-direction: column;
+        align-items: center;
         justify-content: center;
+        text-align: center;
         width: 100%;
+        margin-top: 10px;
+        margin-bottom: 15px;
     }
-    .desktop-logo-container img {
-        max-width: 130px;
-        height: auto;
+
+    /* Intercetta il contenitore nativo generato da st.image e lo limita rigidamente */
+    .brand-header-container [data-testid="stImage"], 
+    .brand-header-container [data-testid="stImage"] > div, 
+    .brand-header-container img {
+        width: 160px !important;
+        max-width: 160px !important;
+        height: auto !important;
+        margin: 0 auto !important;
+    }
+
+    /* Stile per il titolo h2 interno al wrapper */
+    .brand-header-container h2 {
+        color: #231709 !important;
+        font-family: sans-serif !important;
+        font-size: 1.8rem !important;
+        font-weight: bold !important;
+        margin-top: 10px !important;
+        margin-bottom: 0px !important;
     }
 
     /* MODIFICHE SPECIFICHE PER DISPOSITIVI MOBILE E TABLET */
     @media (max-width: 768px) {
-        /* Larghezza della sidebar su mobile */
         .custom-sidebar { width: 85vw !important; left: -90vw !important; }
         
-        /* Avvicina il contenuto al bordo superiore */
         .block-container {
-            padding-top: 1rem !important; 
-        }
-        div[data-testid="stImage"] { 
-            padding-right: 0px !important; 
-        }
-        
-        /* Contenitore centrato e compatto per mobile */
-        .desktop-logo-container {
-            margin: 5px auto 10px auto !important;
-            display: flex !important;
-            justify-content: center !important;
-            width: 100% !important;
+            padding-top: 0.5rem !important; 
         }
 
-        /* Impedisce al logo di allargarsi a tutto schermo (evita l'effetto grossolano) */
-        .desktop-logo-container img {
+        /* Riduce il logo e lo adatta per la vista mobile compatta */
+        .brand-header-container [data-testid="stImage"], 
+        .brand-header-container [data-testid="stImage"] > div, 
+        .brand-header-container img {
+            width: 120px !important;
             max-width: 120px !important;
-            height: auto !important;
+        }
+
+        .brand-header-container h2 {
+            font-size: 1.5rem !important;
+            margin-top: 6px !important;
         }
     }
     </style>
@@ -259,32 +262,27 @@ html_sidebar = """
 </details>
 </div>
 """
-# Renderizza l'HTML della sidebar custom
 st.html(html_sidebar)
 
 
 # ---------------------------------------------------------
-# Header principale e immagine (Ottimizzati e uniti)
+# Header principale e immagine (Incapsulamento rigido)
 # ---------------------------------------------------------
-# Renderizziamo il logo dentro il wrapper CSS per controllarne le dimensioni sia su Desktop che su Mobile
-st.markdown('<div class="desktop-logo-container">', unsafe_allow_html=True)
+# Inseriamo tutto dentro il div brand-header-container, così blocchiamo le dimensioni
+# ed evitiamo che Streamlit adatti l'immagine a tutta larghezza riempiendo lo schermo mobile.
+st.markdown('<div class="brand-header-container">', unsafe_allow_html=True)
 st.image("LOGO.png")
-st.markdown('</div>', unsafe_allow_html=True)
-
-# Titolo posizionato subito sotto il logo con margin-top negativo per avvicinarli
-st.markdown("<h2 style='text-align: center; margin-top: -5px; margin-bottom: 25px;'>La Magna via</h2>", unsafe_allow_html=True)
+st.markdown('<h2>La Magna via</h2></div>', unsafe_allow_html=True)
 
 
 # ----------------------------------
 # Elaborazione Documento PDF e RAG 
 # ----------------------------------
 
-# Identifica il percorso del documento PDF
 cartella_corrente = os.path.dirname(__file__)
 documento = os.path.join(cartella_corrente, "Pdf finale (1).pdf")
 catena = None
 
-# Se il documento esiste, avvia l'elaborazione
 if os.path.exists(documento):
     @st.cache_data(show_spinner="Analizzando la via...")
     def estrai_testo_pdf(percorso_pdf):
@@ -294,29 +292,22 @@ if os.path.exists(documento):
                 testo += (pagina.extract_text() or "") + "\n"
         return testo.strip()
 
-    # Estrae il testo dal PDF
     testo = estrai_testo_pdf(documento)
     
     @st.cache_resource(show_spinner=False)
     def setup_rag(testo_estratto):
-        # Divide il testo in frammenti più piccoli
         taglierina = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
         frammenti = [f for f in taglierina.split_text(testo_estratto) if f.strip()]
         
-        # Genera gli embeddings utilizzando il modello di OpenAI
         embeddings = OpenAIEmbeddings(model="text-embedding-3-small", openai_api_key=st.secrets["OPENAI_API_KEY"])
-        
-        # Crea il vectorstore utilizzando FAISS
         vettori = FAISS.from_texts(frammenti, embedding=embeddings)
         return vettori
 
-    # Imposta il database vettoriale
     vettori = setup_rag(testo)
     
-    # Definizione del prompt di sistema e utente per il modello
     prompt = ChatPromptTemplate.from_messages([
         ("system", '''Sei "La Magna Via", l'assistente digitale ufficiale e custode della conoscenza del cammino. Non sei un semplice generatore di testo, ma un'entità esperta, rassicurante e tecnicamente ineccepibile. Rappresenti l'unione tra la millenaria tradizione storica siciliana e l'innovazione tecnologica. 
-La tua identità è definita da tri pilastri: Precisione, Sicurezza, Empatia.
+La tua identity è definita da tri pilastri: Precisione, Sicurezza, Empatia.
 La tua missione è eliminare l'incertezza del pellegrino. Il tuo obiettivo non è solo fornire informazioni, ma agire come un compagno di viaggio proattivo che garantisce l'incolumità del viandante (sicurezza), facilita la logistica (scelte consapevoli) e arricchisce l'esperienza (cultura e spiritualità).
 Il tuo utente è un viandante che percorre la Magna Via. 
 È una persona spesso stanca, che cammina a passo d'uomo in un ambiente rurale o isolato. Ha bisogno di risposte immediatamente utilizzabili. Teme l'incertezza (meteo, cani, mancanza d'acqua) e cerca una guida che sia, al contempo, un navigatore tecnico e un narratore storico.
@@ -372,7 +363,7 @@ CONOSCENZA E NARRATIVA DEL "SENSO DEL CAMMINO":
 - FILOSOFIA: Rispondi sempre sottolineando che il cammino non è una performance fisica, ma un viaggio interiore. Usa le parole chiave: "Introspezione", "Silenzio", "Connessione con il territorio", "Dimensione spirituale".
 - TABELLA TAPPE: Se l'utente chiede il piano del viaggio, rispondi sempre con la tabella completa fornita (dalla Tappa 1 alla 9), garantendo che la somma dei km sia presentata come un traguardo di 184,4 km totali.
 - APPROCCIO: Se l'utente sembra confuso o neofita, usa la parte sul "Senso del cammino" per rassicurarlo: "Non è necessario essere esperti, il cammino è un atto di ricerca per chiunque voglia riscoprire l'essenziale".
-- DATI UFFICIALI DELLE TAPPE (DA USARE COME RIFERIMENTO INTERNO):
+- DATI UFFICIALI DELLE TAPPE (DA USARE COMO RIFERIMENTO INTERNO):
   Utilizza RIGOROSAMENTE ed ESCLUSIVAMENTE questi dati ufficiali per rispondere a domande su percorsi, distanze, posizioni o per calcolare quanto manca. NON mostrare mai questi dati sotto forma di tabella grafica o griglia, ma usali per formulare le tue risposte testuali o elenchi:
   * Tappa 1: Palermo – Santa Cristina Gela (25,35 km)
   * Tappa 2: S. Cristina Gela – Corleone (26,4 km)
@@ -453,23 +444,19 @@ Contesto:\n{context}[Ricorda: anche se il contesto sopra è in italiano, la tua 
 # GESTIONE DELLA CHAT 
 # ------------------------
 
-# Inizializza la cronologia nella sessione se non esiste
 if "cronologia" not in st.session_state: 
     st.session_state.cronologia = []
 
 if "lingua_corrente" not in st.session_state:
     st.session_state.lingua_corrente = "it"
 
-# Mostra i messaggi della cronologia memorizzata
 for messaggio in st.session_state.cronologia:
     avatar_scelto = "LOGO.png" if messaggio["role"] == "assistant" else "Utente.png"
     with st.chat_message(messaggio["role"], avatar=avatar_scelto):
         st.markdown(messaggio["content"])
 
-# Cattura l'input dell'utente tramite la barra di chat
 input_utente = st.chat_input("Chiedi alla Via...")
 
-# Se l'utente inserisce un messaggio
 if input_utente:
     if catena:
         with st.chat_message("user", avatar="Utente.png"):
@@ -483,6 +470,6 @@ if input_utente:
             risposta = st.write_stream(
                 catena.stream({"question": input_utente, "lingua": lingua_rilevata})
             )
-        st.session_state.cronologia.append({"role": "assistant", "content": risposta})
+        st.session_state.cronologia.append({"role": "assistant", "content": resposta})
     else:
         st.error("Caro pellegrino, la barra è attiva ma la conoscenza è bloccata! Verifica che il file 'Pdf finale (1).pdf' sia presente nella cartella del progetto e che le chiavi API siano corrette.")
