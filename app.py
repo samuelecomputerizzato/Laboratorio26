@@ -21,7 +21,7 @@ st.html(
     """
     <style>
     
-    /* Configurazione e compressione degli spazi del blocco principale */
+    /* Configurazione blocco principale */
     .block-container {
         padding-top: 1rem !important; 
         padding-bottom: 2rem !important;
@@ -143,7 +143,7 @@ st.html(
         font-family: sans-serif !important;
     }
 
-    /* STILIZZAZIONE DEL HEADER NATIVO COINVOLTO */
+    /* STILIZZAZIONE DEL HEADER (Spinto verso il basso per non toccare i pulsanti della barra) */
     .header-wrapper {
         display: flex !important;
         flex-direction: column !important;
@@ -151,8 +151,8 @@ st.html(
         justify-content: center !important;
         text-align: center !important;
         width: 100% !important;
-        margin-top: 15px !important;
-        margin-bottom: 5px !important;
+        margin-top: 70px !important; 
+        margin-bottom: 15px !important;
     }
 
     /* Forziamo la centratura totale sull'immagine generata nativamente */
@@ -175,7 +175,7 @@ st.html(
         font-family: sans-serif !important;
         font-size: 1.8rem !important;
         font-weight: bold !important;
-        margin: 5px 0 0 0 !important;
+        margin: 10px 0 0 0 !important;
         padding: 0 !important;
         text-align: center !important;
         width: 100% !important;
@@ -185,17 +185,17 @@ st.html(
     @media (max-width: 768px) {
         .custom-sidebar { width: 85vw !important; left: -90vw !important; }
         
-        .block-container {
-            padding-top: 0.5rem !important; 
+        .header-wrapper {
+            margin-top: 60px !important; 
         }
 
         .header-wrapper [data-testid="stImage"] img {
-            width: 110px !important;
-            max-width: 110px !important;
+            width: 120px !important;
+            max-width: 120px !important;
         }
         
         .brand-title-custom {
-            font-size: 1.5rem !important;
+            font-size: 1.6rem !important;
         }
     }
     </style>
@@ -268,18 +268,13 @@ st.html(html_sidebar)
 
 
 # ----------------------------------------------------------------------
-# Header principale e immagine (Soluzione Ibrida: st.image + CSS Wrapper)
+# Header principale e immagine (Ordinamento corretto: Logo sopra, Titolo sotto)
 # ----------------------------------------------------------------------
-# Usiamo st.container con classe HTML per racchiudere st.image (così Streamlit risolve il file) 
-# e forzarne la centratura e le dimensioni esatte via CSS sia per mobile che desktop.
 with st.container():
     st.markdown('<div class="header-wrapper">', unsafe_allow_html=True)
-    
-    
-    # Il titolo viene agganciato subito sotto all'interno dello stesso allineamento flexbox
+    st.image("LOGO.png", use_container_width=False)
     st.markdown('<h2 class="brand-title-custom">La Magna via</h2>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
-    st.image("LOGO.png", use_container_width=False)
 
 
 # ----------------------------------
@@ -308,7 +303,7 @@ if os.path.exists(documento):
         
         embeddings = OpenAIEmbeddings(model="text-embedding-3-small", openai_api_key=st.secrets["OPENAI_API_KEY"])
         vettori = FAISS.from_texts(frammenti, embedding=embeddings)
-        return vettori
+        return vettori  # <--- Corretto il bug NameError (vettori invece di vectors)
 
     vettori = setup_rag(testo)
     
@@ -336,9 +331,7 @@ Tone of voice:
 
 Buyer Persona
 •	Il Viandante Ansioso: Preoccupato per i cani randagi, i guadi, il meteo e la mancanza di acqua. Cerca rassicurazione.
-
 •	Il Pellegrino Esperto: Cerca dati tecnici precisi (KM, dislivelli, contatti per dormire). Cerca efficienza.
-
 •	Il "Turista Lento": Cerca la storia dietro le pietre, die curiosità culturali, il sapore dei luoghi. Cerca ispirazione.
 •	Devi saper parlare a tutti e tre cambiando registro.
 
@@ -346,7 +339,6 @@ Stile comunicativo:
 •	Gerarchico (Safety First): Ogni tua risposta sulla logistica deve mettere al primo posto la sicurezza (es. varianti maltempo, guadi, punti critici, emergenze).
 •	Tecnico-Informativo: Decodifichi sempre ogni acronimo o sigla (es. SS = Strada Statale, ASL = Azienda Sanitaria Locale, RT = Regia Trazzera).
 •	Proattivo: Se l'utente chiede una tappa, non rispondere solo alla domanda, ma anticipa i bisogni (es: "Assicurati di avere acqua, non ci sono punti di ristoro per i primi X km").
-
 •	Zero Allucinazioni: Se una specifica informazione non è presente nel dataset, rispondi con eleganza: "Caro pellegrino, al momento non riesco a guidarti su questa informazione. 😢".
 Quando l'utente interroga la storia della Magna Via, non agire come un'enciclopedia, ma come un custode della memoria. Usa un tono evocativo, capace di far sentire al viandante il "peso dei secoli" sotto i propri scarponi.
 
@@ -365,6 +357,7 @@ Quando ti viene chiesta la storia della Via, pensa così:
 •	"L'utente cerca motivazione?" -> Rispondi citando il 'Senso del cammino' e la connessione con i viandanti del passato.
 •	"L'utente ha menzionato un luogo specifico (es. Castronovo o Corleone)?" -> Includi immediatamente il riferimento storico specifico di quel luogo presente nel dataset.
 •   Se l'utente ha scritto in una lingua diversa dall'italiano, non riportare mai questa frasi in italiano: traducile interamente nella lingua dell'utente mantenendo lo stesso tono ed eleganza.
+
 CONOSCENZA E NARRATIVA DEL "SENSO DEL CAMMINO":
 - DEFINIZIONE: La Magna Via è un percorso di circa 184,4 km in 9 tappe che unisce Palermo ad Agrigento, valorizzato dal 2013.
 - FILOSOFIA: Rispondi sempre sottolineando che il cammino non è una performance fisica, ma un viaggio interiore. Usa le parole chiave: "Introspezione", "Silenzio", "Connessione con il territorio", "Dimensione spirituale".
@@ -387,7 +380,7 @@ Ogni risposta su una tappa deve seguire rigorosamente questo ordine gerarchico:
 1. ALERT SICUREZZA: (Varianti pioggia, guadi critici, punti GPS isolati, traffico). 
 2. DATI TECNICI: Distanza (km), Dislivello, Difficoltà, Tempo stimato. 
 3. LOGISTICA PROATTIVA: Punti acqua, approvvigionamento cibo, contatti d'emergenza. 
-4. CONSIGLIO TATTICO: (es. "Prendi il bus 389 per uscire da Palermo", "Non tentare il guado se piove"). 
+4. CONSIGLIO TATTICO: (es. "Prendi il bus 389 per uscire da Palermo", "Non tentare il guado si piove"). 
 5. STORIA E CULTURA: Riferimenti al diploma del 1096 e all'eredità storica del borgo.
 
 LOGICA OPERATIVA TAPPE 1-9
