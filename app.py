@@ -9,9 +9,6 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
-# Rilevamento lingua
-from langdetect import detect, LangDetectException
-
 # -------------------------------------
 # Configurazione estetica della pagina 
 # -------------------------------------
@@ -285,14 +282,6 @@ if os.path.exists(documento):
                 testo += (pagina.extract_text() or "") + "\n"
         return testo.strip()
 
-    # Rileva la lingua del messaggio dell'utente (PASSO 2)
-    # Va richiamata ad ogni messaggio, non solo all'avvio: la lingua può cambiare durante la conversazione.
-    def rileva_lingua(testo_utente: str) -> str:
-        try:
-            return detect(testo_utente)
-        except LangDetectException:
-            return "it"
-
     # Estrae il testo dal PDF
     testo = estrai_testo_pdf(documento)
     
@@ -430,6 +419,29 @@ Contesto:\n{context}[Ricorda: anche se il contesto sopra è in italiano, la tua 
 
     modello_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.2, openai_api_key=st.secrets["OPENAI_API_KEY"])
 
+    # Modello leggero e deterministico dedicato SOLO al rilevamento lingua.
+    # A differenza di langdetect (statistico, basato su n-grammi di lettere), questo modello
+    # capisce il significato del messaggio: riconosce correttamente anche frasi brevi come
+    # "Dogs?" (inglese) invece di scambiarle per un'altra lingua a caso.
+    modello_lingua = ChatOpenAI(model="gpt-4o-mini", temperature=0, max_tokens=5, openai_api_key=st.secrets["OPENAI_API_KEY"])
+
+    # Rileva la lingua del messaggio dell'utente (PASSO 2).
+    # Va richiamata ad ogni messaggio, non solo all'avvio: la lingua può cambiare durante la conversazione.
+    # Se il messaggio è troppo ambiguo (es. un singolo emoji, "ok", un saluto generico presente
+    # in più lingue), il modello risponde "AMBIGUO" e si mantiene la lingua precedente.
+    def rileva_lingua(testo_utente: str, lingua_precedente: str = "it") -> str:
+        try:
+            risposta = modello_lingua.invoke([
+                ("system", "Sei un rilevatore di lingua. Leggi il messaggio dell'utente e rispondi SOLO con il codice ISO 639-1 a due lettere della lingua in cui è scritto (es. it, en, fr, de, es, pt, nl...). Se il messaggio è troppo breve o ambiguo per determinare la lingua con certezza, rispondi esattamente con la parola AMBIGUO. Non aggiungere nient'altro, nessuna spiegazione, nessuna punteggiatura."),
+                ("human", testo_utente),
+            ])
+            codice = risposta.content.strip().lower()
+            if codice == "ambiguo" or len(codice) != 2 or not codice.isalpha():
+                return lingua_precedente
+            return codice
+        except Exception:
+            return lingua_precedente
+
     # Crea la catena di esecuzione (Chain) per recuperare il contesto e generare la risposta.
     # La chain ora si aspetta in input un dizionario {"question": ..., "lingua": ...}
     # invece di una semplice stringa, perché deve propagare anche la lingua rilevata
@@ -449,6 +461,11 @@ Contesto:\n{context}[Ricorda: anche se il contesto sopra è in italiano, la tua 
 if "cronologia" not in st.session_state: 
     st.session_state.cronologia = []
 
+# Inizializza la lingua corrente della conversazione (default italiano)
+# Viene aggiornata solo quando un messaggio è abbastanza lungo da fornire una detection attendibile.
+if "lingua_corrente" not in st.session_state:
+    st.session_state.lingua_corrente = "it"
+
 # Mostra i messaggi della cronologia memorizzata
 for messaggio in st.session_state.cronologia:
     avatar_scelto = "LOGO.png" if messaggio["role"] == "assistant" else "Utente.png"
@@ -467,8 +484,9 @@ if input_utente:
         st.session_state.cronologia.append({"role": "user", "content": input_utente})
 
         # PASSO 2: rileva la lingua del messaggio appena arrivato, prima di interrogare la chain.
-        # Va fatto ad ogni messaggio (non solo all'avvio) perché l'utente può cambiare lingua durante la chat.
-        lingua_rilevata = rileva_lingua(input_utente)
+        # Passa la lingua precedente come fallback per i messaggi troppo corti per una detection attendibile.
+        lingua_rilevata = rileva_lingua(input_utente, st.session_state.lingua_corrente)
+        st.session_state.lingua_corrente = lingua_rilevata
 
         # Genera la risposta dell'assistente in streaming e salvala
         with st.chat_message("assistant", avatar="LOGO.png"):
