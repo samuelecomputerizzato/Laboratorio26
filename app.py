@@ -1,7 +1,6 @@
 import streamlit as st
 import pdfplumber
 import os
-import base64
 
 # Importazioni LangChain
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -14,18 +13,6 @@ from langchain_core.output_parsers import StrOutputParser
 # Configurazione iniziale della pagina (DEVE essere la prima istruzione)
 # ---------------------------------------------------------
 st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", layout="centered")
-
-# ---------------------------------------------------------
-# Funzione di codifica Base64 per evitare immagini rotte sul server
-# ---------------------------------------------------------
-def get_image_base64(path):
-    if os.path.exists(path):
-        with open(path, "rb") as img_file:
-            return base64.b64encode(img_file.read()).decode()
-    return ""
-
-# Convertiamo il logo principale
-logo_base64 = get_image_base64("LOGO.png")
 
 # -------------------------------------
 # Configurazione estetica della pagina (CSS Custom)
@@ -222,7 +209,7 @@ html_sidebar = """
 <summary>📜 Il Codice del Viandante</summary>
 <p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Il rispetto è il primo passo del pellegrino.</p>
 <ul>
-<li><strong>Rispetta la natura:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un enemy: non accenderlo mai.</li>
+<li><strong>Rispetta la natura:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.</li>
 <li><strong>Rispetta il territorio:</strong> se sei ospite di terreni agricoli chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.</li>
 <li><strong>Rispetta il silenzio:</strong> il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e nei ospitali.</li>
 <li><strong>Sii essenziale:</strong> viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.</li>
@@ -252,7 +239,7 @@ html_sidebar = """
 
 <details>
 <summary>📖 Il Glossario del Territorio</summary>
-<p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Le parole per leggere il cuore della Sicilia e il territorio che stai attraversando.</p>
+<p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Le parole per leggere il cuore della Silicon Valley e il territorio che stai attraversando.</p>
 <h4 style="margin-top: 15px; margin-bottom: 5px; font-size: 0.95rem; font-weight: bold;">🚜 Sulle tracce della storia – il paesaggio</h4>
 <ul>
 <li><strong>Trazzera:</strong> non è una semplice strada, è l'antica "autostrada" dei pastori e dei re. Camminare qui significa posare i piedi dove, per secoli, è passato il cuore pulsante della Sicilia.</li>
@@ -273,28 +260,17 @@ st.html(html_sidebar)
 
 
 # ---------------------------------------------------------
-# Header principale e immagine (Soluzione Base64 Infallibile)
+# Header principale e immagine (Tramite cartella statica)
 # ---------------------------------------------------------
-if logo_base64:
-    st.markdown(
-        f"""
-        <div class="brand-header-container">
-            <img src="data:image/png;base64,{logo_base64}" class="brand-logo-custom" alt="Logo">
-            <h2 class="brand-title-custom">La Magna via</h2>
-        </div>
-        """, 
-        unsafe_allow_html=True
-    )
-else:
-    # Fallback se il file non si trova
-    st.markdown(
-        """
-        <div class="brand-header-container">
-            <h2 class="brand-title-custom">La Magna via</h2>
-        </div>
-        """, 
-        unsafe_allow_html=True
-    )
+st.markdown(
+    """
+    <div class="brand-header-container">
+        <img src="app/static/LOGO.png" class="brand-logo-custom" alt="Logo">
+        <h2 class="brand-title-custom">La Magna via</h2>
+    </div>
+    """, 
+    unsafe_allow_html=True
+)
 
 
 # ----------------------------------
@@ -332,7 +308,7 @@ if os.path.exists(documento):
 La tua identity è definita da tri pilastri: Precisione, Sicurezza, Empatia.
 La tua missione è eliminare l'incertezza del pellegrino. Il tuo obiettivo non è solo fornire informazioni, ma agire come un compagno di viaggio proattivo che garantisce l'incolumità del viandante (sicurezza), facilita la logistica (scelte consapevoli) e arricchisce l'esperienza (cultura e spiritualità).
 Il tuo utente è un viandante che percorre la Magna Via. 
-È una persona spesso stanca, che cammina a passo d'uomo in un ambiente rurale o isolato. Ha bisogno di risposte immediatamente utilizzabili. Teme l'incertezza (meteo, cani, mancanza d'acqua) e cerca una guida che sia, al contempo, un navigatore tecnico e un narratore storico.
+È una persona spesso stanca, che cammina a passo d'uomo in un ambiente rurale o isolato. Has bisogno di risposte immediatamente utilizzabili. Teme l'incertezza (meteo, cani, mancanza d'acqua) e cerca una guida che sia, al contempo, un navigatore tecnico e un narratore storico.
 
 ⚠️ MASSIMA PRIORITÀ LINGUA (STRICT LANGUAGE RULE):
 • Rileva accuratamente la lingua dell'ultimo messaggio dell'utente, qualunque essa sia (es. Inglese, Spagnolo, Francese, Tedesco, ecc.).
@@ -473,7 +449,7 @@ if "lingua_corrente" not in st.session_state:
     st.session_state.lingua_corrente = "it"
 
 for messaggio in st.session_state.cronologia:
-    avatar_scelto = "LOGO.png" if messaggio["role"] == "assistant" else "Utente.png"
+    avatar_scelto = "app/static/LOGO.png" if messaggio["role"] == "assistant" else "Utente.png"
     with st.chat_message(messaggio["role"], avatar=avatar_scelto):
         st.markdown(messaggio["content"])
 
@@ -488,7 +464,7 @@ if input_utente:
         lingua_rilevata = rileva_lingua(input_utente, st.session_state.lingua_corrente)
         st.session_state.lingua_corrente = lingua_rilevata
 
-        with st.chat_message("assistant", avatar="LOGO.png"):
+        with st.chat_message("assistant", avatar="app/static/LOGO.png"):
             risposta = st.write_stream(
                 catena.stream({"question": input_utente, "lingua": lingua_rilevata})
             )
