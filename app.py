@@ -273,7 +273,7 @@ st.html(html_sidebar)
 st.markdown(
     """
     <div style="text-align: center; margin: 15px 0;">
-        <img src""static/LOGO.png" style="width: 160px; height: auto; margin-bottom: 10px;">
+        <img src"=static/LOGO.png" style="width: 160px; height: auto; margin-bottom: 10px;">
         <h2 style="color: #231709; font-family: sans-serif; font-size: 1.8rem; font-weight: bold; margin: 0;">La Magna via</h2>
     </div>
     """, 
