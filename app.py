@@ -1,6 +1,7 @@
 import streamlit as st
 import pdfplumber
 import os
+import base64
 
 # Importazioni LangChain
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -13,6 +14,18 @@ from langchain_core.output_parsers import StrOutputParser
 # Configurazione iniziale della pagina (DEVE essere la prima istruzione)
 # ---------------------------------------------------------
 st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", layout="centered")
+
+# ---------------------------------------------------------
+# Funzione di codifica Base64 per evitare immagini rotte sul server
+# ---------------------------------------------------------
+def get_image_base64(path):
+    if os.path.exists(path):
+        with open(path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+    return ""
+
+# Convertiamo il logo principale
+logo_base64 = get_image_base64("LOGO.png")
 
 # -------------------------------------
 # Configurazione estetica della pagina (CSS Custom)
@@ -209,7 +222,7 @@ html_sidebar = """
 <summary>📜 Il Codice del Viandante</summary>
 <p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Il rispetto è il primo passo del pellegrino.</p>
 <ul>
-<li><strong>Rispetta la natura:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un nemico: non accenderlo mai.</li>
+<li><strong>Rispetta la natura:</strong> non lasciare traccia, solo impronte. Porta sempre con te i tuoi rifiuti e i mozziconi. Il fuoco è un enemy: non accenderlo mai.</li>
 <li><strong>Rispetta il territorio:</strong> se sei ospite di terreni agricoli chiudi i cancelli e non calpestare i raccolti. Chiedi sempre prima di cogliere frutti.</li>
 <li><strong>Rispetta il silenzio:</strong> il cammino è meditazione. Rispetta la quiete nei borghi, nei monasteri e nei ospitali.</li>
 <li><strong>Sii essenziale:</strong> viaggia leggero. Negli ostelli, sii ordinato e rispettoso: non è un hotel, ma una casa condivisa.</li>
@@ -260,18 +273,28 @@ st.html(html_sidebar)
 
 
 # ---------------------------------------------------------
-# Header principale e immagine (Soluzione HTML nativa)
+# Header principale e immagine (Soluzione Base64 Infallibile)
 # ---------------------------------------------------------
-# Sostituiamo st.image con un tag <img> per evitare i div automatici di Streamlit
-st.markdown(
-    """
-    <div class="brand-header-container">
-        <img src="app/static/LOGO.png" class="brand-logo-custom" alt="Logo">
-        <h2 class="brand-title-custom">La Magna via</h2>
-    </div>
-    """, 
-    unsafe_allow_html=True
-)
+if logo_base64:
+    st.markdown(
+        f"""
+        <div class="brand-header-container">
+            <img src="data:image/png;base64,{logo_base64}" class="brand-logo-custom" alt="Logo">
+            <h2 class="brand-title-custom">La Magna via</h2>
+        </div>
+        """, 
+        unsafe_allow_html=True
+    )
+else:
+    # Fallback se il file non si trova
+    st.markdown(
+        """
+        <div class="brand-header-container">
+            <h2 class="brand-title-custom">La Magna via</h2>
+        </div>
+        """, 
+        unsafe_allow_html=True
+    )
 
 
 # ----------------------------------
