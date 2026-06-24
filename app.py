@@ -143,34 +143,42 @@ st.html(
         font-family: sans-serif !important;
     }
 
-    /* CONTAINER UNICO PER LOGO E TITOLO */
-    .brand-header-container {
+    /* STILIZZAZIONE DEL HEADER NATIVO COINVOLTO */
+    .header-wrapper {
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
         text-align: center !important;
         width: 100% !important;
-        margin: 20px auto 10px auto !important;
+        margin-top: 15px !important;
+        margin-bottom: 5px !important;
     }
 
-    /* LOGO INIETTATO IN HTML: Dimensioni perfette e bloccate */
-    .brand-logo-custom {
+    /* Forziamo la centratura totale sull'immagine generata nativamente */
+    .header-wrapper [data-testid="stImage"] {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin-bottom: 0px !important;
+    }
+
+    .header-wrapper [data-testid="stImage"] img {
         width: 150px !important;
         max-width: 150px !important;
         height: auto !important;
-        object-fit: contain !important;
-        margin-bottom: 12px !important;
     }
 
-    /* TITOLO PERFETTAMENTE CENTRATO */
+    /* Titolo h2 perfettamente centrato sotto il logo */
     .brand-title-custom {
         color: #231709 !important;
         font-family: sans-serif !important;
         font-size: 1.8rem !important;
         font-weight: bold !important;
-        margin: 0 !important;
+        margin: 5px 0 0 0 !important;
         padding: 0 !important;
+        text-align: center !important;
+        width: 100% !important;
     }
 
     /* MODIFICHE SPECIFICHE PER DISPOSITIVI MOBILE E TABLET */
@@ -181,7 +189,7 @@ st.html(
             padding-top: 0.5rem !important; 
         }
 
-        .brand-logo-custom {
+        .header-wrapper [data-testid="stImage"] img {
             width: 110px !important;
             max-width: 110px !important;
         }
@@ -239,7 +247,7 @@ html_sidebar = """
 
 <details>
 <summary>📖 Il Glossario del Territorio</summary>
-<p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Le parole per leggere il cuore della Silicon Valley e il territorio che stai attraversando.</p>
+<p style="font-style: italic; text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.9;">Le parole per leggere il cuore della Sicilia e il territorio che stai attraversando.</p>
 <h4 style="margin-top: 15px; margin-bottom: 5px; font-size: 0.95rem; font-weight: bold;">🚜 Sulle tracce della storia – il paesaggio</h4>
 <ul>
 <li><strong>Trazzera:</strong> non è una semplice strada, è l'antica "autostrada" dei pastori e dei re. Camminare qui significa posare i piedi dove, per secoli, è passato il cuore pulsante della Sicilia.</li>
@@ -259,18 +267,20 @@ html_sidebar = """
 st.html(html_sidebar)
 
 
-# ---------------------------------------------------------
-# Header principale e immagine (Tramite cartella statica)
-# ---------------------------------------------------------
-st.markdown(
-    """
-    <div class="brand-header-container">
-        <img src="app/static/LOGO.png" class="brand-logo-custom" alt="Logo">
-        <h2 class="brand-title-custom">La Magna via</h2>
-    </div>
-    """, 
-    unsafe_allow_html=True
-)
+# ----------------------------------------------------------------------
+# Header principale e immagine (Soluzione Ibrida: st.image + CSS Wrapper)
+# ----------------------------------------------------------------------
+# Usiamo st.container con classe HTML per racchiudere st.image (così Streamlit risolve il file) 
+# e forzarne la centratura e le dimensioni esatte via CSS sia per mobile che desktop.
+with st.container():
+    st.markdown('<div class="header-wrapper">', unsafe_allow_html=True)
+    
+    # st.image carica l'immagine in modo sicuro dalla cartella radice o da dove si trova LOGO.png
+    st.image("LOGO.png", use_container_width=False)
+    
+    # Il titolo viene agganciato subito sotto all'interno dello stesso allineamento flexbox
+    st.markdown('<h2 class="brand-title-custom">La Magna via</h2>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ----------------------------------
@@ -299,7 +309,7 @@ if os.path.exists(documento):
         
         embeddings = OpenAIEmbeddings(model="text-embedding-3-small", openai_api_key=st.secrets["OPENAI_API_KEY"])
         vettori = FAISS.from_texts(frammenti, embedding=embeddings)
-        return vettori
+        return vectors
 
     vettori = setup_rag(testo)
     
@@ -308,7 +318,7 @@ if os.path.exists(documento):
 La tua identity è definita da tri pilastri: Precisione, Sicurezza, Empatia.
 La tua missione è eliminare l'incertezza del pellegrino. Il tuo obiettivo non è solo fornire informazioni, ma agire come un compagno di viaggio proattivo che garantisce l'incolumità del viandante (sicurezza), facilita la logistica (scelte consapevoli) e arricchisce l'esperienza (cultura e spiritualità).
 Il tuo utente è un viandante che percorre la Magna Via. 
-È una persona spesso stanca, che cammina a passo d'uomo in un ambiente rurale o isolato. Has bisogno di risposte immediatamente utilizzabili. Teme l'incertezza (meteo, cani, mancanza d'acqua) e cerca una guida che sia, al contempo, un navigatore tecnico e un narratore storico.
+È una persona spesso stanca, che cammina a passo d'uomo in un ambiente rurale o isolato. Ha bisogno di risposte immediatamente utilizzabili. Teme l'incertezza (meteo, cani, mancanza d'acqua) e cerca una guida che sia, al contempo, un navigatore tecnico e un narratore storico.
 
 ⚠️ MASSIMA PRIORITÀ LINGUA (STRICT LANGUAGE RULE):
 • Rileva accuratamente la lingua dell'ultimo messaggio dell'utente, qualunque essa sia (es. Inglese, Spagnolo, Francese, Tedesco, ecc.).
@@ -449,7 +459,7 @@ if "lingua_corrente" not in st.session_state:
     st.session_state.lingua_corrente = "it"
 
 for messaggio in st.session_state.cronologia:
-    avatar_scelto = "app/static/LOGO.png" if messaggio["role"] == "assistant" else "Utente.png"
+    avatar_scelto = "LOGO.png" if messaggio["role"] == "assistant" else "Utente.png"
     with st.chat_message(messaggio["role"], avatar=avatar_scelto):
         st.markdown(messaggio["content"])
 
@@ -464,7 +474,7 @@ if input_utente:
         lingua_rilevata = rileva_lingua(input_utente, st.session_state.lingua_corrente)
         st.session_state.lingua_corrente = lingua_rilevata
 
-        with st.chat_message("assistant", avatar="app/static/LOGO.png"):
+        with st.chat_message("assistant", avatar="LOGO.png"):
             risposta = st.write_stream(
                 catena.stream({"question": input_utente, "lingua": lingua_rilevata})
             )
