@@ -272,10 +272,10 @@ st.html(html_sidebar)
 # ----------------------------------------------------------------------
 with st.container():
     st.markdown('<div class="header-wrapper">', unsafe_allow_html=True)
-    st.image("LOGO.png", use_container_width=False)
     st.markdown('<h2 class="brand-title-custom">La Magna via</h2>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
-
+    st.image("LOGO.png", use_container_width=False)
+    
 
 # ----------------------------------
 # Elaborazione Documento PDF e RAG 
