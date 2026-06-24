@@ -267,14 +267,20 @@ html_sidebar = """
 st.html(html_sidebar)
 
 
-# ----------------------------------------------------------------------
-# Header principale e immagine (Ordinamento corretto: Logo sopra, Titolo sotto)
-# ----------------------------------------------------------------------
-with st.container():
-    st.markdown('<div class="header-wrapper">', unsafe_allow_html=True)
-    st.markdown('<h2 class="brand-title-custom">La Magna via</h2>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-    st.image("LOGO.png", use_container_width=False)
+# ---------------------------------------------------------
+# Header principale e immagine (Soluzione Compatta)
+# ---------------------------------------------------------
+st.markdown(
+    """
+    <div style="text-align: center; margin: 15px 0;">
+        <img src="app/static/LOGO.png" style="width: 160px; height: auto; margin-bottom: 10px;">
+        <h2 style="color: #231709; font-family: sans-serif; font-size: 1.8rem; font-weight: bold; margin: 0;">La Magna via</h2>
+    </div>
+    """, 
+    unsafe_allow_html=True
+)
+
+
     
 
 # ----------------------------------
