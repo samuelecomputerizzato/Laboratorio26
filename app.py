@@ -268,12 +268,12 @@ st.html(html_sidebar)
 
 
 # ---------------------------------------------------------
-# Header principale e immagine (Soluzione Compatta)
+# Header principale (Soluzione super corta con cartella static)
 # ---------------------------------------------------------
 st.markdown(
     """
-    <div style="text-align: center; margin: 15px 0;">
-        <img src"=/static/LOGO.png" style="width: 160px; height: auto; margin-bottom: 10px;">
+    <div style="text-align: center; margin: 10px 0;">
+        <img src="/static/LOGO.png" style="width: 150px; height: auto; margin-bottom: 5px;">
         <h2 style="color: #231709; font-family: sans-serif; font-size: 1.8rem; font-weight: bold; margin: 0;">La Magna via</h2>
     </div>
     """, 
