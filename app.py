@@ -10,7 +10,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
 # Rilevamento lingua
-from langdetect import LangDetectException
+from langdetect import detect, LangDetectException
 
 # -------------------------------------
 # Configurazione estetica della pagina 
