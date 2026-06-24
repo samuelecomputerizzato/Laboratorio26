@@ -309,7 +309,7 @@ if os.path.exists(documento):
         
         embeddings = OpenAIEmbeddings(model="text-embedding-3-small", openai_api_key=st.secrets["OPENAI_API_KEY"])
         vettori = FAISS.from_texts(frammenti, embedding=embeddings)
-        return vectors
+        return vettori
 
     vettori = setup_rag(testo)
     
