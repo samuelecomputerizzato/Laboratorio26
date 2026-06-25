@@ -2,21 +2,14 @@ import streamlit as st
 import pdfplumber
 import os
 
-# Importazioni LangChain
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
-# ---------------------------------------------------------
-# Configurazione iniziale della pagina (DEVE essere la prima istruzione)
-# ---------------------------------------------------------
 st.set_page_config(page_title="La Magna Via", page_icon=":walking_man:", layout="centered")
 
-# -------------------------------------
-# Configurazione estetica della pagina (CSS Custom)
-# -------------------------------------
 st.html(
     """
     <style>
@@ -155,7 +148,6 @@ st.html(
         margin-bottom: 15px !important;
     }
 
-    /* Forziamo la centratura totale sull'immagine generata nativamente */
     .header-wrapper [data-testid="stImage"] {
         display: flex !important;
         justify-content: center !important;
@@ -169,7 +161,6 @@ st.html(
         height: auto !important;
     }
 
-    /* Titolo h2 perfettamente centrato sotto il logo */
     .brand-title-custom {
         color: #231709 !important;
         font-family: sans-serif !important;
@@ -180,8 +171,8 @@ st.html(
         text-align: center !important;
         width: 100% !important;
     }
+#OTTIMIZZAZIONE MOBILE
 
-    /* MODIFICHE SPECIFICHE PER DISPOSITIVI MOBILE E TABLET */
     @media (max-width: 768px) {
         .custom-sidebar { width: 85vw !important; left: -90vw !important; }
         
@@ -202,9 +193,7 @@ st.html(
     """
 )
 
-# ---------------------
 # STRUTTURA SIDEBAR 
-# ---------------------
 html_sidebar = """
 <input type="checkbox" id="side-menu-switch" class="sidebar-checkbox">
 <label for="side-menu-switch" class="sidebar-toggle-button">☰ Lo spazio del viandante</label>
@@ -267,9 +256,6 @@ html_sidebar = """
 st.html(html_sidebar)
 
 
-# ----------------------------------------------------------------------
-# Header principale e immagine (Ordinamento corretto: Logo sopra, Titolo sotto)
-# ----------------------------------------------------------------------
 with st.container():
     st.markdown('<div class="header-wrapper">', unsafe_allow_html=True)
     st.image("LOGO.png", use_container_width=False)
@@ -277,9 +263,7 @@ with st.container():
     st.markdown('</div>', unsafe_allow_html=True)
 
 
-# ----------------------------------
 # Elaborazione Documento PDF e RAG 
-# ----------------------------------
 
 cartella_corrente = os.path.dirname(__file__)
 documento = os.path.join(cartella_corrente, "Pdf finale (1).pdf")
