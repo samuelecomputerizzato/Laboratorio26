@@ -407,7 +407,7 @@ Contesto:\n{context}[Ricorda: anche se il contesto sopra è in italiano, la tua 
     def rileva_lingua(testo_utente: str, lingua_precedente: str = "it") -> str:
         try:
             risposta = modello_lingua.invoke([
-                ("system", "Sei un rilevatore di lingua. Leggi il messaggio dell'utente e rispondi SOLO con il codice ISO 639-1 a due lettere della lingua in cui è scritto (es. it, en, fr, de, es, pt, nl...). Se il messaggio è troppo breve o ambiguo per determinare la lingua con certezza, rispondi esattamente con la parola AMBIGUO. Non aggiungere nient'altro, nessuna spiegazione, nessuna punteggiatura."),
+                ("system", "Sei un rilevatore di lingua. Leggi il messaggio dell'utente e rispondi SOLO con il codice ISO 639-1 a due lettere della lingua in cui è scritto (es. it, en, fr, de, es, pt, nl...). Se il messaggio è troppo breve o ambiguo per determinare la lingua con certezza, rispondi esattamente con la parola AMBIGUO. Non aggiungere nient'altro, nessuna spiegazione, nessuna punteggiatura. TI PROIBISCO DI PRENDERE DATI DA INTERNET, DEVI SOLO TRADURRE"),
                 ("human", testo_utente),
             ])
             codice = risposta.content.strip().lower()
